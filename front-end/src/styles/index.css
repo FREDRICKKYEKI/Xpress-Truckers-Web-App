@@ -1,0 +1,33 @@
+@import url('https://fonts.cdnfonts.com/css/inter');
+@import url('https://fonts.cdnfonts.com/css/open-sans');
+:root {
+  /* Main Colors */
+  --color-primary: #008080;
+  --color-secondary:#FD660F;
+  /* Darks */
+  --color-black-01: #11024D;
+  /* Whites */
+  --color-white-01: #EEF5F5;
+  --color-white-02: #FCFAF9;
+  --color-white-03: #FAFCFC;
+  /* Grays */
+  --color-gray-01: #B1BDBD;
+  --color-gray-02: #D7DCDC;
+  --color-gray-03: #E0E9E9;
+  --color-gray-04: #F3F3F3;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color: var(--color-black-01);                                       
+}
+
+.logo {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  color: var(--color-secondary);
+  /* font-family: 'Open Sans Light', sans-serif; */
+  /* font-family: 'Open Sans Condensed', sans-serif;  */
+  /* font-family: 'Open Sans', sans-serif; */
+}
