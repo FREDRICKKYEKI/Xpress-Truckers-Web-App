@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script defer src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script src="./form.js"></script>
+    <link href="./form.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Registration Form</h2>
+        <form class="reg-form" id="registration-form">
+            <div class="username">
+                <div class="firstname">
+                    <label for="firstname">First Name:</label>
+                    <input placeholder="Firstname" class="" type="text" id="firstname" name="username" required>
+                </div>
+                <div class="lastname">
+                    <label for="lastname">Last Name:</label>
+                    <input placeholder="Lastname" class="" type="text" id="lastname" name="username" required>
+                </div>
+            </div>
+
+            <label for="phone">Phone Number:</label>
+            <input placeholder="e.g 0712345678" type="phone" id="phonenumber" name="phone" required>
+
+            <label for="email">Email:</label>
+            <input placeholder="Enter your email" type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            <label for="repeat-password">Confirm Password:</label>
+            <input type="password" id="repeat-password" name="password" placeholder="Rewrite password" required>
+
+            <label for="role">Register as ?:</label>
+            <input type="radio" checked id="user-role" name="role" value="user" required> Regular User
+            <input type="radio" id="driver-role" name="role" value="driver" required> Driver
+
+            <!-- Driver-specific controls -->
+            <div class="driver-controls">
+                <hr>
+                <h4>Driver Details Only</h4>
+                <span><i>This area is only for users signing up as drivers.
+                        If you wish to register as a regular user of this app please select the <b>Regular User</b>
+                        option above.</i></span>
+                <hr>
+                <div id="map"></div>
+                <div class="input-group">
+                    <label for="registration">Registration Number (Number plate):</label>
+                    <input placeholder="e.g KAK 350N" type="text" id="vehicle-registration" name="registration">
+                </div>
+                <label for="place">Place of operation:</label>
+                <div class="position-relative">
+                    <input placeholder="e.g Nairobi" type="text" id="location-input" name="place">
+                    <ul data-role="places" class="places-list"></ul>
+                </div>
+                <label for="vehicle-type">Vehicle Type:</label>
+                <select id="vehicle-type" name="vehicle-type">
+                    <option value="pickup">Pickup (small)</option>
+                    <option value="van">Lorry (medium)</option>
+                    <option value="other">Truck (Large)</option>
+                </select>
+
+                <label for="vehicle-make">Vehicle model/make:</label>
+                <input placeholder="e.g Toyota hillux" type="text" id="vehicle-make" name="make">
+
+                <label for="services">Services</label>
+                <div id="services">
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label data-role="service" class="form-check-label" for="exampleCheck1">Check me 1</label>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                        <label data-role="service" class="form-check-label" for="exampleCheck2">Check me 2</label>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck3">
+                        <label data-role="service" class="form-check-label" for="exampleCheck3">Check me 3</label>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck4">
+                        <label data-role="service" class="form-check-label" for="exampleCheck4">Check me 4</label>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+    </div>
+</body>
+
+</html>
