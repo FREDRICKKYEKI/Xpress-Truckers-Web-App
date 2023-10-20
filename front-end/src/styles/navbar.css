@@ -1,0 +1,23 @@
+header {
+    background: var(--color-black-01);
+    padding: .5rem;
+}
+
+header h4 {
+    margin: unset;
+}
+.navbar .logo {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    min-height: 70px;
+    align-items: center;
+    padding-inline: 1rem;
+}
+.navbar .options {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: var(--color-white-03);
+  }
