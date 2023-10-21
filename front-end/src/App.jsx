@@ -1,5 +1,10 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import React, { useEffect } from "react";
 import Home from "./pages/Home";
 import Signup from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
@@ -9,6 +14,14 @@ import NavBar from "./components/NavBar";
 import { RequireAuth } from "./components/RequireAuth";
 
 function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname.slice(1);
+    document.title =
+      "Xpress Truckers" + " | " + path.charAt(0).toUpperCase() + path.slice(1);
+  }, [location.pathname]);
+
   return (
     <>
       <NavBar />

@@ -1,0 +1,23 @@
+.truck-request-form {
+  position: absolute;
+  max-width: 280px;
+  z-index: 1000;
+  min-height: 250px;
+  inset: 30px;
+  background-color: white;
+  border: 1px solid var(--color-gray-01);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.truck-request-form h4 {
+  font-weight: bold;
+}
+
+.truck-request-form .form-check label {
+  font-size: smaller;
+}
+
+ul:empty {
+  display: none;
+}

@@ -8,7 +8,6 @@ export const RequireAuth = ({ children }) => {
 
   useEffect(() => {
     if (!currentUser?.name) {
-      console.log("currentUser is null or undefined");
       navigate("/login");
     }
   }, []);

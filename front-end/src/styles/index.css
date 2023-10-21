@@ -1,25 +1,27 @@
-@import url('https://fonts.cdnfonts.com/css/inter');
-@import url('https://fonts.cdnfonts.com/css/open-sans');
+@import url("https://fonts.cdnfonts.com/css/inter");
+@import url("https://fonts.cdnfonts.com/css/open-sans");
 :root {
   /* Main Colors */
   --color-primary: #008080;
-  --color-secondary:#FD660F;
+  --color-secondary: #fd660f;
   /* Darks */
-  --color-black-01: #11024D;
+  --color-black-01: #11024d;
   /* Whites */
-  --color-white-01: #EEF5F5;
-  --color-white-02: #FCFAF9;
-  --color-white-03: #FAFCFC;
+  --color-white-01: #eef5f5;
+  --color-white-02: #fcfaf9;
+  --color-white-03: #fafcfc;
   /* Grays */
-  --color-gray-01: #B1BDBD;
-  --color-gray-02: #D7DCDC;
-  --color-gray-03: #E0E9E9;
-  --color-gray-04: #F3F3F3;
+  --color-gray-01: #b1bdbd;
+  --color-gray-02: #d7dcdc;
+  --color-gray-03: #e0e9e9;
+  --color-gray-04: #f3f3f3;
+  --bs-blue: var(--color-black-01);
+  --bs-primary: var(--color-black-01);
 }
 
 * {
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 body {
@@ -36,4 +38,10 @@ body {
 main {
   flex: 1;
   height: 100%;
+  position: relative;
+}
+
+button {
+  background-color: var(--color-black-01) !important;
+  border-color: var(--color-black-01) !important;
 }
