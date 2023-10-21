@@ -1,23 +1,39 @@
 header {
     background: var(--color-black-01);
-    padding: .5rem;
+    padding: 1rem;
+    height: max-content;
+    width: 100vw;
+    /* flex: 1; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-header h4 {
-    margin: unset;
+header .brand-name {
+height: 100%;
 }
-.navbar .logo {
+
+header .logo {
     font-family: 'Open Sans', sans-serif;
     font-weight: 600;
     display: flex;
     justify-content: space-between;
-    min-height: 70px;
     align-items: center;
-    padding-inline: 1rem;
 }
-.navbar .options {
+header .options {
     display: flex;
     gap: 1rem;
     align-items: center;
     color: var(--color-white-03);
-  }
+}
+
+header a {
+    color: var(--color-white-03);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+header a:hover {
+    color: var(--color-gray-02);
+}
