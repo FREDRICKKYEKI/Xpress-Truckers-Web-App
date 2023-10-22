@@ -1,0 +1,14 @@
+.leaflet-container {
+  height: 100%;
+  width: 100vw;
+  position: relative;
+}
+
+.leaflet-left {
+  right: 10px !important;
+}
+
+.leaflet-control {
+  float: right !important;
+  clear: both;
+}
