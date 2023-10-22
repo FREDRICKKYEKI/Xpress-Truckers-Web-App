@@ -6,4 +6,4 @@ I'll change it in the morning, I was learning to work with MySqlalchemy with fla
 
 I'll also have to split  the models, and the engine, so the everything is not cluttered.
 
-I'll work on full implementation tomorrow, send suggestions please. ~ Lennox
+I'll work on full implementation tomorrow, send suggestions please. ~ Lennox Namasaka
