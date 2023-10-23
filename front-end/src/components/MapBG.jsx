@@ -1,26 +1,24 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "../styles/map.css";
 import "../styles/home.css";
 import { useSelector } from "react-redux";
-import { TruckRequestForm } from "./TruckRequestForm";
+import { MapMarker } from "./MapMarker";
 
 export const MapBG = ({ loading }) => {
-  const position = useSelector((state) => state.currentLocation);
+  const positionData = useSelector((state) => state.currentLocation);
+  const center = Object.values(positionData?.geometry);
 
   if (loading) return <div>Loading...</div>;
+
   return (
-    <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+    <MapContainer center={center} zoom={13} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={position}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+      <MapMarker PositionData={positionData} center={center} />
     </MapContainer>
   );
 };

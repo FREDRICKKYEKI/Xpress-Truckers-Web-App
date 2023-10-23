@@ -1,63 +1,190 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { envs } from "../utils/loadEnv";
+import { setDestination, setCurrentLocation } from "../StateManagement/store";
+import { useDispatch } from "react-redux";
+import { DriverRequest } from "../utils/RequestModels";
 
 export const TruckRequestForm = () => {
+  const dispatch = useDispatch();
+
+  const [locations, setLocations] = useState({
+    originsResponses: null,
+    destinationsResponses: null,
+  });
+
+  const locationTypes = {
+    origin: "origin",
+    destination: "destination",
+  };
+
+  function storeLocation(locationType, data) {
+    if (!data) return;
+    if (locationType === locationTypes.origin) {
+      dispatch(setCurrentLocation(data || null));
+    } else {
+      dispatch(setDestination(data || null));
+    }
+  }
+
+  function fetchLocations(e) {
+    const text = e.target.value;
+    if (text.length < 3) return;
+    fetch(`https://api.opencagedata.com/geosearch?q=${text}`, {
+      headers: {
+        accept: "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "opencage-geosearch-key": `${envs.openCageApiKey}`,
+        Referer: "https://opencagedata.com/",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+      },
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (e.target.id === "input-datalist-origin") {
+          setLocations((prev) => ({ ...prev, originsResponses: data }));
+        } else {
+          setLocations((prev) => ({ ...prev, destinationsResponses: data }));
+        }
+      });
+  }
+
+  function requestTruck(e) {
+    e.preventDefault();
+    const origin = locations.originsResponses?.results[0];
+    const destination = locations.destinationsResponses?.results[0];
+    const vehicleType = document.getElementById("v-type").value;
+    const services = document.querySelectorAll("[data-role=service]");
+    const servicesArray = [];
+    services.forEach((service) => {
+      console.log(service);
+      if (service.checked) {
+        servicesArray.push(service.value);
+      }
+    });
+    const request = new DriverRequest(
+      origin,
+      destination,
+      vehicleType,
+      servicesArray
+    );
+    console.log(request);
+  }
+
   return (
-    <div className="truck-request-form">
+    <form onSubmit={requestTruck} className="truck-request-form">
       <h5 className="text-center">Search For Truck</h5>
 
-      <div class="mb-1 form-group">
-        <label for="origin">Where are you now?</label>
-        <input id="origin" type="text" class="form-control" />
+      <div className="form-group mb-1">
+        <label htmlFor="input-datalist">Where are you now?</label>
+        <input
+          onInput={(e) => fetchLocations(e)}
+          onChange={storeLocation(
+            locationTypes.origin,
+            locations.originsResponses?.results.length == 1
+              ? locations.originsResponses?.results[0]
+              : null
+          )}
+          type="text"
+          className="form-control"
+          placeholder="e.g Nairobi, Eldoret"
+          list="list-origin"
+          id="input-datalist-origin"
+        />
+        <datalist id="list-origin">
+          {locations.originsResponses?.results.map((place, index) => (
+            <option key={index}>{place.formatted}</option>
+          ))}
+        </datalist>
       </div>
 
-      <div class="mb-1 form-group">
-        <label for="destination">Destination</label>
-        <input id="destination" type="text" class="form-control" />
-        <ul data-role="places" class="places-list"></ul>
+      <div className="form-group mb-1">
+        <label htmlFor="input-datalist">Destination:</label>
+        <input
+          onInput={(e) => fetchLocations(e)}
+          type="text"
+          className="form-control"
+          placeholder="e.g Nairobi, Eldoret"
+          list="list-destination"
+          id="input-datalist-destination"
+        />
+        <datalist id="list-destination">
+          {locations.destinationsResponses?.results.map((place, index) => (
+            <option key={index}>{place.formatted}</option>
+          ))}
+        </datalist>
       </div>
 
-      <div class="input-group mb-2 justify-content-between">
-        <label class="form-check-label fs-6" for="services">
+      <div className="input-group mb-2 justify-content-between">
+        <label className="form-check-label fs-6" htmlFor="services">
           Vehicle Type:
         </label>
-        <select id="v-type" class="custom-select p-2 w-100">
-          <option selected>Choose...</option>
-          <option value="pickup">Pickup (small)</option>
-          <option value="van">Lorry (medium)</option>
-          <option value="other">Truck (Large)</option>
+        <select
+          defaultValue={"null"}
+          id="v-type"
+          className="custom-select p-2 w-100"
+        >
+          <option value={"null"}>Choose...</option>
+          <option value={"A"}>Pickup (small)</option>
+          <option value={"B"}>Lorry (medium)</option>
+          <option value={"C"}>Truck (Large)</option>
         </select>
       </div>
 
-      <label class="form-check-label" for="services">
-        Choose a service
+      <label className="" htmlFor="services">
+        Choose a service:
       </label>
-      <div id="services" class="mb-0 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-        <label data-role="service" class="form-check-label" for="exampleCheck1">
+      <div id="services" className="mb-0 form-check">
+        <label className="form-check-label" htmlFor="service1">
+          <input
+            data-role="service"
+            type="checkbox"
+            className="form-check-input"
+            id="service1"
+            value={"A"}
+          />
           Moving out
         </label>
       </div>
-      <div class="mb-0 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck2" />
-        <label data-role="service" class="form-check-label" for="exampleCheck2">
+      <div className="mb-0 form-check">
+        <label className="form-check-label" htmlFor="service2">
+          <input
+            data-role="service"
+            type="checkbox"
+            className="form-check-input"
+            id="service2"
+            value={"B"}
+          />
           Transport Construction Materials
         </label>
       </div>
-      <div class="mb-0 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck3" />
-        <label data-role="service" class="form-check-label" for="exampleCheck3">
+      <div className="mb-0 form-check">
+        <label className="form-check-label" htmlFor="service3">
+          <input
+            data-role="service"
+            type="checkbox"
+            className="form-check-input"
+            id="service3"
+            value={"C"}
+          />
           Transport Farm Produce
         </label>
       </div>
-      <div class="mb-2 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck4" />
-        <label data-role="service" class="form-check-label" for="exampleCheck4">
+      <div className="mb-2 form-check">
+        <label className="form-check-label" htmlFor="service4">
+          <input
+            data-role="service"
+            type="checkbox"
+            className="form-check-input"
+            id="service4"
+            value={"D"}
+          />
           Long Distance Transportation
         </label>
       </div>
-      <button class="btn btn-primary w-100" type="submit">
+      <button className="btn btn-primary w-100" type="submit">
         Request Truck
       </button>
-    </div>
+    </form>
   );
 };

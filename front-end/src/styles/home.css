@@ -18,6 +18,7 @@
   font-size: smaller;
 }
 
-ul:empty {
-  display: none;
+.truck-request-form select {
+  border: 1px solid var(--color-gray-01);
+  border-radius: 0.25rem;
 }

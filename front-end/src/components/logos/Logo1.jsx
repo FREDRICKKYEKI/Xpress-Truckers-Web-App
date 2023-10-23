@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 export const Logo1 = () => {
   return (
-    <a href="/home" className="logo">
+    <a href="/" className="logo">
       <h5
         className="brand-name"
         style={{

@@ -18,8 +18,14 @@ function App() {
 
   useEffect(() => {
     const path = location.pathname.slice(1);
-    document.title =
-      "Xpress Truckers" + " | " + path.charAt(0).toUpperCase() + path.slice(1);
+
+    path.length > 0
+      ? (document.title =
+          "Xpress Truckers" +
+          " | " +
+          path.charAt(0).toUpperCase() +
+          path.slice(1))
+      : (document.title = "Xpress Truckers");
   }, [location.pathname]);
 
   return (
@@ -27,7 +33,7 @@ function App() {
       <NavBar />
       <main className="main">
         <Routes>
-          <Route path="/home" exact element={<Home />} />
+          <Route path="/" exact element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/driver" element={<Driver />} />

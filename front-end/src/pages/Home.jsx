@@ -15,6 +15,7 @@ const Home = () => {
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log(position);
         setLoading(false);
         dispatch(
           setCurrentLocation({
