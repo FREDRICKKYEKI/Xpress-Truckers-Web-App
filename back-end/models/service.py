@@ -9,6 +9,6 @@ from sqlalchemy.orm import relationship
 
 class Service(BaseModel, Base):
     """representation of a service"""
-    ___tablename__ = 'services'
+    __tablename__ = 'services'
     name = Column(String(128), nullable=False)
     description = Column(String(128), nullable=False)
