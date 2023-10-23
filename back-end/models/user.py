@@ -13,7 +13,7 @@ class User(BaseModel, Base):
     __tablename__ = 'users'
     first_name = Column(String(128), nullable=True)
     last_name = Column(String(128), nullable=True)
-    email = Column(String(128), nullable=False)
+    """email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
     phonenumber = Column(String(128), nullable=True)
     role = Column(Enum('user', 'driver', 'admin'), nullable=False, default='user')
@@ -22,7 +22,7 @@ class User(BaseModel, Base):
     images = relationship("Image", backref="user", cascade="all, delete-orphan")
     driver_services = relationship("DriverService", backref="user", cascade="all, delete-orphan")
     trips = relationship("Trip", backref="user", cascade="all, delete-orphan")
-
+"""
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
@@ -33,4 +33,3 @@ class User(BaseModel, Base):
         if name == "password":
             value = md5(value.encode()).hexdigest()
         super().__setattr__(name, value)
-
