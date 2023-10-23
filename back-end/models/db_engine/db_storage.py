@@ -40,7 +40,8 @@ class DBStorage:
                                       format(XT_MYSQL_USER,
                                              XT_MYSQL_PWD,
                                              XT_MYSQL_HOST,
-                                             XT_MYSQL_DB))
+                                             XT_MYSQL_DB),
+                                      pool_pre_ping=True)
         if XT_ENV == 'test':
             Base.metadata.drop_all(self.__engine)
 
@@ -48,7 +49,6 @@ class DBStorage:
         """
         get all class objects in the database
         """
-
         new_dict = {}
         for item in classes:
             if cls is None or cls is item or cls is classes[item]:
@@ -62,7 +62,8 @@ class DBStorage:
         """
         add a new object to current database session
         """
-        self.__session.add(obj)
+        if obj:
+            self.__session.add(obj)
 
     def save(self):
         """
