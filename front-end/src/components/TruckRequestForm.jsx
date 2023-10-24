@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { envs } from "../utils/loadEnv";
-import { setDestination, setCurrentLocation } from "../StateManagement/store";
+import {
+  setDestination,
+  setCurrentLocation,
+  setIsLoading,
+} from "../StateManagement/store";
 import { useDispatch } from "react-redux";
-import { DriverRequest } from "../utils/RequestModels";
+import { DriverRequest } from "../utils/DataModels";
+import { toast } from "react-toastify";
 
-export const TruckRequestForm = () => {
+export const TruckRequestForm = ({ locationTypes }) => {
   const dispatch = useDispatch();
 
   const [locations, setLocations] = useState({
@@ -12,14 +17,10 @@ export const TruckRequestForm = () => {
     destinationsResponses: null,
   });
 
-  const locationTypes = {
-    origin: "origin",
-    destination: "destination",
-  };
-
   function storeLocation(locationType, data) {
     if (!data) return;
-    if (locationType === locationTypes.origin) {
+    toast.dismiss();
+    if (locationType === locationTypes.ORIGIN) {
       dispatch(setCurrentLocation(data || null));
     } else {
       dispatch(setDestination(data || null));
@@ -29,6 +30,7 @@ export const TruckRequestForm = () => {
   function fetchLocations(e) {
     const text = e.target.value;
     if (text.length < 3) return;
+    dispatch(setIsLoading(true));
     fetch(`https://api.opencagedata.com/geosearch?q=${text}`, {
       headers: {
         accept: "*/*",
@@ -41,11 +43,15 @@ export const TruckRequestForm = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        dispatch(setIsLoading(false));
         if (e.target.id === "input-datalist-origin") {
           setLocations((prev) => ({ ...prev, originsResponses: data }));
         } else {
           setLocations((prev) => ({ ...prev, destinationsResponses: data }));
         }
+      })
+      .catch((error) => {
+        dispatch(setIsLoading(false));
       });
   }
 
@@ -57,7 +63,6 @@ export const TruckRequestForm = () => {
     const services = document.querySelectorAll("[data-role=service]");
     const servicesArray = [];
     services.forEach((service) => {
-      console.log(service);
       if (service.checked) {
         servicesArray.push(service.value);
       }
@@ -68,123 +73,140 @@ export const TruckRequestForm = () => {
       vehicleType,
       servicesArray
     );
-    console.log(request);
+    try {
+      if (request.isValid()) {
+        console.log("is valid", request);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error.message, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
   }
 
   return (
-    <form onSubmit={requestTruck} className="truck-request-form">
-      <h5 className="text-center">Search For Truck</h5>
+    <>
+      <form onSubmit={requestTruck} className="truck-request-form">
+        <h5 className="text-center">Search For Truck</h5>
 
-      <div className="form-group mb-1">
-        <label htmlFor="input-datalist">Where are you now?</label>
-        <input
-          onInput={(e) => fetchLocations(e)}
-          onChange={storeLocation(
-            locationTypes.origin,
-            locations.originsResponses?.results.length == 1
-              ? locations.originsResponses?.results[0]
-              : null
-          )}
-          type="text"
-          className="form-control"
-          placeholder="e.g Nairobi, Eldoret"
-          list="list-origin"
-          id="input-datalist-origin"
-        />
-        <datalist id="list-origin">
-          {locations.originsResponses?.results.map((place, index) => (
-            <option key={index}>{place.formatted}</option>
-          ))}
-        </datalist>
-      </div>
+        <div className="form-group mb-1">
+          <label htmlFor="input-datalist">Where are you now?</label>
+          <input
+            onInput={(e) => fetchLocations(e)}
+            onBlur={storeLocation(
+              locationTypes.ORIGIN,
+              locations.originsResponses?.results.length == 1
+                ? locations.originsResponses?.results[0]
+                : null
+            )}
+            type="text"
+            className="form-control"
+            placeholder="e.g Nairobi, Eldoret"
+            list="list-origin"
+            id="input-datalist-origin"
+          />
+          <datalist id="list-origin">
+            {locations.originsResponses?.results.map((place, index) => (
+              <option key={index}>{place.formatted}</option>
+            ))}
+          </datalist>
+        </div>
 
-      <div className="form-group mb-1">
-        <label htmlFor="input-datalist">Destination:</label>
-        <input
-          onInput={(e) => fetchLocations(e)}
-          type="text"
-          className="form-control"
-          placeholder="e.g Nairobi, Eldoret"
-          list="list-destination"
-          id="input-datalist-destination"
-        />
-        <datalist id="list-destination">
-          {locations.destinationsResponses?.results.map((place, index) => (
-            <option key={index}>{place.formatted}</option>
-          ))}
-        </datalist>
-      </div>
+        <div className="form-group mb-1">
+          <label htmlFor="input-datalist">Destination:</label>
+          <input
+            onInput={(e) => fetchLocations(e)}
+            onBlur={storeLocation(
+              locationTypes.DESTINATION,
+              locations.destinationsResponses?.results.length == 1
+                ? locations.destinationsResponses?.results[0]
+                : null
+            )}
+            type="text"
+            className="form-control"
+            placeholder="e.g Nairobi, Eldoret"
+            list="list-destination"
+            id="input-datalist-destination"
+          />
+          <datalist id="list-destination">
+            {locations.destinationsResponses?.results.map((place, index) => (
+              <option key={index}>{place.formatted}</option>
+            ))}
+          </datalist>
+        </div>
 
-      <div className="input-group mb-2 justify-content-between">
-        <label className="form-check-label fs-6" htmlFor="services">
-          Vehicle Type:
-        </label>
-        <select
-          defaultValue={"null"}
-          id="v-type"
-          className="custom-select p-2 w-100"
-        >
-          <option value={"null"}>Choose...</option>
-          <option value={"A"}>Pickup (small)</option>
-          <option value={"B"}>Lorry (medium)</option>
-          <option value={"C"}>Truck (Large)</option>
-        </select>
-      </div>
+        <div className="input-group mb-2 justify-content-between">
+          <label className="form-check-label fs-6" htmlFor="services">
+            Vehicle Type:
+          </label>
+          <select
+            defaultValue={"null"}
+            id="v-type"
+            className="custom-select p-2 w-100"
+          >
+            <option value={"null"}>Choose...</option>
+            <option value={"A"}>Pickup (small)</option>
+            <option value={"B"}>Lorry (medium)</option>
+            <option value={"C"}>Truck (Large)</option>
+          </select>
+        </div>
 
-      <label className="" htmlFor="services">
-        Choose a service:
-      </label>
-      <div id="services" className="mb-0 form-check">
-        <label className="form-check-label" htmlFor="service1">
-          <input
-            data-role="service"
-            type="checkbox"
-            className="form-check-input"
-            id="service1"
-            value={"A"}
-          />
-          Moving out
+        <label className="" htmlFor="services">
+          Choose a service:
         </label>
-      </div>
-      <div className="mb-0 form-check">
-        <label className="form-check-label" htmlFor="service2">
-          <input
-            data-role="service"
-            type="checkbox"
-            className="form-check-input"
-            id="service2"
-            value={"B"}
-          />
-          Transport Construction Materials
-        </label>
-      </div>
-      <div className="mb-0 form-check">
-        <label className="form-check-label" htmlFor="service3">
-          <input
-            data-role="service"
-            type="checkbox"
-            className="form-check-input"
-            id="service3"
-            value={"C"}
-          />
-          Transport Farm Produce
-        </label>
-      </div>
-      <div className="mb-2 form-check">
-        <label className="form-check-label" htmlFor="service4">
-          <input
-            data-role="service"
-            type="checkbox"
-            className="form-check-input"
-            id="service4"
-            value={"D"}
-          />
-          Long Distance Transportation
-        </label>
-      </div>
-      <button className="btn btn-primary w-100" type="submit">
-        Request Truck
-      </button>
-    </form>
+        <div id="services" className="mb-0 form-check">
+          <label className="form-check-label" htmlFor="service1">
+            <input
+              data-role="service"
+              type="checkbox"
+              className="form-check-input"
+              id="service1"
+              value={"A"}
+            />
+            Moving out
+          </label>
+        </div>
+        <div className="mb-0 form-check">
+          <label className="form-check-label" htmlFor="service2">
+            <input
+              data-role="service"
+              type="checkbox"
+              className="form-check-input"
+              id="service2"
+              value={"B"}
+            />
+            Transport Construction Materials
+          </label>
+        </div>
+        <div className="mb-0 form-check">
+          <label className="form-check-label" htmlFor="service3">
+            <input
+              data-role="service"
+              type="checkbox"
+              className="form-check-input"
+              id="service3"
+              value={"C"}
+            />
+            Transport Farm Produce
+          </label>
+        </div>
+        <div className="mb-2 form-check">
+          <label className="form-check-label" htmlFor="service4">
+            <input
+              data-role="service"
+              type="checkbox"
+              className="form-check-input"
+              id="service4"
+              value={"D"}
+            />
+            Long Distance Transportation
+          </label>
+        </div>
+        <button className="btn btn-primary w-100" type="submit">
+          Request Truck
+        </button>
+      </form>
+    </>
   );
 };

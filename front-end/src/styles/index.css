@@ -22,7 +22,6 @@
 * {
   box-sizing: border-box;
   font-family: "Inter", sans-serif;
-  color: var(--color-black-01);
 }
 
 body {
@@ -40,9 +39,4 @@ main {
   flex: 1;
   height: 100%;
   position: relative;
-}
-
-button {
-  background-color: var(--color-black-01) !important;
-  border-color: var(--color-black-01) !important;
 }

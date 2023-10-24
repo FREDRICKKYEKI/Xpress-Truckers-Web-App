@@ -1,44 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { MapBG } from "../components/MapBG";
-import { setCurrentLocation } from "../StateManagement/store";
+import { setCurrentLocation, setIsLoading } from "../StateManagement/store";
 import { useDispatch } from "react-redux";
 import { TruckRequestForm } from "../components/TruckRequestForm";
+import {
+  getCurrentLocation,
+  getLocationData,
+  locationTypes,
+} from "../utils/utils";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!navigator?.geolocation) {
-      console.log("Geolocation is not supported by your browser");
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        console.log(position);
-        setLoading(false);
-        dispatch(
-          setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+    dispatch(setIsLoading(true));
+
+    getCurrentLocation()
+      .then((location) => {
+        getLocationData({
+          lat: location.coords.latitude,
+          lng: location.coords.longitude,
+        })
+          .then((data) => {
+            dispatch(setIsLoading(false));
+            console.log(data);
           })
-        );
-      },
-      (error) => {
-        setLoading(false);
-        if (error.code === 1) {
-          console.log("Geolocation permission denied by the user.");
-        } else {
-          console.error("Geolocation error:", error);
-        }
-      }
-    );
+          .then((error) => {
+            dispatch(setIsLoading(false));
+            console.error(error);
+          });
+      })
+      .catch((error) => {
+        dispatch(setIsLoading(false));
+        console.error(error);
+      });
   }, []);
 
   return (
     <>
-      <MapBG loading={loading} />
-      <TruckRequestForm />
+      <MapBG locationTypes={locationTypes} />
+      <TruckRequestForm locationTypes={locationTypes} />
     </>
   );
 };

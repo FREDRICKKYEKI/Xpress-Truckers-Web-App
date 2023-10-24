@@ -12,21 +12,24 @@ import Driver from "./pages/Driver";
 import Profile from "./pages/Profile";
 import NavBar from "./components/NavBar";
 import { RequireAuth } from "./components/RequireAuth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 function App() {
-  const location = useLocation();
+  const isLoading = useSelector((state) => state.isLoading);
 
   useEffect(() => {
-    const path = location.pathname.slice(1);
-
-    path.length > 0
-      ? (document.title =
-          "Xpress Truckers" +
-          " | " +
-          path.charAt(0).toUpperCase() +
-          path.slice(1))
-      : (document.title = "Xpress Truckers");
-  }, [location.pathname]);
+    if (isLoading) {
+      toast.dismiss();
+      toast.loading("Loading...", {
+        position: toast.POSITION.TOP_CENTER,
+        closeButton: true,
+      });
+    } else {
+      toast.dismiss();
+    }
+  }, [isLoading]);
 
   return (
     <>
@@ -46,6 +49,7 @@ function App() {
             }
           />
         </Routes>
+        <ToastContainer />
       </main>
     </>
   );

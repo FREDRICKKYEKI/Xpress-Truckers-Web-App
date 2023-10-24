@@ -22,3 +22,8 @@
   border: 1px solid var(--color-gray-01);
   border-radius: 0.25rem;
 }
+
+.truck-request-form button {
+  background-color: var(--color-black-01) !important;
+  border-color: var(--color-black-01) !important;
+}
