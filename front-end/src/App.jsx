@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { useEffect } from "react";
 import Home from "./pages/Home";
 import Signup from "./pages/SignUp";
@@ -15,21 +10,43 @@ import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import { promiseStates } from "./utils/utils";
 
 function App() {
-  const isLoading = useSelector((state) => state.isLoading);
+  const promiseState = useSelector((state) => state.promiseState);
+  const currentLocation = useSelector((state) => state.currentLocation);
 
   useEffect(() => {
-    if (isLoading) {
+    document.querySelector("#input-origin").value = currentLocation.formatted;
+  }, []);
+  useEffect(() => {
+    console.log(promiseState);
+    if (promiseState.state === promiseStates.PENDING) {
       toast.dismiss();
-      toast.loading("Loading...", {
+      toast.loading(promiseState.message || "Loading...", {
         position: toast.POSITION.TOP_CENTER,
         closeButton: true,
       });
-    } else {
+    } else if (promiseState.state === promiseStates.FULFILLED) {
       toast.dismiss();
+      if (!promiseState.message) {
+        toast.dismiss();
+        return;
+      }
+      toast.success(promiseState.message, {
+        position: toast.POSITION.TOP_RIGHT,
+        closeButton: true,
+        autoClose: 10,
+      });
+    } else if (promiseState.state === promiseStates.REJECTED) {
+      toast.dismiss();
+      toast(promiseState.message, {
+        position: toast.POSITION.TOP_CENTER,
+        closeButton: true,
+        delay: 200,
+      });
     }
-  }, [isLoading]);
+  }, [promiseState.state]);
 
   return (
     <>

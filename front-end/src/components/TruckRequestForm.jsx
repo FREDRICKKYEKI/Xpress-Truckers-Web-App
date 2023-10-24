@@ -1,25 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { envs } from "../utils/loadEnv";
 import {
   setDestination,
   setCurrentLocation,
-  setIsLoading,
+  setPromiseState,
 } from "../StateManagement/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DriverRequest } from "../utils/DataModels";
 import { toast } from "react-toastify";
+import { destinationIcon, locationTypes, promiseStates } from "../utils/utils";
 
-export const TruckRequestForm = ({ locationTypes }) => {
+export const TruckRequestForm = ({ originRef, destinationRef }) => {
   const dispatch = useDispatch();
-
   const [locations, setLocations] = useState({
     originsResponses: null,
     destinationsResponses: null,
   });
+  const currentLocation = useSelector((state) => state.currentLocation);
+  const destination = useSelector((state) => state.destination);
 
-  function storeLocation(locationType, data) {
+  function storeLocation(locationType, data, origin) {
     if (!data) return;
-    toast.dismiss();
+    console.log("storing location function...", origin);
     if (locationType === locationTypes.ORIGIN) {
       dispatch(setCurrentLocation(data || null));
     } else {
@@ -27,10 +29,10 @@ export const TruckRequestForm = ({ locationTypes }) => {
     }
   }
 
-  function fetchLocations(e) {
+  function fetchLocations(locationType, e) {
     const text = e.target.value;
     if (text.length < 3) return;
-    dispatch(setIsLoading(true));
+
     fetch(`https://api.opencagedata.com/geosearch?q=${text}`, {
       headers: {
         accept: "*/*",
@@ -43,36 +45,37 @@ export const TruckRequestForm = ({ locationTypes }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        dispatch(setIsLoading(false));
-        if (e.target.id === "input-datalist-origin") {
-          setLocations((prev) => ({ ...prev, originsResponses: data }));
+        dispatch(setPromiseState(promiseStates.FULFILLED, "location found"));
+        if (locationType === locationTypes.ORIGIN) {
+          setLocations((prev) => ({ ...prev, originsResponses: data.results }));
         } else {
-          setLocations((prev) => ({ ...prev, destinationsResponses: data }));
+          setLocations((prev) => ({
+            ...prev,
+            destinationsResponses: data.results,
+          }));
         }
       })
       .catch((error) => {
-        dispatch(setIsLoading(false));
+        dispatch(setPromiseState(promiseStates.REJECTED, error.message));
       });
   }
 
   function requestTruck(e) {
     e.preventDefault();
-    const origin = locations.originsResponses?.results[0];
-    const destination = locations.destinationsResponses?.results[0];
+    const from = currentLocation;
+    const to = destination;
     const vehicleType = document.getElementById("v-type").value;
     const services = document.querySelectorAll("[data-role=service]");
     const servicesArray = [];
+
     services.forEach((service) => {
       if (service.checked) {
         servicesArray.push(service.value);
       }
     });
-    const request = new DriverRequest(
-      origin,
-      destination,
-      vehicleType,
-      servicesArray
-    );
+
+    const request = new DriverRequest(from, to, vehicleType, servicesArray);
+
     try {
       if (request.isValid()) {
         console.log("is valid", request);
@@ -93,21 +96,28 @@ export const TruckRequestForm = ({ locationTypes }) => {
         <div className="form-group mb-1">
           <label htmlFor="input-datalist">Where are you now?</label>
           <input
-            onInput={(e) => fetchLocations(e)}
-            onBlur={storeLocation(
-              locationTypes.ORIGIN,
-              locations.originsResponses?.results.length == 1
-                ? locations.originsResponses?.results[0]
-                : null
-            )}
+            ref={originRef}
+            required
+            onInput={(e) => fetchLocations(locationTypes.ORIGIN, e)}
+            onFocus={() => dispatch(setPromiseState(promiseStates.PENDING))}
+            onBlur={() => {
+              dispatch(setPromiseState(promiseStates.FULFILLED, null));
+              storeLocation(
+                locationTypes.ORIGIN,
+                locations.originsResponses?.length == 1
+                  ? locations.originsResponses[0]
+                  : null,
+                "from origin"
+              );
+            }}
             type="text"
+            placeholder={"e.g Nairobi, Eldoret"}
             className="form-control"
-            placeholder="e.g Nairobi, Eldoret"
             list="list-origin"
-            id="input-datalist-origin"
+            id="input-origin"
           />
           <datalist id="list-origin">
-            {locations.originsResponses?.results.map((place, index) => (
+            {locations.originsResponses?.map((place, index) => (
               <option key={index}>{place.formatted}</option>
             ))}
           </datalist>
@@ -116,22 +126,29 @@ export const TruckRequestForm = ({ locationTypes }) => {
         <div className="form-group mb-1">
           <label htmlFor="input-datalist">Destination:</label>
           <input
-            onInput={(e) => fetchLocations(e)}
-            onBlur={storeLocation(
-              locationTypes.DESTINATION,
-              locations.destinationsResponses?.results.length == 1
-                ? locations.destinationsResponses?.results[0]
-                : null
-            )}
+            required
+            onInput={(e) => fetchLocations(locationTypes.DESTINATION, e)}
+            onFocus={() => dispatch(setPromiseState(promiseStates.PENDING))}
+            onBlur={() => {
+              dispatch(setPromiseState(promiseStates.FULFILLED, null));
+              storeLocation(
+                locationTypes.DESTINATION,
+                locations.destinationsResponses?.length == 1
+                  ? locations.destinationsResponses[0]
+                  : null,
+                "from origin"
+              );
+            }}
             type="text"
             className="form-control"
-            placeholder="e.g Nairobi, Eldoret"
+            placeholder={"e.g Nairobi, Eldoret"}
             list="list-destination"
-            id="input-datalist-destination"
+            ref={destinationRef}
+            id="input-destination"
           />
           <datalist id="list-destination">
-            {locations.destinationsResponses?.results.map((place, index) => (
-              <option key={index}>{place.formatted}</option>
+            {locations.destinationsResponses?.map((place, index) => (
+              <option key={index}>{place?.formatted}</option>
             ))}
           </datalist>
         </div>

@@ -1,19 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MapBG } from "../components/MapBG";
-import { setCurrentLocation, setIsLoading } from "../StateManagement/store";
+import { setCurrentLocation, setPromiseState } from "../StateManagement/store";
 import { useDispatch } from "react-redux";
 import { TruckRequestForm } from "../components/TruckRequestForm";
 import {
   getCurrentLocation,
   getLocationData,
   locationTypes,
+  promiseStates,
 } from "../utils/utils";
+import { LocationDataResponse } from "../utils/DataModels";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const originRef = useRef();
+  const destinationRef = useRef();
 
   useEffect(() => {
-    dispatch(setIsLoading(true));
+    dispatch(
+      setPromiseState(promiseStates.PENDING, "Getting current location")
+    );
 
     getCurrentLocation()
       .then((location) => {
@@ -22,24 +29,48 @@ const Home = () => {
           lng: location.coords.longitude,
         })
           .then((data) => {
-            dispatch(setIsLoading(false));
-            console.log(data);
+            dispatch(
+              setPromiseState(
+                promiseStates.FULFILLED,
+                "Current Location Data found"
+              )
+            );
+
+            const location = new LocationDataResponse(data.results[0]);
+            try {
+              if (location.isValid()) {
+                dispatch(setCurrentLocation(location.toObject()));
+                document.querySelector("#input-origin").value =
+                  location.toObject().formatted;
+              }
+            } catch (e) {
+              toast.dismiss();
+              toast.error(e.message);
+            }
           })
-          .then((error) => {
-            dispatch(setIsLoading(false));
+          .catch((error) => {
+            dispatch(setPromiseState(promiseStates.REJECTED));
             console.error(error);
           });
       })
       .catch((error) => {
-        dispatch(setIsLoading(false));
+        dispatch(setPromiseState(promiseStates.REJECTED, error.message));
         console.error(error);
       });
   }, []);
 
   return (
     <>
-      <MapBG locationTypes={locationTypes} />
-      <TruckRequestForm locationTypes={locationTypes} />
+      <MapBG
+        originRef={originRef}
+        destinationRef={destinationRef}
+        locationTypes={locationTypes}
+      />
+      <TruckRequestForm
+        originRef={originRef}
+        destinationRef={destinationRef}
+        locationTypes={locationTypes}
+      />
     </>
   );
 };

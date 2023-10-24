@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import "../styles/map.css";
 import "../styles/home.css";
 
-export const MapBG = ({ locationTypes }) => {
+export const MapBG = ({ locationTypes, originRef, destinationRef }) => {
   const currentLocation = useSelector((state) => state.currentLocation);
   const destination = useSelector((state) => state.destination);
   const center = Object.values(currentLocation?.geometry);
@@ -22,6 +22,8 @@ export const MapBG = ({ locationTypes }) => {
         center={center}
         destinationData={destination}
         locationTypes={locationTypes}
+        originRef={originRef}
+        destinationRef={destinationRef}
       />
     </MapContainer>
   );
