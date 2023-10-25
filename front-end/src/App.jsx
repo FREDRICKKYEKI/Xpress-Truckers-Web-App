@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import React, { useEffect } from "react";
 import Home from "./pages/Home";
 import Signup from "./pages/SignUp";
@@ -10,17 +10,28 @@ import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
-import { promiseStates } from "./utils/utils";
+import { COMPANY_NAME, promiseStates } from "./utils/utils";
+import { NotFound } from "./pages/NotFound";
 
 function App() {
   const promiseState = useSelector((state) => state.promiseState);
   const currentLocation = useSelector((state) => state.currentLocation);
+  const noNavs = ["/login", "/signup"];
+  const location = useLocation();
 
   useEffect(() => {
-    document.querySelector("#input-origin").value = currentLocation.formatted;
+    document.title = `${COMPANY_NAME} | ${
+      location.pathname.slice(1).toUpperCase() || "Home"
+    }`;
+  }, [document.location]);
+
+  useEffect(() => {
+    document.onLocation;
+    try {
+      document.querySelector("#input-origin").value = currentLocation.formatted;
+    } catch (e) {}
   }, []);
   useEffect(() => {
-    console.log(promiseState);
     if (promiseState.state === promiseStates.PENDING) {
       toast.dismiss();
       toast.loading(promiseState.message || "Loading...", {
@@ -34,13 +45,18 @@ function App() {
         return;
       }
       toast.success(promiseState.message, {
-        position: toast.POSITION.TOP_RIGHT,
+        position: toast.POSITION.TOP_CENTER,
         closeButton: true,
         autoClose: 10,
       });
     } else if (promiseState.state === promiseStates.REJECTED) {
       toast.dismiss();
-      toast(promiseState.message, {
+      let message = "";
+      if (promiseState.message?.includes("Network")) {
+        message = "You are offline!";
+      }
+      message = promiseState.message;
+      toast(message, {
         position: toast.POSITION.TOP_CENTER,
         closeButton: true,
         delay: 200,
@@ -50,13 +66,14 @@ function App() {
 
   return (
     <>
-      <NavBar />
+      {!noNavs.includes(location.pathname) && <NavBar />}
       <main className="main">
         <Routes>
           <Route path="/" exact element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<LogIn />} />
-          <Route path="/driver" element={<Driver />} />
+          <Route path="/driver/:id" element={<Driver />} />
+          <Route path="*" element={<NotFound />} />
           <Route
             path="/profile"
             element={

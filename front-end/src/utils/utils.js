@@ -1,6 +1,8 @@
 import L from "leaflet";
 import { envs } from "./loadEnv";
 
+export const COMPANY_NAME = "Xpress Truckers";
+
 /**
  * Returns a promise that resolves to the current location of the user.
  * @returns {Promise<Position>} A promise that resolves to the current position of the user.
@@ -90,3 +92,39 @@ export const promiseStates = {
   FULFILLED: "FULFILLED",
   REJECTED: "REJECTED",
 };
+
+export const userTypes = {
+  DRIVER: "DRIVER",
+  REGULAR: "REGULAR",
+  ADMIN: "ADMIN",
+};
+
+export const logInTypes = {
+  PHONE: "phone",
+  EMAIL: "email",
+};
+
+export const SERVICES = [
+  {
+    id: 0,
+    name: "Moving out",
+  },
+  {
+    id: 1,
+    name: "Transport Construction Materials",
+  },
+  {
+    id: 2,
+    name: "Transport Farm Produce",
+  },
+  {
+    id: 3,
+    name: "Long Distance Transportation",
+  },
+];
+
+export const VEHICLE_TYPES = [
+  { id: 0, type: "A", name: "Pick-Up" },
+  { id: 1, type: "B", name: "Lorry" },
+  { id: 2, type: "C", name: "Large Size Truck" },
+];

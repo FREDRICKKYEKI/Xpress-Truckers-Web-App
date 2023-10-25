@@ -8,7 +8,12 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { DriverRequest } from "../utils/DataModels";
 import { toast } from "react-toastify";
-import { destinationIcon, locationTypes, promiseStates } from "../utils/utils";
+import {
+  VEHICLE_TYPES,
+  destinationIcon,
+  locationTypes,
+  promiseStates,
+} from "../utils/utils";
 
 export const TruckRequestForm = ({ originRef, destinationRef }) => {
   const dispatch = useDispatch();
@@ -19,13 +24,19 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
   const currentLocation = useSelector((state) => state.currentLocation);
   const destination = useSelector((state) => state.destination);
 
+  /**
+   * Stores the location data in the Redux store based on the location type.
+   * @param {string} locationType - The type of location (origin or destination).
+   * @param {Object} data - The location data to be stored.
+   * @param {string} origin - The origin of the location data.
+   */
   function storeLocation(locationType, data, origin) {
     if (!data) return;
     console.log("storing location function...", origin);
     if (locationType === locationTypes.ORIGIN) {
-      dispatch(setCurrentLocation(data || null));
+      dispatch(setCurrentLocation(data));
     } else {
-      dispatch(setDestination(data || null));
+      dispatch(setDestination(data));
     }
   }
 
@@ -78,7 +89,7 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
 
     try {
       if (request.isValid()) {
-        console.log("is valid", request);
+        console.log(request.toRequest());
       }
     } catch (error) {
       toast.dismiss();
@@ -99,9 +110,14 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
             ref={originRef}
             required
             onInput={(e) => fetchLocations(locationTypes.ORIGIN, e)}
-            onFocus={() => dispatch(setPromiseState(promiseStates.PENDING))}
+            onFocus={() =>
+              toast.loading("Searching...", {
+                position: toast.POSITION.TOP_CENTER,
+                closeButton: true,
+              })
+            }
             onBlur={() => {
-              dispatch(setPromiseState(promiseStates.FULFILLED, null));
+              toast.dismiss();
               storeLocation(
                 locationTypes.ORIGIN,
                 locations.originsResponses?.length == 1
@@ -128,9 +144,14 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
           <input
             required
             onInput={(e) => fetchLocations(locationTypes.DESTINATION, e)}
-            onFocus={() => dispatch(setPromiseState(promiseStates.PENDING))}
+            onFocus={() =>
+              toast.loading("Searching...", {
+                position: toast.POSITION.TOP_CENTER,
+                closeButton: true,
+              })
+            }
             onBlur={() => {
-              dispatch(setPromiseState(promiseStates.FULFILLED, null));
+              toast.dismiss();
               storeLocation(
                 locationTypes.DESTINATION,
                 locations.destinationsResponses?.length == 1
@@ -154,7 +175,7 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
         </div>
 
         <div className="input-group mb-2 justify-content-between">
-          <label className="form-check-label fs-6" htmlFor="services">
+          <label className="form-check-label fs-6" htmlFor="v-type">
             Vehicle Type:
           </label>
           <select
@@ -163,9 +184,11 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
             className="custom-select p-2 w-100"
           >
             <option value={"null"}>Choose...</option>
-            <option value={"A"}>Pickup (small)</option>
-            <option value={"B"}>Lorry (medium)</option>
-            <option value={"C"}>Truck (Large)</option>
+            {VEHICLE_TYPES.map((type, index) => (
+              <option key={type.id} value={type.type}>
+                {type.name}
+              </option>
+            ))}
           </select>
         </div>
 

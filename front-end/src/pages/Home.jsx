@@ -45,7 +45,7 @@ const Home = () => {
               }
             } catch (e) {
               toast.dismiss();
-              toast.error(e.message);
+              dispatch(setPromiseState(promiseStates.REJECTED, e.message));
             }
           })
           .catch((error) => {
@@ -54,7 +54,9 @@ const Home = () => {
           });
       })
       .catch((error) => {
-        dispatch(setPromiseState(promiseStates.REJECTED, error.message));
+        dispatch(
+          setPromiseState(promiseStates.REJECTED, "Location not found!")
+        );
         console.error(error);
       });
   }, []);

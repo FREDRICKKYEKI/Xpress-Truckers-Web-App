@@ -36,12 +36,16 @@ export const MapMarkers = ({
           destinationRef.current.value = location?.formatted;
         }
         toast.success("Updated succesfully", {
+          position: toast.POSITION.TOP_CENTER,
           autoClose: 10,
         });
       })
       .catch((error) => {
         toast.dismiss();
-        toast.error("Error!");
+        toast.error("Error!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 10,
+        });
         console.error(error);
       });
   }
