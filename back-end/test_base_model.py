@@ -8,7 +8,18 @@ from models.vehicle import Vehicle
 
 from models import storage
 
-a = storage.all()
+users = storage.all(User).values()
+for user in users:
+    if user.id == '28f43756-8129-4ebc-bc60-1c55a409ea64':
+        user.role = 'driver'
+
+storage.save()
+users = storage.all(User).values()
+
+for user in users:
+    print(user)
+
+"""
 new = User(first_name='kwargs', last_name='model', email='lennoxnams@example.com',
            password='lennox_pwd',role='user')
 
@@ -27,7 +38,7 @@ for item in b.values():
     print(item)
 
 storage.save()
-
+"""
 """
 print("JSON of my_model:")
 for key in my_model_json.keys():

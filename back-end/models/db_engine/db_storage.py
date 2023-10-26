@@ -87,6 +87,25 @@ class DBStorage:
         Session = scoped_session(session)
         self.__session = Session
 
+    def get(self, cls, id):
+        """
+        gets an object given class and id
+        """
+        from models import storage
+
+        if cls not in classes.values():
+            return None
+        all_cls = storage.all(cls)
+        for value in all_cls.values():
+            if (value.id == id):
+                return value
+
+    def count(self, cls=None):
+        """counts the number of items in classes"""
+        from models import storage
+        count = len(storage.all(cls))
+        return count
+
     def close(self):
         """
         closes the current session
