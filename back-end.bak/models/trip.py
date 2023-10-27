@@ -11,8 +11,8 @@ from sqlalchemy.orm import relationship
 class Trip(BaseModel, Base):
     """representation of a trip"""
     __tablename__ = 'trips'
-    client_id = Column(String(60), ForeignKey('users.id'), nullable=False)  # problem might be here
-    driver_id = Column(String(60), nullable=True)  # and here
+    client_id = Column(String(60), ForeignKey('client.id'), nullable=False)  # problem might be here
+    driver_id = Column(String(60), ForeignKey('drivers.id'), nullable=True)  # and here
     vehicle_id = Column(String(60), ForeignKey('vehicles.id'), nullable=True)
     service_id = Column(String(60), ForeignKey('services.id'), nullable=False)
     origin = Column(String(128), nullable=False)
