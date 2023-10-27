@@ -352,7 +352,7 @@ const SignUp = () => {
             <span>
               Already have an account?{" "}
               <a
-                href="/signup"
+                href="/login"
                 style={{
                   color: "var(--color-secondary)",
                   // textDecoration: "none",

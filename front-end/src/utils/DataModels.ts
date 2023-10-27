@@ -1,11 +1,15 @@
-import { logInTypes, userTypes } from "./utils";
+import { userTypes } from "./utils";
 
 export class DriverRequest {
+  origin: {};
+  destination: {};
+  vehicleType: string;
+  services: string[];
   constructor(
-    origin = null,
-    destination = null,
-    vehicleType = null,
-    services = null
+    origin = {},
+    destination = {},
+    vehicleType = "",
+    services = []
   ) {
     this.origin = origin;
     this.destination = destination;
@@ -42,10 +46,13 @@ export class DriverRequest {
 
 export class LocationDataResponse {
   __keys = ["bounds", "formatted", "geometry"];
-  constructor(data) {
-    this.bounds = data.bounds;
-    this.formatted = data.formatted;
-    this.geometry = data.geometry;
+  bounds: {};
+  formatted: string;
+  geometry: {};
+  constructor({bounds={}, formatted="", geometry={}}) {
+    this.bounds = bounds;
+    this.formatted = formatted;
+    this.geometry = geometry;
   }
 
   isValid() {
@@ -82,8 +89,19 @@ export class LocationDataResponse {
 }
 
 export class UserRegistrationData {
-  __car_reg_pattern = /^[a-zA-Z]{3} \d{3}[a-zA-Z]$/;
-  __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  private __car_reg_pattern = /^[a-zA-Z]{3} \d{3}[a-zA-Z]$/;
+  private __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  phonenumber: string;
+  usertype: string;
+  vehicleRegistration: string;
+  vehicleType: string;
+  vehicleModel: string;
+  placeOperation: {};
+  services: string[];
 
   constructor({
     firstname = "",
@@ -212,8 +230,17 @@ export class UserRegistrationData {
   }
 }
 
+export enum logInTypes  {
+  PHONE= "phone",
+  EMAIL= "email"
+};
+
+
 export class UserLogInData {
-  __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  private __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  email_phone: any;
+  password: string;
+  type: logInTypes;
 
   constructor({ email_phone = "", password = "", type = logInTypes.EMAIL }) {
     this.email_phone = email_phone;

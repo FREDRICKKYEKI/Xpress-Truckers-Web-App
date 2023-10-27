@@ -14,7 +14,7 @@ export const RequireAuth = ({ children }) => {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1000,
       });
-      navigate("/signup");
+      navigate("/login");
     }
   }, []);
   return <>{children}</>;

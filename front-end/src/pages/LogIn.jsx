@@ -47,9 +47,16 @@ const LogIn = () => {
     <section className="auth-form">
       <div className="container login-form">
         <div className="d-flex justify-content-between  mt-3">
-          <a style={{ color: "var(--color-secondary)" }} className="" href="/">
-            &larr; <>Go back</>
-          </a>
+          <span style={{ color: "var(--color-secondary)" }}>
+            &larr;
+            <a
+              className=""
+              style={{ color: "var(--color-secondary)" }}
+              href="/"
+            >
+              <b>Go Back</b>
+            </a>
+          </span>
         </div>
         <LogoIcon size="sm" />
         <h2 className="m-1 text-center">Welcome back</h2>

@@ -18,9 +18,11 @@ class User(BaseModel, Base):
     phonenumber = Column(String(128), nullable=True)
     role = Column(Enum('user', 'driver', 'admin'), nullable=False, default='user')
     ratings = Column(String(128), nullable=True)
-    vehicles = relationship("Vehicle", backref="user", cascade="all, delete-orphan")
+    vehicles = relationship("Vehicle", backref="user",
+                            cascade="all, delete-orphan")
     images = relationship("Image", backref="user", cascade="all, delete-orphan")
-    driver_services = relationship("DriverService", backref="user", cascade="all, delete-orphan")
+    driver_services = relationship("DriverService", backref="user",
+                                   cascade="all, delete-orphan")
     trips = relationship("Trip", backref="user", cascade="all, delete-orphan")
 
 
