@@ -3,23 +3,15 @@ from models.driver_service import DriverService
 from models.image import Image
 from models.service import Service
 from models.trip import Trip
-from models.user import User
 from models.vehicle import Vehicle
+from models.admin import Admin
+from models.client import Client
+from models.driver import Driver
 
 from models import storage
 
-users = storage.all(User).values()
-for user in users:
-    if user.id == '28f43756-8129-4ebc-bc60-1c55a409ea64':
-        user.role = 'driver'
-
-storage.save()
-users = storage.all(User).values()
-
-for user in users:
-    print(user)
-
 """
+a = storage.all()
 new = User(first_name='kwargs', last_name='model', email='lennoxnams@example.com',
            password='lennox_pwd',role='user')
 
@@ -38,7 +30,11 @@ for item in b.values():
     print(item)
 
 storage.save()
+
 """
+driver = Driver(first_name="John", last_name="Doe", password="pass")
+print(driver)
+
 """
 print("JSON of my_model:")
 for key in my_model_json.keys():
