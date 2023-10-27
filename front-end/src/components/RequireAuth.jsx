@@ -7,15 +7,15 @@ export const RequireAuth = ({ children }) => {
   const currentUser = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!currentUser?.name) {
-      toast.dismiss();
-      toast.info("Please sign in to continue...", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1000,
-      });
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!currentUser?.name) {
+  //     toast.dismiss();
+  //     toast.info("Please sign in to continue...", {
+  //       position: toast.POSITION.TOP_CENTER,
+  //       autoClose: 1000,
+  //     });
+  //     navigate("/login");
+  //   }
+  // }, []);
   return <>{children}</>;
 };

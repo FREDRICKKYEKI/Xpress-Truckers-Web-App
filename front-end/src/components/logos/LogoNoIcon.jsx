@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-export const Logo1 = () => {
+export const LogoBrandName = () => {
   return (
     <a href="/" className="logo">
       <h5

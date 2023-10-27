@@ -1,4 +1,4 @@
-import { userTypes } from "./utils";
+import { logInTypes, userTypes } from "./utils";
 
 export class DriverRequest {
   origin: {};
@@ -230,10 +230,6 @@ export class UserRegistrationData {
   }
 }
 
-export enum logInTypes  {
-  PHONE= "phone",
-  EMAIL= "email"
-};
 
 
 export class UserLogInData {

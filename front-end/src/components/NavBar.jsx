@@ -1,12 +1,12 @@
 import React from "react";
-import { Logo1 } from "./logos/Logo1";
 import "../styles/navbar.css";
 import { NavLink } from "react-router-dom";
+import { LogoBrandName } from "./logos/LogoNoIcon";
 
 const NavBar = () => {
   return (
     <header className="navbar">
-      <Logo1 />
+      <LogoBrandName />
       <span className="options" style={{ color: "var(--color-white-03)" }}>
         <NavLink to="#">Become a Driver</NavLink>
         <NavLink to="/profile">Profile</NavLink>

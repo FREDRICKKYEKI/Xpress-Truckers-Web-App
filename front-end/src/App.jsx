@@ -16,7 +16,7 @@ import { NotFound } from "./pages/NotFound";
 function App() {
   const promiseState = useSelector((state) => state.promiseState);
   const currentLocation = useSelector((state) => state.currentLocation);
-  const noNavs = ["/login", "/signup"];
+  const noNavs = ["/login", "/signup", "/profile"];
   const location = useLocation();
 
   useEffect(() => {

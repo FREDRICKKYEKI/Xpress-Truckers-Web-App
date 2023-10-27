@@ -78,30 +78,30 @@ export const destinationIcon = L.icon({
  * The types of location.
  * @enum {string}
  */
-export const locationTypes = {
-  ORIGIN: "ORIGIN",
-  DESTINATION: "DESTINATION",
+export enum locationTypes  {
+  ORIGIN = "ORIGIN",
+  DESTINATION = "DESTINATION",
 };
 
 /**
  * The states of a promise.
  * @enum {string}
  */
-export const promiseStates = {
-  PENDING: "PENDING",
-  FULFILLED: "FULFILLED",
-  REJECTED: "REJECTED",
+export enum promiseStates {
+  PENDING = "PENDING",
+  FULFILLED = "FULFILLED",
+  REJECTED = "REJECTED",
 };
 
-export const userTypes = {
-  DRIVER: "DRIVER",
-  REGULAR: "REGULAR",
-  ADMIN: "ADMIN",
+export enum userTypes {
+  DRIVER = "DRIVER",
+  REGULAR = "REGULAR",
+  ADMIN = "ADMIN",
 };
 
-export const logInTypes = {
-  PHONE: "phone",
-  EMAIL: "email",
+export enum logInTypes {
+  PHONE = "phone",
+  EMAIL = "email",
 };
 
 export const SERVICES = [

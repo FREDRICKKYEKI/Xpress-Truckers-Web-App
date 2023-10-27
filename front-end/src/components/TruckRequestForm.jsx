@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { envs } from "../utils/loadEnv";
 import {
   setDestination,
@@ -8,12 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { DriverRequest } from "../utils/DataModels";
 import { toast } from "react-toastify";
-import {
-  VEHICLE_TYPES,
-  destinationIcon,
-  locationTypes,
-  promiseStates,
-} from "../utils/utils";
+import { VEHICLE_TYPES, locationTypes, promiseStates } from "../utils/utils";
 
 export const TruckRequestForm = ({ originRef, destinationRef }) => {
   const dispatch = useDispatch();
