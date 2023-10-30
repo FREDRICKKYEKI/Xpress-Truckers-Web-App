@@ -3,12 +3,17 @@ import { envs } from "./loadEnv";
 
 export const COMPANY_NAME = "Xpress Truckers";
 
+export const defaultAvatarUrl =
+  "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg";
+
+const UNSPLASH_ROOT = "https://api.unsplash.com";
+
 /**
  * Returns a promise that resolves to the current location of the user.
  * @returns {Promise<Position>} A promise that resolves to the current position of the user.
  * @throws {string} If geolocation is not supported by the browser.
  */
-export function getCurrentLocation() {
+export function getCurrentLocation(): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!navigator?.geolocation) {
       console.log("Geolocation is not supported by your browser");
@@ -39,13 +44,20 @@ export function getCurrentLocation() {
  * @returns {Promise<Object>} A promise that resolves to the location data for the given latitude and longitude.
  * @throws {Error} If there is an error while fetching the location data.
  */
-export function getLocationData({ lat: latitude, lng: longitude }) {
+export function getLocationData({
+  lat: latitude,
+  lng: longitude,
+}: {
+  lat: number;
+  lng: number;
+}): Promise<object> {
   return new Promise((resolve, reject) => {
     fetch(
       `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&key=${envs.geoCodeApi}&language=en&pretty=1`
     )
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         resolve(data);
       })
       .catch((error) => {
@@ -54,11 +66,24 @@ export function getLocationData({ lat: latitude, lng: longitude }) {
   });
 }
 
+export function getUnsplashPhotos({ query }: { query: string }): Promise<JSON> {
+  return new Promise((resolve, reject) => {
+    fetch(
+      `${UNSPLASH_ROOT}/search/photos?page=${Math.floor(
+        Math.random() * 10 + 1
+      )}&query=${query}&client_id=${envs.unsplashApiAccessKey}&per_page=4`
+    )
+      .then((data) => data.json())
+      .then((data) => resolve(data))
+      .catch((error) => reject(error));
+  });
+}
+
 /**
  * The icon for the origin location.
  * @type {L.Icon}
  */
-export const originIcon = L.icon({
+export const originIcon: L.Icon = L.icon({
   iconUrl: "/markers/origin-marker.svg",
   iconSize: [48, 48],
   iconAnchor: [24, 24],
@@ -68,7 +93,7 @@ export const originIcon = L.icon({
  * The icon for the destination location.
  * @type {L.Icon}
  */
-export const destinationIcon = L.icon({
+export const destinationIcon: L.Icon = L.icon({
   iconUrl: "/markers/destination-marker.svg",
   iconSize: [38, 38],
   iconAnchor: [16, 32],
@@ -78,10 +103,10 @@ export const destinationIcon = L.icon({
  * The types of location.
  * @enum {string}
  */
-export enum locationTypes  {
+export enum locationTypes {
   ORIGIN = "ORIGIN",
   DESTINATION = "DESTINATION",
-};
+}
 
 /**
  * The states of a promise.
@@ -91,18 +116,17 @@ export enum promiseStates {
   PENDING = "PENDING",
   FULFILLED = "FULFILLED",
   REJECTED = "REJECTED",
-};
+}
 
 export enum userTypes {
   DRIVER = "DRIVER",
   REGULAR = "REGULAR",
-  ADMIN = "ADMIN",
-};
+}
 
 export enum logInTypes {
   PHONE = "phone",
   EMAIL = "email",
-};
+}
 
 export const SERVICES = [
   {

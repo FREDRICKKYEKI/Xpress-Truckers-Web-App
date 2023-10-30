@@ -29,3 +29,14 @@
   background-color: var(--color-black-01) !important;
   border-color: var(--color-black-01) !important;
 }
+
+@media (max-width: 499px) {
+  .truck-request-form {
+    top: unset;
+    min-width: 100% !important;
+    /* margin: 10px; */
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+  }
+}

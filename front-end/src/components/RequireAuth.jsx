@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const RequireAuth = ({ children }) => {
-  const currentUser = useAuth();
-  const navigate = useNavigate();
+  // const currentUser = useAuth();
+  // const navigate = useNavigate();
 
   // useEffect(() => {
   //   if (!currentUser?.name) {

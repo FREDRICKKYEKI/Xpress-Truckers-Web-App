@@ -16,8 +16,9 @@ import { NotFound } from "./pages/NotFound";
 function App() {
   const promiseState = useSelector((state) => state.promiseState);
   const currentLocation = useSelector((state) => state.currentLocation);
-  const noNavs = ["/login", "/signup", "/profile"];
   const location = useLocation();
+  const noNavs = ["/login", "/signup"];
+  const v2Paths = ["profile", "driver"];
 
   useEffect(() => {
     document.title = `${COMPANY_NAME} | ${
@@ -31,6 +32,7 @@ function App() {
       document.querySelector("#input-origin").value = currentLocation.formatted;
     } catch (e) {}
   }, []);
+
   useEffect(() => {
     if (promiseState.state === promiseStates.PENDING) {
       toast.dismiss();
@@ -66,7 +68,13 @@ function App() {
 
   return (
     <>
-      {!noNavs.includes(location.pathname) && <NavBar />}
+      {!noNavs.includes(location.pathname) && (
+        <NavBar
+          variant={`${
+            v2Paths.includes(location.pathname.split("/")[1]) ? "v2" : "v1"
+          }`}
+        />
+      )}
       <main className="main">
         <Routes>
           <Route path="/" exact element={<Home />} />

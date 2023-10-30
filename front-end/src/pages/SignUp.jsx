@@ -30,10 +30,6 @@ const SignUp = () => {
   const carModelRef = useRef();
   const locationRef = useRef();
 
-  useEffect(() => {
-    console.log(showDriverControls);
-  }, [showDriverControls]);
-
   function handleDriverControls(e) {
     if (e.target.id === userTypes.DRIVER) {
       setShowDriverControls(true);
@@ -58,7 +54,6 @@ const SignUp = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.results);
         dispatch(setPromiseState(promiseStates.FULFILLED, "Location found!"));
         setLocations(data.results);
       })
@@ -112,7 +107,7 @@ const SignUp = () => {
           closeButton: true,
           autoClose: 800,
         });
-        console.log(user.toObject());
+        console.log(user.toRequest());
       }
     } catch (e) {
       toast.dismiss();
@@ -324,7 +319,7 @@ const SignUp = () => {
                 <label htmlFor="services">Pick the services you provide:</label>
                 <div id="services">
                   {SERVICES.map((service) => (
-                    <div className="mb-1 form-check">
+                    <div key={service.id} className="mb-1 form-check">
                       <label
                         data-role="service"
                         className="form-check-label"

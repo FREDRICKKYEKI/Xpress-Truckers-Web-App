@@ -5,12 +5,7 @@ export class DriverRequest {
   destination: {};
   vehicleType: string;
   services: string[];
-  constructor(
-    origin = {},
-    destination = {},
-    vehicleType = "",
-    services = []
-  ) {
+  constructor(origin = {}, destination = {}, vehicleType = "", services = []) {
     this.origin = origin;
     this.destination = destination;
     this.vehicleType = vehicleType;
@@ -49,7 +44,7 @@ export class LocationDataResponse {
   bounds: {};
   formatted: string;
   geometry: {};
-  constructor({bounds={}, formatted="", geometry={}}) {
+  constructor({ bounds = {}, formatted = "", geometry = {} }) {
     this.bounds = bounds;
     this.formatted = formatted;
     this.geometry = geometry;
@@ -88,6 +83,12 @@ export class LocationDataResponse {
   }
 }
 
+interface locationData {
+  bounds: {};
+  formatted: string;
+  geometry: {};
+}
+
 export class UserRegistrationData {
   private __car_reg_pattern = /^[a-zA-Z]{3} \d{3}[a-zA-Z]$/;
   private __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -100,7 +101,7 @@ export class UserRegistrationData {
   vehicleRegistration: string;
   vehicleType: string;
   vehicleModel: string;
-  placeOperation: {};
+  placeOperation: locationData;
   services: string[];
 
   constructor({
@@ -113,7 +114,7 @@ export class UserRegistrationData {
     vehicleRegistration = "",
     vehicleType = "",
     vehicleModel = "",
-    placeOperation = {},
+    placeOperation,
     services = [],
   }) {
     this.firstname = firstname;
@@ -185,7 +186,12 @@ export class UserRegistrationData {
       case !this.vehicleModel: {
         throw Error("Vehicle model not provided!");
       }
-      case !this.placeOperation: {
+      case typeof this.placeOperation === "string": {
+        throw Error(
+          "Invalid place of operation! Please select from the list🔻"
+        );
+      }
+      case this.placeOperation === null: {
         throw Error("Place of operation not provided!");
       }
       case !new LocationDataResponse(this.placeOperation).validate(): {
@@ -229,8 +235,6 @@ export class UserRegistrationData {
     return JSON.stringify(this.toObject());
   }
 }
-
-
 
 export class UserLogInData {
   private __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
