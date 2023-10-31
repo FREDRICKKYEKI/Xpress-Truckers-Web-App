@@ -19,4 +19,5 @@ class Trip(BaseModel, Base):
     destination = Column(String(128), nullable=False)
     start_at = Column(DateTime, default=datetime.utcnow)
     end_at = Column(DateTime)
-    status = Column(Enum('pending', 'ongoing', 'finished', 'cancelled'), nullable=False, default='pending')
+    status = Column(Enum('pending', 'ongoing', 'finished', 'cancelled'),
+                    nullable=False, default='pending')
