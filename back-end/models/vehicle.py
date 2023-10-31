@@ -15,4 +15,5 @@ class Vehicle(BaseModel, Base):
     vehicle_type = Column(Enum('A', 'B', 'C'), nullable=False)
     vehicle_registration = Column(String(128), nullable=False)
     location = Column(String(128), nullable=False) #location of operation
-    trips = relationship("Trip", backref="vehicle", cascade="all, delete-orphan")
+    trips = relationship("Trip", backref="vehicle",
+                         cascade="all, delete-orphan")

@@ -8,38 +8,34 @@ from models.vehicle import Vehicle
 
 from models import storage
 
-users = storage.all(User).values()
-for user in users:
-    if user.id == '28f43756-8129-4ebc-bc60-1c55a409ea64':
-        user.role = 'driver'
+services = storage.all(Service).values()
+for service in services:
+    print(service)
 
+"""
 storage.save()
 users = storage.all(User).values()
 
 for user in users:
     print(user)
+"""
 
 """
-new = User(first_name='kwargs', last_name='model', email='lennoxnams@example.com',
-           password='lennox_pwd',role='user')
-
-print(new)
-
-new.save()
 print('\n----All----\n')
-print(a)
+print(users)
 
 print('\n----Values----\n')
-for item in a.values():
+for item in users:
     print(item)
 print('\n-----Users-----\n')
+
 b = storage.all(User)
 for item in b.values():
     print(item)
 
+
 storage.save()
-"""
-"""
+
 print("JSON of my_model:")
 for key in my_model_json.keys():
     print("\t{}: ({}) - {}".format(key, type(my_model_json[key]),
