@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-white-02);
+}
+.container {
+  max-width: 600px !important;
+  padding: 20px;
+  min-width: 100%;
+}
+
+/* .login-form {
+  max-width: 500px !important;
+} */
+
+.reg-form label:not([data-role="service"]) {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.reg-form input:not([type="radio"], [type="checkbox"]),
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px !important;
+}
+
+.form-check .form-check-label {
+  font-weight: 400 !important;
+}
+/* driver radio !remember this */
+input[type="radio"]:nth-child(3) {
+  margin-left: 10px;
+}
+
+.auth-page button[type="submit"] {
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 7.5px 10px !important;
+}
+
+.driver-controls {
+  margin-top: 20px;
+}
+
+.driver-controls span {
+  display: block;
+  margin-block: 10px;
+}
+
+ul[data-role="places"] {
+  list-style: none;
+  z-index: 100;
+  position: absolute;
+  border: 1px solid #ccc;
+  top: 100%;
+  width: 100%;
+  background-color: white;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: scroll;
+  border-radius: 5px;
+}
+
+ul[data-role="places"] li {
+  margin-block: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+ul[data-role="places"] li:hover {
+  background-color: #f3f3f3;
+}
+
+button[type="submit"] {
+  background-color: var(--color-black-01);
+}
+
+.PhoneInputInput {
+  border: 1px var(--color-gray-01) solid;
+  border-radius: 0.25rem;
+  outline: 2px transparent solid;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.PhoneInputInput:focus {
+  border: 1px solid transparent;
+  outline: 2px var(--color-black-01) solid;
+}

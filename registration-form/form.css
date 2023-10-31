@@ -16,7 +16,7 @@ body {
   margin-bottom: 3rem;
 }
 
-.reg-form label:not([data-role='service']) {
+.reg-form label:not([data-role="service"]) {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
@@ -31,7 +31,6 @@ select {
 
 .username {
   display: flex;
-  /* justify-content: space-between;   */
   gap: 12px;
 }
 
@@ -43,7 +42,6 @@ button[type="submit"] {
   width: 100%;
   margin-top: 1.2rem;
   padding: 7.5px 10px !important;
-
 }
 
 .driver-controls {
@@ -61,7 +59,7 @@ ul[data-role="places"] {
   z-index: 100;
   position: absolute;
   border: 1px solid #ccc;
-  top:100%;
+  top: 100%;
   width: 100%;
   background-color: white;
   padding: 0;
