@@ -10,12 +10,8 @@ import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
-import {
-  COMPANY_NAME,
-  capitalize,
-  getXTData,
-  promiseStates,
-} from "./utils/utils";
+import { COMPANY_NAME, promiseStates } from "./utils/constants";
+import { capitalize, getXTData } from "./utils/utils";
 import { NotFound } from "./pages/NotFound";
 
 function App() {

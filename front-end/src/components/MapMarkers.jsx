@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import {
-  defaultAvatarUrl,
   destinationIcon,
-  getLocationData,
-  originIcon,
   truckLargeIcon,
   truckMediumIcon,
   truckSmallIcon,
-} from "../utils/utils";
+  originIcon,
+} from "../utils/mapMarkers";
+import { getLocationData } from "../utils/utils";
 import { useDispatch } from "react-redux";
 import { setCurrentLocation, setDestination } from "../StateManagement/store";
 import { LocationDataResponse } from "../utils/DataModels";

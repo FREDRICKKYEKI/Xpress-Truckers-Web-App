@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Profile.css";
-import {
-  SERVICES,
-  VEHICLE_TYPES,
-  defaultAvatarUrl,
-  getUnsplashPhotos,
-} from "../utils/utils";
+import { SERVICES, VEHICLE_TYPES, defaultAvatarUrl } from "../utils/constants";
+import { getUnsplashPhotos } from "../utils/utils";
 import { toast } from "react-toastify";
 import { Rating } from "../components/Rating";
 

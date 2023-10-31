@@ -13,9 +13,9 @@
  * @returns {Envs} Object containing environment variables.
  */
 export const envs = {
-  openCageApiKey: import.meta.env.VITE_OPEN_CAGE_API_KEY,
-  geoCodeApi: import.meta.env.VITE_GEO_CODE_API_KEY,
-  unsplashApiAccessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
-  unsplashApiSecretKey: import.meta.env.VITE_UNSPLASH_SECRET_KEY,
-  db_host: import.meta.env.VITE_DB_HOST,
+  openCageApiKey: (import.meta as any).env.VITE_OPEN_CAGE_API_KEY,
+  geoCodeApi: (import.meta as any).env.VITE_GEO_CODE_API_KEY,
+  unsplashApiAccessKey: (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY,
+  unsplashApiSecretKey: (import.meta as any).env.VITE_UNSPLASH_SECRET_KEY,
+  db_host: (import.meta as any).env.VITE_DB_HOST,
 };

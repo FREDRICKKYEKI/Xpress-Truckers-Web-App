@@ -89,6 +89,10 @@ button[type="submit"] {
   width: 100%;
 }
 
+.color-light {
+  color: var(--color-white-01) !important;
+}
+
 .color-dark {
   color: var(--color-black-01) !important;
 }

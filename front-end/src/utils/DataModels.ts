@@ -1,4 +1,4 @@
-import { logInTypes, userTypes } from "./utils";
+import { logInTypes, userTypes } from "./constants";
 
 export class DriverRequest {
   origin: {};

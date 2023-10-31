@@ -1,6 +1,6 @@
 import React from "react";
-import { COMPANY_NAME } from "../../utils/utils";
 import logo from "/logos/logo.png";
+import { COMPANY_NAME } from "../../utils/constants";
 
 export const LogoIcon = ({ size = "md" }) => {
   const STYLES = {

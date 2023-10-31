@@ -6,10 +6,10 @@ import "react-phone-number-input/style.css";
 import {
   SERVICES,
   VEHICLE_TYPES,
-  promiseStates,
   userTypes,
-} from "../utils/utils";
-import { envs } from "../utils/loadEnv";
+  promiseStates,
+} from "../utils/constants";
+import { geoSearch } from "../utils/utils";
 import { useDispatch } from "react-redux";
 import { setPromiseState } from "../StateManagement/store";
 import { toast } from "react-toastify";
@@ -42,17 +42,7 @@ const SignUp = () => {
     const text = e.target.value;
     if (text.length < 3) return;
 
-    fetch(`https://api.opencagedata.com/geosearch?q=${text}`, {
-      headers: {
-        accept: "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "opencage-geosearch-key": `${envs.openCageApiKey}`,
-        Referer: "https://opencagedata.com/",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-      },
-      method: "GET",
-    })
-      .then((response) => response.json())
+    geoSearch(text)
       .then((data) => {
         dispatch(setPromiseState(promiseStates.FULFILLED, "Location found!"));
         setLocations(data.results);

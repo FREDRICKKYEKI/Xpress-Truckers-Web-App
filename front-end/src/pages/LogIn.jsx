@@ -1,9 +1,9 @@
 import { LogoIcon } from "../components/logos/LogoIcon";
-import { COMPANY_NAME, logInTypes } from "../utils/utils";
 import React, { useRef, useState } from "react";
 import "../styles/authPagesStyles.css";
 import { UserLogInData } from "../utils/DataModels";
 import { toast } from "react-toastify";
+import { logInTypes } from "../utils/constants";
 
 const LogIn = () => {
   const [showPassword, setShowPassword] = useState(false);
