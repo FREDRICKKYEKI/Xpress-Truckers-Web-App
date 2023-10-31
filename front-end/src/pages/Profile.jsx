@@ -21,7 +21,7 @@ const Profile = () => {
             <i className="fa-solid fa-pen" />
           </button>
         </div>
-        <div className="profile__card__body text-center card-body p-0">
+        <div className="profile__card__body card-body p-0">
           <h5 className="card-title">John Doe</h5>
           <p className="card-text">JohnDoe@gmail.com</p>
           <p className="card-text">+25472345678</p>

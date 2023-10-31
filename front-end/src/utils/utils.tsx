@@ -8,6 +8,8 @@ export const defaultAvatarUrl =
 
 const UNSPLASH_ROOT = "https://api.unsplash.com";
 
+const apiUrl = "http://127.0.0.1:5000/api/v1/";
+
 /**
  * Returns a promise that resolves to the current location of the user.
  * @returns {Promise<Position>} A promise that resolves to the current position of the user.
@@ -57,7 +59,28 @@ export function getLocationData({
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        resolve(data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function geoSearch(text: string): Promise<JSON> {
+  return new Promise((resolve, reject) => {
+    fetch(`https://api.opencagedata.com/geosearch?q=${text}`, {
+      headers: {
+        accept: "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "opencage-geosearch-key": `${envs.openCageApiKey}`,
+        Referer: "https://opencagedata.com/",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+      },
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
         resolve(data);
       })
       .catch((error) => {
@@ -73,6 +96,24 @@ export function getUnsplashPhotos({ query }: { query: string }): Promise<JSON> {
         Math.random() * 10 + 1
       )}&query=${query}&client_id=${envs.unsplashApiAccessKey}&per_page=4`
     )
+      .then((data) => data.json())
+      .then((data) => resolve(data))
+      .catch((error) => reject(error));
+  });
+}
+
+/**
+ * Capitalizes the first letter of a string.
+ * @param str - The string to capitalize.
+ * @returns The capitalized string.
+ */
+export function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function getXTData(endpoint: string): Promise<JSON> {
+  return new Promise((resolve, reject) => {
+    fetch(`${apiUrl}/${endpoint}`)
       .then((data) => data.json())
       .then((data) => resolve(data))
       .catch((error) => reject(error));
@@ -97,6 +138,24 @@ export const destinationIcon: L.Icon = L.icon({
   iconUrl: "/markers/destination-marker.svg",
   iconSize: [38, 38],
   iconAnchor: [16, 32],
+});
+
+export const truckLargeIcon: L.Icon = L.icon({
+  iconUrl: "/truck-markers/truck-large.png",
+  iconSize: [100, 50],
+  iconAnchor: [16, 32],
+});
+
+export const truckMediumIcon: L.Icon = L.icon({
+  iconUrl: "/truck-markers/truck-medium-no-bg.png",
+  iconSize: [90, 50],
+  iconAnchor: [16, 32],
+});
+
+export const truckSmallIcon: L.Icon = L.icon({
+  iconUrl: "/truck-markers/truck-small.png",
+  iconSize: [100, 50],
+  iconAnchor: [50, 25],
 });
 
 /**

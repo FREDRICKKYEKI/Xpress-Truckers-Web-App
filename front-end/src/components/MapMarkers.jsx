@@ -1,10 +1,19 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
-import { destinationIcon, getLocationData, originIcon } from "../utils/utils";
+import {
+  defaultAvatarUrl,
+  destinationIcon,
+  getLocationData,
+  originIcon,
+  truckLargeIcon,
+  truckMediumIcon,
+  truckSmallIcon,
+} from "../utils/utils";
 import { useDispatch } from "react-redux";
 import { setCurrentLocation, setDestination } from "../StateManagement/store";
 import { LocationDataResponse } from "../utils/DataModels";
 import { toast } from "react-toastify";
+import { DriverPopUp } from "../components/DriverPopUp";
 
 export const MapMarkers = ({
   center,
@@ -18,6 +27,18 @@ export const MapMarkers = ({
   const dispatch = useDispatch();
   const originMarkerRef = useRef();
   const destinationMarkerRef = useRef();
+  const dummyTruckLGPosition = [
+    Number(center[0]) + 0.001,
+    Number(center[1]) + 0.01,
+  ];
+  const dummyTruckMDPosition = [
+    Number(center[0]) + 0.051,
+    Number(center[1]) - 0.039,
+  ];
+  const dummyTruckSMPosition = [
+    Number(center[0]) - 0.08,
+    Number(center[1]) + 0.0099,
+  ];
 
   function updateLocation(locationType, latLng) {
     toast.loading("Updating location...", {
@@ -58,6 +79,18 @@ export const MapMarkers = ({
 
   return (
     <>
+      <Marker icon={truckLargeIcon} position={dummyTruckLGPosition}></Marker>
+      <Marker icon={truckMediumIcon} position={dummyTruckMDPosition}></Marker>
+      <Marker
+        riseOnHover={true}
+        icon={truckSmallIcon}
+        position={dummyTruckSMPosition}
+      >
+        <Popup>
+          <DriverPopUp />
+        </Popup>
+      </Marker>
+
       <Marker
         icon={originIcon}
         draggable={true}

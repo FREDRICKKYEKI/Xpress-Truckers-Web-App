@@ -10,7 +10,12 @@ import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
-import { COMPANY_NAME, promiseStates } from "./utils/utils";
+import {
+  COMPANY_NAME,
+  capitalize,
+  getXTData,
+  promiseStates,
+} from "./utils/utils";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
@@ -22,15 +27,20 @@ function App() {
 
   useEffect(() => {
     document.title = `${COMPANY_NAME} | ${
-      location.pathname.slice(1).toUpperCase() || "Home"
+      capitalize(location.pathname.split("/")[1]) || "Home"
     }`;
-  }, [document.location]);
+  }, [location]);
 
   useEffect(() => {
-    document.onLocation;
     try {
       document.querySelector("#input-origin").value = currentLocation.formatted;
     } catch (e) {}
+
+    getXTData("drivers")
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((e) => console.log(e));
   }, []);
 
   useEffect(() => {

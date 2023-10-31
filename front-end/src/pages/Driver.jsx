@@ -41,7 +41,7 @@ const Driver = () => {
             className="profile__icon card-img"
           />
         </div>
-        <div className="profile__card__body text-center card-body">
+        <div className="profile__card__body card-body">
           <h5 className="card-title">John Doe</h5>
           <p className="card-text"></p>
           <Rating text={true} value={rating} />

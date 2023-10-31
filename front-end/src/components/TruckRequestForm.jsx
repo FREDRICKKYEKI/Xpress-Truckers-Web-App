@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { envs } from "../utils/loadEnv";
 import {
   setDestination,
@@ -8,9 +8,17 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { DriverRequest } from "../utils/DataModels";
 import { toast } from "react-toastify";
-import { VEHICLE_TYPES, locationTypes, promiseStates } from "../utils/utils";
+import {
+  VEHICLE_TYPES,
+  geoSearch,
+  locationTypes,
+  promiseStates,
+} from "../utils/utils";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 export const TruckRequestForm = ({ originRef, destinationRef }) => {
+  const { _, width } = useWindowSize();
+  const [openMenu, setOpenMenu] = useState(true);
   const dispatch = useDispatch();
   const [locations, setLocations] = useState({
     originsResponses: null,
@@ -25,9 +33,8 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
    * @param {Object} data - The location data to be stored.
    * @param {string} origin - The origin of the location data.
    */
-  function storeLocation(locationType, data, origin) {
+  function storeLocation(locationType, data) {
     if (!data) return;
-    console.log("storing location function...", origin);
     if (locationType === locationTypes.ORIGIN) {
       dispatch(setCurrentLocation(data));
     } else {
@@ -39,17 +46,7 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
     const text = e.target.value;
     if (text.length < 3) return;
 
-    fetch(`https://api.opencagedata.com/geosearch?q=${text}`, {
-      headers: {
-        accept: "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "opencage-geosearch-key": `${envs.openCageApiKey}`,
-        Referer: "https://opencagedata.com/",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-      },
-      method: "GET",
-    })
-      .then((response) => response.json())
+    geoSearch(text)
       .then((data) => {
         dispatch(setPromiseState(promiseStates.FULFILLED, "location found"));
         if (locationType === locationTypes.ORIGIN) {
@@ -93,10 +90,37 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
       });
     }
   }
-
+  useEffect(() => {
+    if (width > 499) {
+      try {
+        document.getElementById("truck-request-form").style.height =
+          "max-content";
+      } catch (e) {}
+    }
+  }, [width]);
   return (
     <>
-      <form onSubmit={requestTruck} className="truck-request-form">
+      <form
+        style={{
+          overflow: "hidden",
+          height: `${openMenu ? "450px" : "250px"}`,
+        }}
+        onSubmit={requestTruck}
+        id="truck-request-form"
+        className="truck-request-form"
+      >
+        {width < 499 && (
+          <div
+            onClick={() => setOpenMenu(!openMenu)}
+            className="float-end px-1"
+          >
+            <i
+              className={`fas fa-lg fa-angle-${
+                openMenu ? "down" : "up"
+              } color-dark`}
+            ></i>
+          </div>
+        )}
         <h5 className="text-center">Search For Truck</h5>
 
         <div className="form-group mb-1">
@@ -117,8 +141,7 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
                 locationTypes.ORIGIN,
                 locations.originsResponses?.length == 1
                   ? locations.originsResponses[0]
-                  : null,
-                "from origin"
+                  : null
               );
             }}
             type="text"
@@ -151,8 +174,7 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
                 locationTypes.DESTINATION,
                 locations.destinationsResponses?.length == 1
                   ? locations.destinationsResponses[0]
-                  : null,
-                "from origin"
+                  : null
               );
             }}
             type="text"
@@ -239,7 +261,7 @@ export const TruckRequestForm = ({ originRef, destinationRef }) => {
           </label>
         </div>
         <button className="btn btn-primary w-100" type="submit">
-          Request Truck
+          Search For Trucks
         </button>
       </form>
     </>
