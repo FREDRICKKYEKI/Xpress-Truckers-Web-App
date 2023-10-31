@@ -3,12 +3,8 @@ import { MapBG } from "../components/MapBG";
 import { setCurrentLocation, setPromiseState } from "../StateManagement/store";
 import { useDispatch } from "react-redux";
 import { TruckRequestForm } from "../components/TruckRequestForm";
-import {
-  getCurrentLocation,
-  getLocationData,
-  locationTypes,
-  promiseStates,
-} from "../utils/utils";
+import { locationTypes, promiseStates } from "../utils/constants";
+import { getCurrentLocation, getLocationData } from "../utils/utils";
 import { LocationDataResponse } from "../utils/DataModels";
 import { toast } from "react-toastify";
 

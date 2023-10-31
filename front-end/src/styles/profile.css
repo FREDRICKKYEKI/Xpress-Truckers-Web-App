@@ -136,6 +136,7 @@
   .driver-details__card,
   .vehicle__card {
     all: unset;
+    text-align: center;
   }
   .profile__icon {
     display: flex;

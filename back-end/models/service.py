@@ -11,4 +11,5 @@ class Service(BaseModel, Base):
     """representation of a service"""
     __tablename__ = 'services'
     name = Column(String(128), nullable=False)
+    type = Column(Enum('A', 'B', 'C', 'D'), nullable=False)
     description = Column(String(128), nullable=False)

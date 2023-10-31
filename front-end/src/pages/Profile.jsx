@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/Profile.css";
 import { Rating } from "../components/Rating";
-import { defaultAvatarUrl } from "../utils/utils";
+import { defaultAvatarUrl } from "../utils/constants";
 
 const Profile = () => {
   const rating = 3.9;

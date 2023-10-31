@@ -10,12 +10,8 @@ import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
-import {
-  COMPANY_NAME,
-  capitalize,
-  getXTData,
-  promiseStates,
-} from "./utils/utils";
+import { COMPANY_NAME, promiseStates } from "./utils/constants";
+import { capitalize, getXTData } from "./utils/utils";
 import { NotFound } from "./pages/NotFound";
 
 function App() {
@@ -35,12 +31,6 @@ function App() {
     try {
       document.querySelector("#input-origin").value = currentLocation.formatted;
     } catch (e) {}
-
-    getXTData("drivers")
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((e) => console.log(e));
   }, []);
 
   useEffect(() => {
@@ -66,9 +56,11 @@ function App() {
       let message = "";
       if (promiseState.message?.includes("Network")) {
         message = "You are offline!";
+      } else if (!promiseState.message) {
+        message = "Something went wrong!";
       }
       message = promiseState.message;
-      toast(message, {
+      toast.error(message, {
         position: toast.POSITION.TOP_CENTER,
         closeButton: true,
         delay: 200,

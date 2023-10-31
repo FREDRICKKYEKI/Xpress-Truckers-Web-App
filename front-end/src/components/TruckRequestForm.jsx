@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { envs } from "../utils/loadEnv";
 import {
   setDestination,
   setCurrentLocation,
   setPromiseState,
 } from "../StateManagement/store";
+import {
+  VEHICLE_TYPES,
+  locationTypes,
+  promiseStates,
+} from "../utils/constants";
+import { geoSearch } from "../utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { DriverRequest } from "../utils/DataModels";
 import { toast } from "react-toastify";
-import {
-  VEHICLE_TYPES,
-  geoSearch,
-  locationTypes,
-  promiseStates,
-} from "../utils/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
 
 export const TruckRequestForm = ({ originRef, destinationRef }) => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Rating } from "./Rating";
-import { SERVICES, VEHICLE_TYPES, defaultAvatarUrl } from "../utils/utils";
+import { defaultAvatarUrl } from "../utils/constants";
 
 export const DriverPopUp = () => {
   return (
@@ -20,9 +20,7 @@ export const DriverPopUp = () => {
           </b>
         </p>
       </div>
-      <button className="btn btn-secondary bg-primary mt-2 w-100">
-        More info
-      </button>
+      <a className="btn btn-secondary color-light mt-2 w-100">More info</a>
     </div>
   );
 };

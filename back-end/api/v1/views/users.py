@@ -3,9 +3,11 @@
 Defines API routes for users and clients
 """
 from api.v1.views import app_views
-from flask import abort, jsonify, request
+from flask import abort, jsonify, request, make_response
 from models import storage
 from models.user import User
+from models.vehicle import Vehicle
+from models.driver_service import DriverService
 
 
 @app_views.route('/users/', methods=['GET'], strict_slashes=False,
@@ -58,19 +60,78 @@ def insert_user():
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, description="Not a JSON")
-    if not props.get("email"):
-        abort(400, description="Missing Email")
-    if not props.get("phone"):
-        abort(400, description="Missing Phone")
-    if not props.get("role"):
-        abort(400, description="Missing Role")
-    if not props.get("password"):
-        abort(400, description="Missing Password")
+        return make_response(jsonify({"error":"Not a JSON"}), 400);
 
-    new_user = User(**props)
-    new_user.save()
-    return jsonify(new_user.to_dict()), 201
+    if not props.get("email"):
+        return make_response(jsonify({"error":"Missing Email"}), 400);
+
+    if not props.get("password"):
+        return make_response(jsonify({"error":"Missing Password"}), 400);
+
+    if not props.get("phonenumber"):
+        return make_response(jsonify({"error":"Missing Phonenumber"}), 400);
+
+    if not props.get("role"):
+        return make_response(jsonify({"error":"Missing Role"}), 400);
+
+
+    if props.get("email") in [user.email for user in all_users.values()]:
+        return make_response(jsonify({"error":"Email already exists"}), 400);
+    if props.get("phonenumber") in [user.phonenumber for user in all_users.values()]:
+        return make_response(jsonify({"error":"Phone number already exists"}), 400);
+    if props.get("role") not in ["user", "driver"]:
+        return make_response(jsonify({"error":"Role must be user or driver"}), 400);
+
+    if props.get("role") == "driver":
+        if not props.get("vehicleModel"):
+            return make_response(jsonify({"error":"Missing vehicle model"}), 400);
+        if not props.get("vehicleRegistration"):
+            return make_response(jsonify({"error":"Missing vehicle registration"}), 400);
+        if not props.get("vehicleType"):
+            return make_response(jsonify({"error":"Missing vehicle type"}), 400);
+        if not props.get("latitude") or not props.get("longitude"):
+            return make_response(jsonify({"error":"Invalid location data"}), 400);
+        if not props.get("services"):
+            return make_response(jsonify({"error":"Missing services"}), 400);
+
+        new_user = User(first_name=props.get("first_name"),
+                        last_name=props.get("last_name"),
+                        email=props.get("email"),
+                        password=props.get("password"),
+                        phonenumber=props.get("phonenumber"),
+                        role=props.get("role"));
+        new_user.save()
+
+        new_vehicle = Vehicle(make=props.get("vehicleModel"),
+                              driver_id=new_user.id,
+                              vehicle_registration=props.get("vehicleRegistration"),
+                              vehicle_type=props.get("vehicleType"),
+                              latitude=props.get("latitude"),
+                              longitude=props.get("longitude"),
+                              );
+        new_vehicle.save()
+
+        for service in props.get("services"):
+            new_driver_service = DriverService(service_id=service,
+                                        driver_id=new_user.id);
+            new_driver_service.save()
+
+        new_driver_service.save()
+        response = jsonify(new_user.to_dict())
+        response.status_code = 201
+        response.headers.add('Access-Control-Allow-Origin', '*')
+
+        return response
+    else:
+        new_user = User(first_name=props.get("first_name"),
+                        last_name=props.get("last_name"),
+                        email=props.get("email"),
+                        password=props.get("password"),
+                        phonenumber=props.get("phonenumber"),
+                        role=props.get("role"));
+
+        new_user.save()
+        return jsonify(new_user.to_dict()), 201
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)

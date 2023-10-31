@@ -1,4 +1,5 @@
-import { logInTypes, userTypes } from "./utils";
+import { logInTypes, userTypes } from "./constants";
+import { driver, user } from "./types";
 
 export class DriverRequest {
   origin: {};
@@ -40,14 +41,16 @@ export class DriverRequest {
 }
 
 export class LocationDataResponse {
-  __keys = ["bounds", "formatted", "geometry"];
+  __keys = ["name", "formatted", "geometry"];
   bounds: {};
+  name: string;
   formatted: string;
-  geometry: {};
-  constructor({ bounds = {}, formatted = "", geometry = {} }) {
-    this.bounds = bounds;
-    this.formatted = formatted;
-    this.geometry = geometry;
+  geometry: { lat: number; lng: number };
+  constructor(data: locationData) {
+    this.name = data?.name;
+    this.bounds = data?.bounds;
+    this.formatted = data?.formatted;
+    this.geometry = data?.geometry;
   }
 
   isValid() {
@@ -60,8 +63,9 @@ export class LocationDataResponse {
     }
     return true;
   }
-  toObject() {
+  toObject(): locationData {
     return {
+      name: this.name,
       bounds: this.bounds,
       formatted: this.formatted,
       geometry: this.geometry,
@@ -72,6 +76,7 @@ export class LocationDataResponse {
     try {
       for (const key of Object.keys(this.toObject())) {
         if (!this.__keys.includes(key) || !this[key]) {
+          console.log(this);
           return false;
         }
         return true;
@@ -85,8 +90,9 @@ export class LocationDataResponse {
 
 interface locationData {
   bounds: {};
+  name: string;
   formatted: string;
-  geometry: {};
+  geometry: { lat: number; lng: number };
 }
 
 export class UserRegistrationData {
@@ -208,25 +214,26 @@ export class UserRegistrationData {
   toObject() {
     if (this.usertype === userTypes.REGULAR) {
       return {
-        firstname: this.firstname,
-        lastname: this.lastname,
+        first_name: this.firstname,
+        last_name: this.lastname,
         email: this.email,
         password: this.password,
         phonenumber: this.phonenumber,
-        usertype: this.usertype,
+        role: this.usertype,
       };
     }
     return {
-      firstname: this.firstname,
-      lastname: this.lastname,
+      first_name: this.firstname,
+      last_name: this.lastname,
       email: this.email,
       password: this.password,
       phonenumber: this.phonenumber,
-      usertype: this.usertype,
+      role: this.usertype,
       vehicleRegistration: this.vehicleRegistration,
       vehicleType: this.vehicleType,
       vehicleModel: this.vehicleModel,
-      placeOperation: this.placeOperation,
+      latitude: this.placeOperation.geometry.lat,
+      longitude: this.placeOperation.geometry.lng,
       services: this.services,
     };
   }
