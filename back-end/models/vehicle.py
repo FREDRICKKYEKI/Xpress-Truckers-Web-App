@@ -14,6 +14,7 @@ class Vehicle(BaseModel, Base):
     make = Column(String(128), nullable=False)
     vehicle_type = Column(Enum('A', 'B', 'C'), nullable=False)
     vehicle_registration = Column(String(128), nullable=False)
-    location = Column(String(128), nullable=False) #location of operation
+    longitude = Column(String(128), nullable=False)
+    latitude = Column(String(128), nullable=False)
     trips = relationship("Trip", backref="vehicle",
                          cascade="all, delete-orphan")

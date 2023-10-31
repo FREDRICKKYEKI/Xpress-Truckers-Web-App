@@ -1,5 +1,7 @@
-import { UNSPLASH_ROOT, apiUrl } from "./constants";
+import { UNSPLASH_ROOT, apiEndpoints, apiUrl } from "./constants";
 import { envs } from "./loadEnv";
+import axios from "axios";
+import { driver, user } from "./types";
 
 /**
  * Returns a promise that resolves to the current location of the user.
@@ -34,7 +36,7 @@ export function getCurrentLocation(): Promise<any> {
  * @param {Object} location - The location object containing latitude and longitude.
  * @param {number} location.lat - The latitude of the location.
  * @param {number} location.lng - The longitude of the location.
- * @returns {Promise<Object>} A promise that resolves to the location data for the given latitude and longitude.
+ * @returns {Promise<JSON>} A promise that resolves to the location data for the given latitude and longitude.
  * @throws {Error} If there is an error while fetching the location data.
  */
 export function getLocationData({
@@ -43,7 +45,7 @@ export function getLocationData({
 }: {
   lat: number;
   lng: number;
-}): Promise<object> {
+}): Promise<JSON> {
   return new Promise((resolve, reject) => {
     fetch(
       `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&key=${envs.geoCodeApi}&language=en&pretty=1`
@@ -58,6 +60,11 @@ export function getLocationData({
   });
 }
 
+/**
+ * Performs a geosearch using the OpenCageData API.
+ * @param text - The text to search for.
+ * @returns A Promise that resolves to a JSON object containing the search results.
+ */
 export function geoSearch(text: string): Promise<JSON> {
   return new Promise((resolve, reject) => {
     fetch(`https://api.opencagedata.com/geosearch?q=${text}`, {
@@ -119,5 +126,19 @@ export function getXTData(endpoint: string): Promise<JSON> {
       .then((data) => data.json())
       .then((data) => resolve(data))
       .catch((error) => reject(error));
+  });
+}
+
+/**
+ * Registers a user or driver by sending a POST request to the server.
+ * @param user The user or driver object to be registered.
+ * @returns A Promise that resolves with the JSON response from the server.
+ */
+export function registerUser(user: user | driver): Promise<JSON> {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${apiUrl}/${apiEndpoints.userSignUp}`, user)
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
   });
 }

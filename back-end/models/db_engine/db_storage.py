@@ -111,3 +111,9 @@ class DBStorage:
         closes the current session
         """
         self.__session.remove()
+
+    def session(self):
+        """
+        returns the current session
+        """
+        return self.__session

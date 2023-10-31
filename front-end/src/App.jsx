@@ -31,12 +31,6 @@ function App() {
     try {
       document.querySelector("#input-origin").value = currentLocation.formatted;
     } catch (e) {}
-
-    getXTData("drivers")
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((e) => console.log(e));
   }, []);
 
   useEffect(() => {
@@ -62,9 +56,11 @@ function App() {
       let message = "";
       if (promiseState.message?.includes("Network")) {
         message = "You are offline!";
+      } else if (!promiseState.message) {
+        message = "Something went wrong!";
       }
       message = promiseState.message;
-      toast(message, {
+      toast.error(message, {
         position: toast.POSITION.TOP_CENTER,
         closeButton: true,
         delay: 200,

@@ -9,14 +9,16 @@ import {
   userTypes,
   promiseStates,
 } from "../utils/constants";
-import { geoSearch } from "../utils/utils";
-import { useDispatch } from "react-redux";
+import { geoSearch, registerUser } from "../utils/utils";
+import { useDispatch, useSelector } from "react-redux";
 import { setPromiseState } from "../StateManagement/store";
 import { toast } from "react-toastify";
 import { UserRegistrationData } from "../utils/DataModels";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const dispatch = useDispatch();
+  const promiseState = useSelector((state) => state.promiseState);
   const [showDriverControls, setShowDriverControls] = useState(false);
   const [locations, setLocations] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -29,6 +31,7 @@ const SignUp = () => {
   const carTypeRef = useRef();
   const carModelRef = useRef();
   const locationRef = useRef();
+  const navigate = useNavigate();
 
   function handleDriverControls(e) {
     if (e.target.id === userTypes.DRIVER) {
@@ -45,6 +48,7 @@ const SignUp = () => {
     geoSearch(text)
       .then((data) => {
         dispatch(setPromiseState(promiseStates.FULFILLED, "Location found!"));
+        console.log(data);
         setLocations(data.results);
       })
       .catch((error) => {
@@ -88,23 +92,35 @@ const SignUp = () => {
       placeOperation: placeOperation,
       services: servicesArray,
     });
-
     try {
       if (user.isValid()) {
         toast.dismiss();
-        toast.success("Validated!", {
+        toast.loading("Signing Up...", {
           position: toast.POSITION.TOP_CENTER,
           closeButton: true,
-          autoClose: 800,
         });
-        console.log(user.toRequest());
+        registerUser(user.toObject())
+          .then((data) => {
+            console.log(data);
+            toast.dismiss();
+            toast.success("Registration Successful!", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 500,
+            });
+
+            navigate("/login");
+          })
+          .catch((err) => {
+            toast.error(err?.response?.data?.error, {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 500,
+            });
+          });
       }
     } catch (e) {
-      toast.dismiss();
       toast.error(e.message, {
         position: toast.POSITION.TOP_CENTER,
-        closeButton: true,
-        autoClose: 800,
+        autoClose: 500,
       });
     }
   }
@@ -330,7 +346,11 @@ const SignUp = () => {
               </div>
             </div>
           )}
-          <button className="btn btn-primary" type="submit">
+          <button
+            disabled={promiseState == promiseStates.PENDING}
+            className="btn btn-primary"
+            type="submit"
+          >
             Register
           </button>
           <div className="d-flex justify-content-between mt-3">

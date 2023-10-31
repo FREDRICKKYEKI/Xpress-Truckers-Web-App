@@ -71,3 +71,7 @@ class BaseModel:
     def delete(self):
         """delete the current instance from the storage"""
         models.storage.delete(self)
+
+    def filter_by(self, **kwargs):
+        """filter by the given kwargs"""
+        return models.storage.filter_by(self, **kwargs)

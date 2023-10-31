@@ -5,7 +5,7 @@ export const defaultAvatarUrl =
 
 export const UNSPLASH_ROOT = "https://api.unsplash.com";
 
-export const apiUrl = "http://127.0.0.1:5000/api/v1/";
+export const apiUrl = "http://127.0.0.1:5000/api/v1";
 
 /**
  * The types of location.
@@ -48,19 +48,20 @@ export enum logInTypes {
  */
 export const SERVICES = [
   {
-    id: 0,
+    id: " 480ed48c-c6cf-47b6-9244-e75524f90548",
     name: "Moving out",
   },
   {
-    id: 1,
+    id: "a0c7e510-7963-44f2-88a2-b90d4e4c79f7",
+
     name: "Transport Construction Materials",
   },
   {
-    id: 2,
+    id: "38569936-0d84-4ae0-8519-22ee85f7108b",
     name: "Transport Farm Produce",
   },
   {
-    id: 3,
+    id: "c856c038-e071-43b5-9c49-25b7d742e7c4",
     name: "Long Distance Transportation",
   },
 ];
@@ -73,3 +74,7 @@ export const VEHICLE_TYPES = [
   { id: 1, type: "B", name: "Lorry" },
   { id: 2, type: "C", name: "Large Size Truck" },
 ];
+
+export const apiEndpoints = {
+  userSignUp: "users/",
+};

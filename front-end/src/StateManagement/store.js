@@ -37,16 +37,6 @@ export const setPromiseState = (promiseState, message = null) => {
 };
 
 const initialLocationData = {
-  bounds: {
-    northeast: {
-      lat: "-1.16067",
-      lng: "37.10487",
-    },
-    southwest: {
-      lat: "-1.44488",
-      lng: "36.66470",
-    },
-  },
   formatted: "Nairobi, Kenya",
   geometry: {
     lat: "-1.292066",
