@@ -20,3 +20,13 @@ export type user = {
   phone: string;
   usertype: userTypes;
 };
+
+export type userLoginEmail = {
+  email: string;
+  password: string;
+};
+
+export type userLoginPhone = {
+  phone: string;
+  password: string;
+};

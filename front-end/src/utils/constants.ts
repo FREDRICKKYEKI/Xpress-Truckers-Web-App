@@ -77,4 +77,5 @@ export const VEHICLE_TYPES = [
 
 export const apiEndpoints = {
   userSignUp: "users/",
+  userLogin: "login/",
 };

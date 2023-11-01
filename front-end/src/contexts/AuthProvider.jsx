@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-
+import { useLocalStorage } from "@uidotdev/usehooks";
 const AuthContext = React.createContext();
 
 export default function useAuth() {
@@ -8,16 +8,13 @@ export default function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    localStorage.getItem("token")
-      ? setCurrentUser(localStorage.getItem("token"))
-      : setCurrentUser(null);
-  }, []);
+  const [token, setToken] = useLocalStorage("token", null);
 
   const value = {
     currentUser,
+    setCurrentUser,
+    setToken,
+    token,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

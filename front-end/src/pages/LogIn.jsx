@@ -4,12 +4,17 @@ import "../styles/authPagesStyles.css";
 import { UserLogInData } from "../utils/DataModels";
 import { toast } from "react-toastify";
 import { logInTypes } from "../utils/constants";
+import { signInUser } from "../utils/utils";
+import useAuth from "../contexts/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [loginType, setLoginType] = useState(logInTypes.EMAIL);
   const emailRef = useRef();
   const passwordRef = useRef();
+  const { setToken, setCurrentUser } = useAuth();
 
   function handleEmailChange(e) {
     if (e.target?.value.includes("@")) {
@@ -19,8 +24,9 @@ const LogIn = () => {
     }
   }
 
-  function handleSignUp(e) {
+  function handleLogin(e) {
     e.preventDefault();
+
     const email = document.querySelector("#email-login").value;
     const password = passwordRef.current.value;
     const user = new UserLogInData({
@@ -30,11 +36,33 @@ const LogIn = () => {
     });
     try {
       if (user.isValid()) {
-        console.log(user.toRequest());
-        toast.success("Sign up successful", {
+        toast.dismiss();
+        toast.loading("Signing in...", {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 400,
+          closeButton: true,
         });
+
+        signInUser(user.toObject())
+          .then((res) => {
+            toast.dismiss();
+            toast.success("Sign up successful", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 400,
+            });
+            console.log(res);
+            setToken(res.token);
+            setCurrentUser(res.user);
+            navigate("/profile");
+          })
+          .catch((err) => {
+            toast.dismiss();
+
+            toast.error(err?.response?.data?.error, {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 400,
+            });
+          });
       }
     } catch (e) {
       toast.error(e.message, {
@@ -61,7 +89,7 @@ const LogIn = () => {
         <LogoIcon size="sm" />
         <h2 className="m-1 text-center">Welcome back</h2>
         <h3 className="text-center">Sign In</h3>
-        <form onSubmit={handleSignUp} className="" id="registration-form">
+        <form onSubmit={handleLogin} className="" id="registration-form">
           {/* email */}
           <div className="form-group mb-3">
             <label htmlFor="email-login">Email address</label>

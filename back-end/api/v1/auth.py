@@ -39,35 +39,45 @@ def token_required(f):
 
     return decorated
 
-@app_views.route('/login')
+@app_views.route('/login', strict_slashes=False, methods=['POST'])
 def login():
-    auth = request.authorization
+    # auth = request.authorization
 
-    if not auth or not auth.username or not auth.password:
-        return (make_response(
-            'Could not verify', 401,
-            {'WWW-Authenticate' : 'Basic realm="Login required!"'}))
+    # if not auth or not auth.username or not auth.password:
+    #     return (make_response(
+    #         'Could not verify', 401,
+    #         {'WWW-Authenticate' : 'Basic realm="Login required!"'}))
 
+    body = request.get_json()
     all_users = storage.all(User).values()
     user = None
+
     for item in all_users:
-        if item.email == auth.username:
+        if item.email == body.get("email"):
             user = item
+            break
+
     if not user:
-        return (make_response(
-            'Could not verify', 401,
+        return (make_response(jsonify({"error": "Invalid Sign-in Details"}), 401,
             {'WWW-Authenticate' : 'Basic realm="Login required!"'}))
 
-    # password = md5(auth.password.encode()).hexdigest()
-    print(auth.password, user.password)
-    if user.password == auth.password:
+    print(user.password)
+    if user.check_password(body.get("password")):
         token = jwt.encode(
             {'id' : user.id,
              'exp' : datetime.datetime.utcnow() + datetime.timedelta(hours=24)
-             }, SECRET_KEY, algorithms=['HS256'])
-        print(token)
+             }, SECRET_KEY, algorithm='HS256')
 
-        return jsonify({'token' : token})
+        response = jsonify({'token' : token,
+                            "user": {
+                                     "id": user.id,
+                                     "first_name": user.first_name,
+                                     "last_name": user.last_name,
+                                     "email": user.email,
+                                     "role": user.role,
+                                     }})
+
+        return  response, 200
 
     return (make_response(
         'Could not verify', 401,

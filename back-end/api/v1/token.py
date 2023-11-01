@@ -11,7 +11,7 @@ import jwt
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
-cors = CORS(app, resources={r"/api/v1/*": {"Origins": "0.0.0.0"}})
+cors = CORS(app, resources={r"/api/v1/*": {"Origins": "http://localhost:5173"}})
 app.config['SECRET_KEY'] = 'thisissecret'
 
 def token_required(f):
