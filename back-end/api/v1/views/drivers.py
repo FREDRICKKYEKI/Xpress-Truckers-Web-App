@@ -2,6 +2,7 @@
 """
 Defines requests for the drivers route
 """
+from api.v1.auth import token_required
 from api.v1.views import app_views
 from flask import jsonify
 from models import storage
@@ -12,7 +13,8 @@ from models.user import User
                  defaults={'driver_id': None})
 @app_views.route('/drivers/<driver_id>/', methods=['GET'],
                  strict_slashes=False)
-def get_drivers(driver_id):
+@token_required
+def get_drivers(current_user, driver_id):
     """
     retrievs driver data only
     """

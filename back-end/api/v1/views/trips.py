@@ -2,6 +2,7 @@
 """
 Defines the requests for trip requests
 """
+from api.v1.auth import token_required
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models import storage
@@ -12,7 +13,8 @@ from models.trip import Trip
                  defaults={'trip_id': None})
 @app_views.route('/trips/<trip_id>/', methods=['GET'],
                  strict_slashes=False)
-def get_trip(trip_id):
+@token_required
+def get_trip(current_user, trip_id):
     """
     retrievs requested data for the trip
     """
@@ -31,7 +33,8 @@ def get_trip(trip_id):
 
 
 @app_views.route('/trips/', methods=['POST'], strict_slashes=False)
-def create_trip():
+@token_required
+def create_trip(current_user):
     """
     creates a new trip
     """
@@ -61,7 +64,8 @@ def create_trip():
 
 
 @app_views.route('/trips/<trip_id>', methods=['PUT'], strict_slashes=False)
-def update_trip(trip_id):
+@token_required
+def update_trip(current_user, trip_id):
     """
     updates details of the trip
     """
@@ -81,7 +85,8 @@ def update_trip(trip_id):
 
 
 @app_views.route('/trips/<trip_id>', methods=['DELETE'], strict_slashes=False)
-def delete_trip(trip_id):
+@token_required
+def delete_trip(current_user, trip_id):
     """
     deletes a trip from the database
     """
