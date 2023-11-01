@@ -2,6 +2,7 @@
 """
 Defines API routes for users and clients
 """
+from api.v1.auth import token_required
 from api.v1.views import app_views
 from flask import abort, jsonify, request, make_response
 from models import storage
@@ -9,12 +10,12 @@ from models.user import User
 from models.vehicle import Vehicle
 from models.driver_service import DriverService
 
-
 @app_views.route('/users/', methods=['GET'], strict_slashes=False,
                  defaults={'user_id': None})
 @app_views.route('/users/<user_id>/', methods=['GET'],
                  strict_slashes=False)
-def get_users(user_id):
+@token_required
+def get_users(current_user, user_id):
     """fetches all users (Drivers and clients)"""
     if not user_id:
         out = [user.to_dict() for user in storage.all(User).values()]
@@ -31,7 +32,8 @@ def get_users(user_id):
                  defaults={'client_id': None})
 @app_views.route('/clients/<client_id>/', methods=['GET'],
                  strict_slashes=False)
-def get_clients(client_id):
+@token_required
+def get_clients(current_user, client_id):
     """
     retrieves only client data
     """
@@ -135,7 +137,8 @@ def insert_user():
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
-def update_user(user_id):
+@token_required
+def update_user(current_user, user_id):
     """
     update user details
     """
@@ -155,7 +158,8 @@ def update_user(user_id):
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
-def delete_user(user_id):
+@token_required
+def delete_user(current_user, user_id):
     """
     deletes a user from the database
     """

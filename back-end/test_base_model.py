@@ -8,9 +8,10 @@ from models.vehicle import Vehicle
 
 from models import storage
 
-services = storage.all(Service).values()
-for service in services:
-    print(service)
+#user = User.session.query.filter_by(email='lennoxnams@example.com').first()
+users = storage.all(User).values()
+for user in users:
+    print(user)
 
 """
 storage.save()

@@ -2,6 +2,7 @@
 """
 Defines the routes for vehicles route
 """
+from api.v1.auth import token_required
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models import storage
@@ -12,7 +13,8 @@ from models.vehicle import Vehicle
                  defaults={'vehicle_id': None})
 @app_views.route('/vehicles/<vehicle_id>/', methods=['GET'],
                  strict_slashes=False)
-def get_vehicle(vehicle_id):
+@token_required
+def get_vehicle(current_user, vehicle_id):
     """
     retrievs vehicle data only
     """
@@ -31,7 +33,8 @@ def get_vehicle(vehicle_id):
 
 
 @app_views.route('/vehicles/', methods=['POST'], strict_slashes=False)
-def insert_vehicle():
+@token_required
+def insert_vehicle(current_user):
     """
     creates a new vehicle object
     """
@@ -58,7 +61,8 @@ def insert_vehicle():
 
 @app_views.route('/vehicles/<vehicle_id>', methods=['PUT'],
                  strict_slashes=False)
-def update_vehicle(vehicle_id):
+@token_required
+def update_vehicle(current_user, vehicle_id):
     """
     update a Vehicle object
     """
@@ -79,7 +83,8 @@ def update_vehicle(vehicle_id):
 
 @app_views.route('/vehicles/<vehicle_id>', methods=['DELETE'],
                  strict_slashes=False)
-def delete_vehicle(vehicle_id):
+@token_required
+def delete_vehicle(current_user, vehicle_id):
     """
     delete a vehicle object
     """

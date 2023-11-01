@@ -2,6 +2,7 @@
 """
 Defines the routes for vehicles route
 """
+from api.v1.auth import token_required
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models import storage
@@ -12,7 +13,8 @@ from models.service import Service
                  defaults={'service_id': None})
 @app_views.route('/services/<service_id>/', methods=['GET'],
                  strict_slashes=False)
-def get_service(service_id):
+@token_required
+def get_service(current_user, service_id):
     """
     retrievs vehicle data only
     """
@@ -30,12 +32,10 @@ def get_service(service_id):
 
         return (jsonify({"Error": "Service not found"}))
 
-
+"""
 @app_views.route('/services/', methods=['POST'], strict_slashes=False)
 def insert_service():
-    """
-    create a new service in the database
-    """
+
     all_services = storage.all(Service)
 
     props = request.get_json()
@@ -49,11 +49,12 @@ def insert_service():
     new_service = Service(**props)
     new_service.save()
     return jsonify(new_service.to_dict()), 201
-
+"""
 
 @app_views.route('/services/<service_id>', methods=['PUT'],
                  strict_slashes=False)
-def update_service(service_id):
+@token_required
+def update_service(current_user, service_id):
     """
     updates service details
     """
@@ -74,7 +75,8 @@ def update_service(service_id):
 
 @app_views.route('/services/<service_id>', methods=['DELETE'],
                  strict_slashes=False)
-def delete_service(service_id):
+@token_required
+def delete_service(current_user, service_id):
     """
     deletes a service from the database
     """
