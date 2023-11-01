@@ -14,7 +14,7 @@ from models.vehicle import Vehicle
 @app_views.route('/vehicles/<vehicle_id>/', methods=['GET'],
                  strict_slashes=False)
 @token_required
-def get_vehicle(current_vehicle, vehicle_id):
+def get_vehicle(current_user, vehicle_id):
     """
     retrievs vehicle data only
     """
@@ -33,7 +33,8 @@ def get_vehicle(current_vehicle, vehicle_id):
 
 
 @app_views.route('/vehicles/', methods=['POST'], strict_slashes=False)
-def insert_vehicle():
+@token_required
+def insert_vehicle(current_user):
     """
     creates a new vehicle object
     """
