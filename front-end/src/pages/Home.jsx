@@ -1,43 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MapBG } from "../components/MapBG";
-import { setCurrentLocation } from "../StateManagement/store";
+import { setCurrentLocation, setPromiseState } from "../StateManagement/store";
 import { useDispatch } from "react-redux";
 import { TruckRequestForm } from "../components/TruckRequestForm";
+import { locationTypes, promiseStates } from "../utils/constants";
+import { getCurrentLocation, getLocationData } from "../utils/utils";
+import { LocationDataResponse } from "../utils/DataModels";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  const originRef = useRef();
+  const destinationRef = useRef();
 
   useEffect(() => {
-    if (!navigator?.geolocation) {
-      console.log("Geolocation is not supported by your browser");
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLoading(false);
-        dispatch(
-          setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          })
-        );
-      },
-      (error) => {
-        setLoading(false);
-        if (error.code === 1) {
-          console.log("Geolocation permission denied by the user.");
-        } else {
-          console.error("Geolocation error:", error);
-        }
-      }
+    dispatch(
+      setPromiseState(promiseStates.PENDING, "Getting current location")
     );
+
+    getCurrentLocation()
+      .then((location) => {
+        getLocationData({
+          lat: location.coords.latitude,
+          lng: location.coords.longitude,
+        })
+          .then((data) => {
+            dispatch(
+              setPromiseState(
+                promiseStates.FULFILLED,
+                "Current Location Data found"
+              )
+            );
+
+            const location = new LocationDataResponse(data.results[0]);
+            try {
+              if (location.isValid()) {
+                dispatch(setCurrentLocation(location.toObject()));
+                document.querySelector("#input-origin").value =
+                  location.toObject().formatted;
+              }
+            } catch (e) {
+              toast.dismiss();
+              dispatch(setPromiseState(promiseStates.REJECTED, e.message));
+            }
+          })
+          .catch((error) => {
+            dispatch(setPromiseState(promiseStates.REJECTED));
+            console.error(error);
+          });
+      })
+      .catch((error) => {
+        dispatch(
+          setPromiseState(promiseStates.REJECTED, "Location not found!")
+        );
+        console.error(error);
+      });
   }, []);
 
   return (
     <>
-      <MapBG loading={loading} />
-      <TruckRequestForm />
+      <MapBG
+        originRef={originRef}
+        destinationRef={destinationRef}
+        locationTypes={locationTypes}
+      />
+      <TruckRequestForm
+        originRef={originRef}
+        destinationRef={destinationRef}
+        locationTypes={locationTypes}
+      />
     </>
   );
 };

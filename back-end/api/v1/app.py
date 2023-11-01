@@ -10,7 +10,7 @@ from os import getenv
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
-cors = CORS(app, resources={r"/api/v1/*": {"Origins": "0.0.0.0"}})
+CORS(app)
 
 
 @app.teardown_appcontext
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     host = getenv('XT_API_HOST') if getenv('XT_API_HOST') else '0.0.0.0'
     port = getenv('XT_API_PORT') if getenv('XT_API_PORT') else '5000'
 
-    app.run(host=host, port=port, threaded=True)
+    app.run(host=host, port=port, threaded=True, debug=True)

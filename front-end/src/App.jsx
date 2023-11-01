@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import React, { useEffect } from "react";
 import Home from "./pages/Home";
 import Signup from "./pages/SignUp";
@@ -12,25 +7,83 @@ import Driver from "./pages/Driver";
 import Profile from "./pages/Profile";
 import NavBar from "./components/NavBar";
 import { RequireAuth } from "./components/RequireAuth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import { COMPANY_NAME, promiseStates } from "./utils/constants";
+import { capitalize, getXTData } from "./utils/utils";
+import { NotFound } from "./pages/NotFound";
 
 function App() {
+  const promiseState = useSelector((state) => state.promiseState);
+  const currentLocation = useSelector((state) => state.currentLocation);
   const location = useLocation();
+  const noNavs = ["/login", "/signup"];
+  const v2Paths = ["profile", "driver"];
 
   useEffect(() => {
-    const path = location.pathname.slice(1);
-    document.title =
-      "Xpress Truckers" + " | " + path.charAt(0).toUpperCase() + path.slice(1);
-  }, [location.pathname]);
+    document.title = `${COMPANY_NAME} | ${
+      capitalize(location.pathname.split("/")[1]) || "Home"
+    }`;
+  }, [location]);
+
+  useEffect(() => {
+    try {
+      document.querySelector("#input-origin").value = currentLocation.formatted;
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (promiseState.state === promiseStates.PENDING) {
+      toast.dismiss();
+      toast.loading(promiseState.message || "Loading...", {
+        position: toast.POSITION.TOP_CENTER,
+        closeButton: true,
+      });
+    } else if (promiseState.state === promiseStates.FULFILLED) {
+      toast.dismiss();
+      if (!promiseState.message) {
+        toast.dismiss();
+        return;
+      }
+      toast.success(promiseState.message, {
+        position: toast.POSITION.TOP_CENTER,
+        closeButton: true,
+        autoClose: 10,
+      });
+    } else if (promiseState.state === promiseStates.REJECTED) {
+      toast.dismiss();
+      let message = "";
+      if (promiseState.message?.includes("Network")) {
+        message = "You are offline!";
+      } else if (!promiseState.message) {
+        message = "Something went wrong!";
+      }
+      message = promiseState.message;
+      toast.error(message, {
+        position: toast.POSITION.TOP_CENTER,
+        closeButton: true,
+        delay: 200,
+      });
+    }
+  }, [promiseState.state]);
 
   return (
     <>
-      <NavBar />
+      {!noNavs.includes(location.pathname) && (
+        <NavBar
+          variant={`${
+            v2Paths.includes(location.pathname.split("/")[1]) ? "v2" : "v1"
+          }`}
+        />
+      )}
       <main className="main">
         <Routes>
-          <Route path="/home" exact element={<Home />} />
+          <Route path="/" exact element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<LogIn />} />
-          <Route path="/driver" element={<Driver />} />
+          <Route path="/driver/:id" element={<Driver />} />
+          <Route path="*" element={<NotFound />} />
           <Route
             path="/profile"
             element={
@@ -40,6 +93,7 @@ function App() {
             }
           />
         </Routes>
+        <ToastContainer />
       </main>
     </>
   );
