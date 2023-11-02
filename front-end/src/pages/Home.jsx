@@ -55,7 +55,7 @@ const Home = () => {
       })
       .catch((error) => {
         dispatch(
-          setPromiseState(promiseStates.REJECTED, "Location not found!")
+          setPromiseState(promiseStates.REJECTED, "Please enable location")
         );
         console.error(error);
       });

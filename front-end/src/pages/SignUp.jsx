@@ -48,7 +48,6 @@ const SignUp = () => {
     geoSearch(text)
       .then((data) => {
         dispatch(setPromiseState(promiseStates.FULFILLED, "Location found!"));
-        console.log(data);
         setLocations(data.results);
       })
       .catch((error) => {

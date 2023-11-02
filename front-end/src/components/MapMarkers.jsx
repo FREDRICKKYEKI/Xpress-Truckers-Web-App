@@ -65,12 +65,12 @@ export const MapMarkers = ({
       map.panTo(center);
     }
   }, [positionData]);
-  console.log(drivers);
   const iconTypes = {
     A: truckSmallIcon,
     B: truckMediumIcon,
     C: truckLargeIcon,
   };
+
   return (
     <>
       {drivers?.map((driver, index) => (

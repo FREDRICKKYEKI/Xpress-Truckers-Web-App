@@ -3,7 +3,6 @@ import { Rating } from "./Rating";
 import { defaultAvatarUrl } from "../utils/constants";
 
 export const DriverPopUp = ({ driver }) => {
-  console.log(driver?.ratings);
   return (
     <div style={{ border: "none" }} className="card">
       <div className="profile__icon">

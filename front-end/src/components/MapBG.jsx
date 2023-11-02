@@ -13,8 +13,6 @@ export const MapBG = ({ locationTypes, originRef, destinationRef }) => {
   const center = Object.values(currentLocation?.geometry);
   const [isLoading, drivers] = useDrivers();
 
-  console.log(drivers);
-
   return (
     <MapContainer center={center} zoom={13} scrollWheelZoom={false}>
       <TileLayer
