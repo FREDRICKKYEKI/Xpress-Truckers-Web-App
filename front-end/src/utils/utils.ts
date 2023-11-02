@@ -2,7 +2,8 @@ import { UNSPLASH_ROOT, apiEndpoints, apiUrl } from "./constants";
 import { envs } from "./loadEnv";
 import axios from "axios";
 import { driver, user, userLoginEmail, userLoginPhone } from "./types";
-
+const accessToken =
+  JSON.parse(localStorage.getItem("user_tk") as string)?.token || "";
 /**
  * Returns a promise that resolves to the current location of the user.
  * @returns {Promise<Position>} A promise that resolves to the current position of the user.
@@ -16,7 +17,6 @@ export function getCurrentLocation(): Promise<any> {
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(position);
         resolve(position);
       },
       (error) => {
@@ -122,10 +122,14 @@ export function capitalize(str: string): string {
  */
 export function getXTData(endpoint: string): Promise<JSON> {
   return new Promise((resolve, reject) => {
-    fetch(`${apiUrl}/${endpoint}`)
-      .then((data) => data.json())
-      .then((data) => resolve(data))
-      .catch((error) => reject(error));
+    axios
+      .get(`${apiUrl}/${endpoint}`, {
+        headers: {
+          "x-access-token": `${accessToken}`,
+        },
+      })
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
   });
 }
 
@@ -147,7 +151,6 @@ export function signInUser(
   user: userLoginEmail | userLoginPhone
 ): Promise<JSON> {
   return new Promise((resolve, reject) => {
-    // console.log(user);
     axios
       .post(`${apiUrl}/${apiEndpoints.userLogin}`, user, {
         headers: {

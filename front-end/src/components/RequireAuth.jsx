@@ -5,10 +5,9 @@ import { toast } from "react-toastify";
 
 export const RequireAuth = ({ children }) => {
   const location = useLocation();
-  const { currentUser } = useAuth();
-  console.log(currentUser);
+  const { token } = useAuth();
 
-  if (!currentUser?.email) {
+  if (!token?.user?.email) {
     toast.dismiss();
     toast.info("Please sign in to continue...", {
       position: toast.POSITION.TOP_CENTER,

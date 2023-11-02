@@ -9,7 +9,7 @@ export const Rating = ({ value, text = false }) => {
         <div style={{ color: "var(--color-secondary)" }} className="rating">
           {text && (
             <span style={{ color: "var(--color-black-01)" }}>
-              <b>Rating {value}</b>:
+              <b>Rating</b>:
             </span>
           )}
           &nbsp;

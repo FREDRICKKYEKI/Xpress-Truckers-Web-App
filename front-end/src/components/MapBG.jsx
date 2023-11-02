@@ -5,11 +5,13 @@ import { MapMarkers } from "./MapMarkers";
 import "leaflet/dist/leaflet.css";
 import "../styles/map.css";
 import "../styles/home.css";
+import { useDrivers } from "../hooks/useDrivers";
 
 export const MapBG = ({ locationTypes, originRef, destinationRef }) => {
   const currentLocation = useSelector((state) => state.currentLocation);
   const destination = useSelector((state) => state.destination);
   const center = Object.values(currentLocation?.geometry);
+  const [isLoading, drivers] = useDrivers();
 
   return (
     <MapContainer center={center} zoom={13} scrollWheelZoom={false}>
@@ -24,6 +26,8 @@ export const MapBG = ({ locationTypes, originRef, destinationRef }) => {
         locationTypes={locationTypes}
         originRef={originRef}
         destinationRef={destinationRef}
+        drivers={drivers}
+        isLoading={isLoading}
       />
     </MapContainer>
   );

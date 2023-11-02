@@ -2,9 +2,10 @@ import React from "react";
 import "../styles/Profile.css";
 import { Rating } from "../components/Rating";
 import { defaultAvatarUrl } from "../utils/constants";
+import useAuth from "../contexts/AuthProvider";
 
 const Profile = () => {
-  const rating = 3.9;
+  const { token } = useAuth();
   return (
     <section className="profile-details d-flex justify-content-center">
       <div className="profile__card card mb-4">
@@ -22,14 +23,16 @@ const Profile = () => {
           </button>
         </div>
         <div className="profile__card__body card-body p-0">
-          <h5 className="card-title">John Doe</h5>
-          <p className="card-text">JohnDoe@gmail.com</p>
-          <p className="card-text">+25472345678</p>
+          <h5 className="card-title">
+            {token?.user?.first_name} {token?.user?.last_name}
+          </h5>
+          <p className="card-text">{token?.user?.email}</p>
+          <p className="card-text">{token?.user?.phone}</p>
           <p className="card-text">Nairobi, Kenya</p>
           <p className="card-text">
-            Rating: <b>{rating}</b>
+            Rating: <b>{token?.user?.rating}</b>
           </p>
-          <Rating color="secondary" value={rating} />
+          <Rating color="secondary" value={token?.user?.rating} />
         </div>
       </div>
     </section>

@@ -17,7 +17,7 @@ class User(BaseModel, Base):
     password = Column(String(128), nullable=False)
     phonenumber = Column(String(128), nullable=True)
     role = Column(Enum('user', 'driver', 'admin'), nullable=False, default='user')
-    ratings = Column(String(128), nullable=True)
+    ratings = Column(String(128), nullable=True, default=0)
     vehicles = relationship("Vehicle", backref="user",
                             cascade="all, delete-orphan")
     images = relationship("Image", backref="user", cascade="all, delete-orphan")
