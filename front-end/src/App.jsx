@@ -31,6 +31,9 @@ function App() {
     try {
       document.querySelector("#input-origin").value = currentLocation.formatted;
     } catch (e) {}
+    getXTData("drivers").then((res) => {
+      console.log(res);
+    });
   }, []);
 
   useEffect(() => {

@@ -146,5 +146,6 @@
     all: unset;
     color: var(--color-black-01);
     text-align: center;
+    display: none;
   }
 }
