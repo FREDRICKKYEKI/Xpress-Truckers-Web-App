@@ -1,10 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { MapBG } from "../components/MapBG";
-import { setCurrentLocation, setPromiseState } from "../StateManagement/store";
+import {
+  setCurrentLocation,
+  setPromiseState,
+  setServices,
+} from "../StateManagement/store";
 import { useDispatch } from "react-redux";
 import { TruckRequestForm } from "../components/TruckRequestForm";
 import { locationTypes, promiseStates } from "../utils/constants";
-import { getCurrentLocation, getLocationData } from "../utils/utils";
+import { getCurrentLocation, getLocationData, getXTData } from "../utils/utils";
 import { LocationDataResponse } from "../utils/DataModels";
 import { toast } from "react-toastify";
 

@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Home from "./pages/Home";
 import Signup from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
@@ -9,17 +9,20 @@ import NavBar from "./components/NavBar";
 import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { COMPANY_NAME, promiseStates } from "./utils/constants";
 import { capitalize, getXTData } from "./utils/utils";
 import { NotFound } from "./pages/NotFound";
+import { setServices } from "./StateManagement/store";
 
 function App() {
   const promiseState = useSelector((state) => state.promiseState);
   const currentLocation = useSelector((state) => state.currentLocation);
+  const dispatch = useDispatch();
   const location = useLocation();
   const noNavs = ["/login", "/signup"];
   const v2Paths = ["profile", "driver"];
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     document.title = `${COMPANY_NAME} | ${
@@ -28,12 +31,24 @@ function App() {
   }, [location]);
 
   useEffect(() => {
+    let services = {};
+    getXTData("services")
+      .then((data) => {
+        setLoading(false);
+        for (let service of data) {
+          services[service.id] = service;
+        }
+        dispatch(setServices(services));
+      })
+      .catch((error) => {
+        setLoading(false);
+
+        console.log(error);
+      });
+
     try {
       document.querySelector("#input-origin").value = currentLocation.formatted;
     } catch (e) {}
-    getXTData("drivers").then((res) => {
-      console.log(res);
-    });
   }, []);
 
   useEffect(() => {
@@ -80,24 +95,28 @@ function App() {
           }`}
         />
       )}
-      <main className="main">
-        <Routes>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/driver/:id" element={<Driver />} />
-          <Route path="*" element={<NotFound />} />
-          <Route
-            path="/profile"
-            element={
-              <RequireAuth>
-                <Profile />
-              </RequireAuth>
-            }
-          />
-        </Routes>
-        <ToastContainer />
-      </main>
+      {!loading ? (
+        <main className="main">
+          <Routes>
+            <Route path="/" exact element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/driver/:id" element={<Driver />} />
+            <Route
+              path="/profile"
+              element={
+                <RequireAuth>
+                  <Profile />
+                </RequireAuth>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <ToastContainer />
+        </main>
+      ) : (
+        <h2>Loading...</h2>
+      )}
     </>
   );
 }

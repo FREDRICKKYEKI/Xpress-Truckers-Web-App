@@ -21,23 +21,13 @@ export const MapMarkers = ({
   locationTypes,
   originRef,
   destinationRef,
+  drivers,
+  isLoading,
 }) => {
   const map = useMap();
   const dispatch = useDispatch();
   const originMarkerRef = useRef();
   const destinationMarkerRef = useRef();
-  const dummyTruckLGPosition = [
-    Number(center[0]) + 0.001,
-    Number(center[1]) + 0.01,
-  ];
-  const dummyTruckMDPosition = [
-    Number(center[0]) + 0.051,
-    Number(center[1]) - 0.039,
-  ];
-  const dummyTruckSMPosition = [
-    Number(center[0]) - 0.08,
-    Number(center[1]) + 0.0099,
-  ];
 
   function updateLocation(locationType, latLng) {
     toast.loading("Updating location...", {
@@ -75,20 +65,26 @@ export const MapMarkers = ({
       map.panTo(center);
     }
   }, [positionData]);
-
+  console.log(drivers);
+  const iconTypes = {
+    A: truckSmallIcon,
+    B: truckMediumIcon,
+    C: truckLargeIcon,
+  };
   return (
     <>
-      <Marker icon={truckLargeIcon} position={dummyTruckLGPosition}></Marker>
-      <Marker icon={truckMediumIcon} position={dummyTruckMDPosition}></Marker>
-      <Marker
-        riseOnHover={true}
-        icon={truckSmallIcon}
-        position={dummyTruckSMPosition}
-      >
-        <Popup>
-          <DriverPopUp />
-        </Popup>
-      </Marker>
+      {drivers?.map((driver, index) => (
+        <Marker
+          key={driver?.id || index}
+          riseOnHover={true}
+          icon={iconTypes[driver?.vehicle?.vehicle_type]}
+          position={[driver?.vehicle?.latitude, driver?.vehicle?.longitude]}
+        >
+          <Popup>
+            <DriverPopUp driver={driver} />
+          </Popup>
+        </Marker>
+      ))}
 
       <Marker
         icon={originIcon}
