@@ -34,3 +34,7 @@ class User(BaseModel, Base):
         if name == "password":
             value = md5(value.encode()).hexdigest()
         super().__setattr__(name, value)
+
+    def check_password(self, password):
+        """checks if password is correct"""
+        return self.password == md5(password.encode()).hexdigest()

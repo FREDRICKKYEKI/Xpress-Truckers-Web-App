@@ -1,21 +1,21 @@
 import React, { useEffect } from "react";
 import useAuth from "../contexts/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const RequireAuth = ({ children }) => {
-  const currentUser = useAuth();
-  const navigate = useNavigate();
+  const location = useLocation();
+  const { currentUser } = useAuth();
+  console.log(currentUser);
 
-  useEffect(() => {
-    if (!currentUser?.name) {
-      toast.dismiss();
-      toast.info("Please sign in to continue...", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1000,
-      });
-      navigate("/login");
-    }
-  }, []);
+  if (!currentUser?.email) {
+    toast.dismiss();
+    toast.info("Please sign in to continue...", {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 1000,
+    });
+    return <Navigate to="/login" state={location.pathname} />;
+  }
+
   return <>{children}</>;
 };

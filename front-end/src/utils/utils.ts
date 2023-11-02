@@ -1,7 +1,7 @@
 import { UNSPLASH_ROOT, apiEndpoints, apiUrl } from "./constants";
 import { envs } from "./loadEnv";
 import axios from "axios";
-import { driver, user } from "./types";
+import { driver, user, userLoginEmail, userLoginPhone } from "./types";
 
 /**
  * Returns a promise that resolves to the current location of the user.
@@ -138,6 +138,22 @@ export function registerUser(user: user | driver): Promise<JSON> {
   return new Promise((resolve, reject) => {
     axios
       .post(`${apiUrl}/${apiEndpoints.userSignUp}`, user)
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
+  });
+}
+
+export function signInUser(
+  user: userLoginEmail | userLoginPhone
+): Promise<JSON> {
+  return new Promise((resolve, reject) => {
+    // console.log(user);
+    axios
+      .post(`${apiUrl}/${apiEndpoints.userLogin}`, user, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => resolve(response.data))
       .catch((err) => reject(err));
   });
