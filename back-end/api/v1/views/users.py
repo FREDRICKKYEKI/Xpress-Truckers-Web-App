@@ -144,11 +144,11 @@ def update_user(current_user, user_id):
     """
     user = storage.get(User, user_id)
     if user is None:
-        abort(404)
+        abort(404, message="Not Found")
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, description="Not a JSON")
+        abort(400, message="Not a JSON")
     for key, value in props.items():
         if key not in ["id", "created_at", "updated_at"]:
             setattr(user, key, value)
@@ -165,7 +165,7 @@ def delete_user(current_user, user_id):
     """
     user = storage.get(User, user_id)
     if user is None:
-        abort(404)
+        abort(404, message="Not Found")
 
     user.delete()
     storage.save()

@@ -60,11 +60,11 @@ def update_service(current_user, service_id):
     """
     service = storage.get(Service, service_id)
     if service is None:
-        abort(404)
+        abort(404, message="Not Found")
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, description="Not a JSON")
+        abort(400, message="Not a JSON")
     for key, value in props.items():
         if key not in ["id", "created_at", "updated_at"]:
             setattr(service, key, value)
@@ -82,7 +82,7 @@ def delete_service(current_user, service_id):
     """
     service = storage.get(Service, service_id)
     if service is None:
-        abort(404)
+        abort(404, message="Not Found")
 
     service.delete()
     storage.save()
