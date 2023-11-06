@@ -8,7 +8,7 @@ export default function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [token, setToken] = useLocalStorage("token", null);
+  const [token, setToken] = useLocalStorage("user_tk", null);
 
   const value = {
     currentUser,

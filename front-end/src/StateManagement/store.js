@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { initialLocationData } from "../utils/constants";
 
 const ACTIONS = {
   // ACTIONS
@@ -6,6 +7,8 @@ const ACTIONS = {
   SET_DESTINATION: "SET_DESTINATION",
   SET_IS_LOADING: "SET_IS_LOADING",
   SET_PROMISE_STATE: "SET_PROMISE_STATE",
+  SET_DRIVERS: "SET_DRIVERS",
+  SET_SERVICES: "SET_SERVICES",
 };
 
 export const setCurrentLocation = (location) => {
@@ -36,12 +39,18 @@ export const setPromiseState = (promiseState, message = null) => {
   };
 };
 
-const initialLocationData = {
-  formatted: "Nairobi, Kenya",
-  geometry: {
-    lat: "-1.292066",
-    lng: "36.821946",
-  },
+export const setDrivers = (drivers) => {
+  return {
+    type: ACTIONS.SET_DRIVERS,
+    payload: drivers,
+  };
+};
+
+export const setServices = (services) => {
+  return {
+    type: ACTIONS.SET_SERVICES,
+    payload: services,
+  };
 };
 
 const initialState = {
@@ -49,6 +58,8 @@ const initialState = {
   isLoading: false,
   destination: null,
   promiseState: { state: null, message: null },
+  drivers: [],
+  services: null,
 };
 
 const reducer = (state = initialState, { type, payload }) => {
@@ -72,6 +83,16 @@ const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         promiseState: payload,
+      };
+    case ACTIONS.SET_DRIVERS:
+      return {
+        ...state,
+        drivers: payload,
+      };
+    case ACTIONS.SET_SERVICES:
+      return {
+        ...state,
+        services: payload,
       };
     default:
       return state;

@@ -46,18 +46,17 @@ const LogIn = () => {
         signInUser(user.toObject())
           .then((res) => {
             toast.dismiss();
-            toast.success("Sign up successful", {
+            toast.success("Sign up successful!", {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 400,
             });
             console.log(res);
-            setToken(res.token);
+            setToken(res);
             setCurrentUser(res.user);
             navigate("/profile");
           })
           .catch((err) => {
             toast.dismiss();
-
             toast.error(err?.response?.data?.error, {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 400,

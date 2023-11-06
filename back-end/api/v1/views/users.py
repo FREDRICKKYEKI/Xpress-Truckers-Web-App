@@ -113,6 +113,12 @@ def insert_user():
         if not props.get("services"):
             return make_response(jsonify({"error":"Missing services"}), 400);
 
+        try:
+            float_latitude = float(props.get("latitude"))
+            float_longitude = float(props.get("longitude"))
+        except ValueError:
+            return make_response(jsonify({"error":"Invalid location data"}), 400);
+
         new_user = User(first_name=props.get("first_name"),
                         last_name=props.get("last_name"),
                         email=props.get("email"),

@@ -8,6 +8,9 @@ from flask import jsonify
 from models import storage
 from models.user import User
 from models.image import Image
+from models.vehicle import Vehicle
+from models.driver_service import DriverService
+from models.service import Service
 
 
 @app_views.route('/drivers/', methods=['GET'], strict_slashes=False,
@@ -21,6 +24,8 @@ def get_drivers(current_user, driver_id):
     """
     all_users = storage.all(User).values()
     images = storage.all(Image).values()
+    all_vehicles = storage.all(Vehicle).values()
+    all_driver_services = storage.all(DriverService).values()
     drivers = []
 
     for user in all_users:
@@ -32,9 +37,26 @@ def get_drivers(current_user, driver_id):
             drivers.append(temp)
 
     if not driver_id:
+        for vehicle in all_vehicles:
+            for driver in drivers:
+                if vehicle.driver_id == driver['id']:
+                    driver['vehicle'] = vehicle.to_dict()
         return (jsonify(drivers))
     else:
+        driver_services = []
+
         for driver in drivers:
             if driver['id'] == driver_id:
+                for vehicle in all_vehicles:
+                    if vehicle.driver_id == driver['id']:
+                        driver['vehicle'] = vehicle.to_dict()
+                        break
+
+                for service in all_driver_services:
+                    if service.driver_id == driver['id']:
+                        driver_services.append(service.to_dict())
+
+                driver['services'] = driver_services
                 return (jsonify(driver))
-        return (jsonify({"Error": "Driver not found"}))
+
+    return (jsonify({"Error": "Driver not found"}))
