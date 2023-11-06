@@ -18,16 +18,16 @@ def get_vehicle(current_user, vehicle_id):
     """
     retrievs vehicle data only
     """
-    all_vehicles = [
-        vehicle.to_dict() for vehicle in storage.all(Vehicle).values()
-    ]
     if not vehicle_id:
+        all_vehicles = [
+            vehicle.to_dict() for vehicle in storage.all(Vehicle).values()
+        ]
         return (jsonify(all_vehicles))
 
     else:
-        for vehicle in all_vehicles:
-            if vehicle['id'] == vehicle_id:
-                return (jsonify(vehicle))
+        vehicle = storage.get(Vehicle, vehicle_id)
+        if vehicle:
+            return (jsonify(vehicle.to_dict()))
 
         return (jsonify({"Error": "Vehicle not found"}))
 

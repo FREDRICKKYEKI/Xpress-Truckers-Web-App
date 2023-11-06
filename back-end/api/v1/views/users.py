@@ -9,6 +9,7 @@ from models import storage
 from models.user import User
 from models.vehicle import Vehicle
 from models.driver_service import DriverService
+from models.image import Image
 
 @app_views.route('/users/', methods=['GET'], strict_slashes=False,
                  defaults={'user_id': None})
@@ -17,13 +18,24 @@ from models.driver_service import DriverService
 @token_required
 def get_users(current_user, user_id):
     """fetches all users (Drivers and clients)"""
+    images = storage.all(Image).values()
+    out = []
     if not user_id:
-        out = [user.to_dict() for user in storage.all(User).values()]
+        for user in storage.all(User).values():
+            temp = user.to_dict()
+            url = [{image.role: image.url} for image in images
+                       if image.owner_id == user.id]
+            temp["img"] = url
+            out.append(temp)
         return (jsonify(out))
     else:
         user = storage.get(User, user_id)
         if user:
-            return (jsonify(user.to_dict()))
+            temp = user.to_dict()
+            url = [{image.role: image.url} for image in images
+                       if image.owner_id == user.id]
+            temp["img"] = url
+            return (jsonify(temp))
 
         return (jsonify({"Error": "User not found"}))
 
@@ -38,11 +50,16 @@ def get_clients(current_user, client_id):
     retrieves only client data
     """
     all_users = storage.all(User).values()
+    images = storage.all(Image).values()
     clients = []
 
     for user in all_users:
         if user.role == 'user':
-            clients.append(user.to_dict())
+            temp = user.to_dict()
+            url = [{image.role: image.url} for image in images
+                       if image.owner_id == user.id]
+            temp["img"] = url
+            clients.append(temp)
 
     if not client_id:
         return (jsonify(clients))

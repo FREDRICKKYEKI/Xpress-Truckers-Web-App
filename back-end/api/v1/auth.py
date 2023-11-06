@@ -58,10 +58,10 @@ def login():
             break
 
     if not user:
-        return (make_response(jsonify({"error": "Invalid Sign-in Details"}), 401,
+        return (make_response(jsonify({"error": "Invalid Username"}), 401,
             {'WWW-Authenticate' : 'Basic realm="Login required!"'}))
 
-    print(user.password)
+    print(user.password, body.get("password"))
     if user.check_password(body.get("password")):
         token = jwt.encode(
             {'id' : user.id,
@@ -80,5 +80,5 @@ def login():
         return  response, 200
 
     return (make_response(
-        'Could not verify', 401,
+        'Invalid Password', 401,
         {'WWW-Authenticate' : 'Basic realm="Login required!"'}))
