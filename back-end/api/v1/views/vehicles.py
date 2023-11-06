@@ -18,16 +18,16 @@ def get_vehicle(current_user, vehicle_id):
     """
     retrievs vehicle data only
     """
-    all_vehicles = [
-        vehicle.to_dict() for vehicle in storage.all(Vehicle).values()
-    ]
     if not vehicle_id:
+        all_vehicles = [
+            vehicle.to_dict() for vehicle in storage.all(Vehicle).values()
+        ]
         return (jsonify(all_vehicles))
 
     else:
-        for vehicle in all_vehicles:
-            if vehicle['id'] == vehicle_id:
-                return (jsonify(vehicle))
+        vehicle = storage.get(Vehicle, vehicle_id)
+        if vehicle:
+            return (jsonify(vehicle.to_dict()))
 
         return (jsonify({"Error": "Vehicle not found"}))
 
@@ -42,17 +42,17 @@ def insert_vehicle(current_user):
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, description="Not a JSON")
+        abort(400, message="Not a JSON")
     if not props.get("driver_id"):
-        abort(400, description="Missing Driver ID")
+        abort(400, message="Missing Driver ID")
     if not props.get("make"):
-        abort(400, description="Missing Make")
+        abort(400, message="Missing Make")
     if not props.get("vehicle_type"):
-        abort(400, description="Missing Vehicle Type")
+        abort(400, message="Missing Vehicle Type")
     if not props.get("vehicle_registration"):
-        abort(400, description="Missing Vehicle Registration")
+        abort(400, message="Missing Vehicle Registration")
     if not props.get("location"):
-        abort(400, description="Missing Location")
+        abort(400, message="Missing Location")
 
     new_vehicle = Vehicle(**props)
     new_vehicle.save()
@@ -68,11 +68,11 @@ def update_vehicle(current_user, vehicle_id):
     """
     vehicle = storage.get(Vehicle, vehicle_id)
     if vehicle is None:
-        abort(404)
+        abort(404, message="Not Found")
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, description="Not a JSON")
+        abort(400, message="Not a JSON")
     for key, value in props.items():
         if key not in ["id", "created_at", "updated_at"]:
             setattr(vehicle, key, value)
@@ -90,7 +90,7 @@ def delete_vehicle(current_user, vehicle_id):
     """
     vehicle = storage.get(Vehicle, vehicle_id)
     if vehicle is None:
-        abort(404)
+        abort(404, message="Message")
 
     vehicle.delete()
     storage.save()

@@ -5,6 +5,7 @@ from models.service import Service
 from models.trip import Trip
 from models.user import User
 from models.vehicle import Vehicle
+from hashlib import md5
 
 from models import storage
 
@@ -13,6 +14,7 @@ users = storage.all(User).values()
 for user in users:
     print(user)
 
+storage.save()
 """
 storage.save()
 users = storage.all(User).values()

@@ -29,6 +29,4 @@ def get_service(_, service_id):
             if service['id'] == service_id:
                 return (jsonify(service))
 
-        return (jsonify({"Error": "Service not found"}))
-
-
+        return (jsonify({"Error": "Service not found"})
