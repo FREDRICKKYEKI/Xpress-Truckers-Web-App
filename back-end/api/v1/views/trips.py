@@ -42,21 +42,21 @@ def create_trip(current_user):
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, message="Not a JSON")
+        abort(jsonify(message="Not a JSON"), 400)
     if not props.get("client_id"):
-        abort(400, message="Missing Client ID")
+        abort(jsonify(message="Missing Client ID"), 400)
     if not props.get("driver_id"):
-        abort(400, message="Missing Driver ID")
+        abort(jsonify(message="Missing Driver ID"), 400)
     if not props.get("service_id"):
-        abort(400, message="Missing Service ID")
+        abort(jsonify(message="Missing Service ID"), 400)
     if not props.get("vehicle_id"):
-        abort(400, message="Missing Vehicle ID")
+        abort(jsonify(message="Missing Vehicle ID"), 400)
     if not props.get("origin"):
-        abort(400, message="Missing Origin")
+        abort(jsonify(message="Missing Origin"), 400)
     if not props.get("destination"):
-        abort(400, message="Missing destination")
+        abort(jsonify(message="Missing destination"), 400)
     if not props.get("status"):
-        abort(400, message="Missing status")
+        abort(jsonify(message="Missing status"), 400)
 
     new_trip = Trip(**props)
     new_trip.save()
@@ -71,11 +71,11 @@ def update_trip(current_user, trip_id):
     """
     trip = storage.get(Trip, trip_id)
     if trip is None:
-        abort(404, message="Not Found")
+        abort(jsonify(message="Not Found"), 404)
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, message="Not a JSON")
+        abort(jsonify(message="Not a JSON"), 400)
     for key, value in props.items():
         if key not in ["id", "created_at", "updated_at"]:
             setattr(trip, key, value)
@@ -92,7 +92,7 @@ def delete_trip(current_user, trip_id):
     """
     trip = storage.get(Trip, trip_id)
     if trip is None:
-        abort(404, message="Not Found")
+        abort(jsonify(message="Not Found"), 404)
 
     trip.delete()
     storage.save()
