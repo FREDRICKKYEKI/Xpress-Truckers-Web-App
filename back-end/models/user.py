@@ -15,7 +15,7 @@ class User(BaseModel, Base):
     last_name = Column(String(128), nullable=True)
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
-    phonenumber = Column(String(128), nullable=True)
+    phonenumber = Column(String(128), nullable=False)
     role = Column(Enum('user', 'driver', 'admin'), nullable=False, default='user')
     ratings = Column(String(128), nullable=True, default=0)
     vehicles = relationship("Vehicle", backref="user",
@@ -38,4 +38,5 @@ class User(BaseModel, Base):
 
     def check_password(self, password):
         """checks if password is correct"""
+        # print(self.password, md5(password.encode()).hexdigest())
         return self.password == md5(password.encode()).hexdigest()

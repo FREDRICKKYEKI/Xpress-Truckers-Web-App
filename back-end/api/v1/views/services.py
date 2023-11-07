@@ -30,5 +30,3 @@ def get_service( service_id):
                 return (jsonify(service))
 
         return (jsonify({"Error": "Service not found"}))
-
-

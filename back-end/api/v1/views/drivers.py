@@ -7,6 +7,7 @@ from api.v1.views import app_views
 from flask import jsonify
 from models import storage
 from models.user import User
+from models.image import Image
 from models.vehicle import Vehicle
 from models.driver_service import DriverService
 from models.service import Service
@@ -22,13 +23,18 @@ def get_drivers( driver_id):
     retrievs driver data only
     """
     all_users = storage.all(User).values()
+    images = storage.all(Image).values()
     all_vehicles = storage.all(Vehicle).values()
     all_driver_services = storage.all(DriverService).values()
     drivers = []
 
     for user in all_users:
         if user.role == 'driver':
-            drivers.append(user.to_dict())
+            temp = user.to_dict()
+            url = [{image.role: image.url} for image in images
+                       if image.owner_id == user.id]
+            temp["img"] = url
+            drivers.append(temp)
 
     if not driver_id:
         for vehicle in all_vehicles:
