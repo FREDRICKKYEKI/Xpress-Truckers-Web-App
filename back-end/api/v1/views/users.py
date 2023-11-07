@@ -23,8 +23,10 @@ def get_users(current_user, user_id):
     if not user_id:
         for user in storage.all(User).values():
             temp = user.to_dict()
-            url = [{image.role: image.url} for image in images
-                       if image.owner_id == user.id]
+            url = {}
+            for image in images:
+                if image.owner_id == user.id:
+                    url[image.role] = image.url
             temp["img"] = url
             out.append(temp)
         return (jsonify(out))
@@ -32,8 +34,10 @@ def get_users(current_user, user_id):
         user = storage.get(User, user_id)
         if user:
             temp = user.to_dict()
-            url = [{image.role: image.url} for image in images
-                       if image.owner_id == user.id]
+            url = {}
+            for image in images:
+                if image.owner_id == user.id:
+                    url[image.role] = image.url
             temp["img"] = url
             return (jsonify(temp))
 
@@ -56,8 +60,10 @@ def get_clients(current_user, client_id):
     for user in all_users:
         if user.role == 'user':
             temp = user.to_dict()
-            url = [{image.role: image.url} for image in images
-                       if image.owner_id == user.id]
+            url = {}
+            for image in images:
+                if image.owner_id == user.id:
+                    url[image.role] = image.url
             temp["img"] = url
             clients.append(temp)
 
@@ -141,7 +147,15 @@ def insert_user():
                                         driver_id=new_user.id);
             new_driver_service.save()
 
-        new_driver_service.save()
+        # post image
+        images = props.get('img')
+        roles = images.keys()
+        urls = images.values()
+        for role, url in zip(roles, urls):
+            new_img = Image(owner_id=new_user.id, role=role, url=url)
+            new_img.save()
+
+        # new_driver_service.save()
         response = jsonify(new_user.to_dict())
         response.status_code = 201
         response.headers.add('Access-Control-Allow-Origin', '*')
@@ -156,6 +170,14 @@ def insert_user():
                         role=props.get("role"));
 
         new_user.save()
+
+        # post image
+        images = props.get('img')
+        roles = images.keys()
+        urls = images.values()
+        for role, url in zip(roles, urls):
+            new_img = Image(owner_id=new_user.id, role=role, url=url)
+            new_img.save()
         return jsonify(new_user.to_dict()), 201
 
 
@@ -167,11 +189,11 @@ def update_user(current_user, user_id):
     """
     user = storage.get(User, user_id)
     if user is None:
-        abort(404, message="Not Found")
+        abort(jsonify(message="Not Found"), 404)
 
     props = request.get_json()
     if type(props) != dict:
-        abort(400, message="Not a JSON")
+        abort(jsonify(message="Not a JSON"))
     for key, value in props.items():
         if key not in ["id", "created_at", "updated_at"]:
             setattr(user, key, value)
@@ -188,7 +210,7 @@ def delete_user(current_user, user_id):
     """
     user = storage.get(User, user_id)
     if user is None:
-        abort(404, message="Not Found")
+        abort(jsonify(message="Not Found"), 404)
 
     user.delete()
     storage.save()
