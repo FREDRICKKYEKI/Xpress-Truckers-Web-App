@@ -25,6 +25,7 @@ class User(BaseModel, Base):
                                    cascade="all, delete-orphan")
     trips = relationship("Trip", backref="user", cascade="all, delete-orphan")
 
+
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
