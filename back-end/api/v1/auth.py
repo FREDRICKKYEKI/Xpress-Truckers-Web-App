@@ -25,7 +25,10 @@ def token_required(f):
         if not token:
             return jsonify({'message' : 'Token is missing!'}), 401
 
-        data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        try:
+            data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        except Exception:
+            return jsonify({'message' : 'Token Expired, Please Log In Again!'}), 401
         users = storage.all(User).values()
         current_user = None
         for user in users:
