@@ -101,11 +101,11 @@ CREATE TABLE trips (
 -- Insert sample data into the 'users' table
 INSERT INTO users (id, created_at, updated_at, first_name, last_name, email, password, phonenumber, role, ratings)
 VALUES
-    ('f47ac10b-58cc-4372-a567-0e02b2c3d479', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'John', 'Doe', 'johndoe@example.com', 'password1', '+123456789', 'user', '4.8'),
-    ('4b48aca8-887f-4cf1-9a1e-0db71194dd73', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Alice', 'Smith', 'alicesmith@example.com', 'password2', '+987654321', 'driver', '4.5'),
-    ('50254c03-e92c-49f7-9819-4a5d2b455d09', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Eve', 'Johnson', 'evejohnson@example.com', 'password3', '+111222333', 'user', '4.2'),
-    ('98cb9d33-1262-4c69-883a-86aa2d613640', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Bob', 'Brown', 'bobbrown@example.com', 'password4', '+444555666', 'admin', NULL),
-    ('122f8541-5223-4d4a-853d-722d7f69e1f4', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Chris', 'Wilson', 'chriswilson@example.com', 'password5', '+777888999', 'user', '4.9');
+    ('f47ac10b-58cc-4372-a567-0e02b2c3d479', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'John', 'Doe', 'johndoe@example.com', '7c6a180b36896a0a8c02787eeafb0e4c', '+123456789', 'user', '4.8'),
+    ('4b48aca8-887f-4cf1-9a1e-0db71194dd73', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Alice', 'Smith', 'alicesmith@example.com', '6cb75f652a9b52798eb6cf2201057c73', '+987654321', 'driver', '4.5'),
+    ('50254c03-e92c-49f7-9819-4a5d2b455d09', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Eve', 'Johnson', 'evejohnson@example.com', '819b0643d6b89dc9b579fdfc9094f28e', '+111222333', 'user', '4.2'),
+    ('98cb9d33-1262-4c69-883a-86aa2d613640', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Bob', 'Brown', 'bobbrown@example.com', '34cc93ece0ba9e3f6f235d4af979b16c', '+444555666', 'admin', NULL),
+    ('122f8541-5223-4d4a-853d-722d7f69e1f4', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'Chris', 'Wilson', 'chriswilson@example.com', 'db0edd04aaac4506f7edab03ac855d56', '+777888999', 'user', '4.9');
 
 -- Insert sample data into the 'services' table
 INSERT INTO services (id, created_at, updated_at, name, type, description)
