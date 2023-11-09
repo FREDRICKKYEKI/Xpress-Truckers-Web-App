@@ -150,7 +150,7 @@ def filter_service(current_user):
     if type(service_types) != list:
         abort(jsonify(message="services should be provided as a list"), 400)
 
-    vehicle_types = props.get("vehicle_type")
+    vehicle_types = props.get("vehicleType")
 
     if not vehicle_types:
         abort(jsonify(message="Please Provide a vehicle type"), 400)

@@ -18,30 +18,6 @@ export const initialLocationData: locationData = {
   },
 };
 
-// /**
-//  * An array of objects representing the available services.
-//  * Each object contains an id and a name.
-//  */
-// export const SERVICES = [
-//   {
-//     id: ' 480ed48c-c6cf-47b6-9244-e75524f90548',
-//     name: 'Moving out',
-//   },
-//   {
-//     id: 'a0c7e510-7963-44f2-88a2-b90d4e4c79f7',
-
-//     name: 'Transport Construction Materials',
-//   },
-//   {
-//     id: '38569936-0d84-4ae0-8519-22ee85f7108b',
-//     name: 'Transport Farm Produce',
-//   },
-//   {
-//     id: 'c856c038-e071-43b5-9c49-25b7d742e7c4',
-//     name: 'Long Distance Transportation',
-//   },
-// ];
-
 /**
  * An array of vehicle types with their corresponding id, type, and name.
  */
@@ -75,5 +51,6 @@ export const routes = {
   editUser: "/profile/me/edit",
   driverRoute: "/driver/:id",
   landingPage: "http://144.126.221.185/",
+  driverDashboard: "/driver/dashboard",
   driver: (id: string) => `/driver/${id}`,
 };

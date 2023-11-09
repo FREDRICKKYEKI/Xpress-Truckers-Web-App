@@ -148,12 +148,13 @@ def insert_user():
             new_driver_service.save()
 
         # post image
-        images = props.get('img')
-        roles = images.keys()
-        urls = images.values()
-        for role, url in zip(roles, urls):
-            new_img = Image(owner_id=new_user.id, role=role, url=url)
-            new_img.save()
+        if (props.get('img')):
+            images = props.get('img')
+            roles = images.keys()
+            urls = images.values()
+            for role, url in zip(roles, urls):
+                new_img = Image(owner_id=new_user.id, role=role, url=url)
+                new_img.save()
 
         # new_driver_service.save()
         response = jsonify(new_user.to_dict())
@@ -170,14 +171,14 @@ def insert_user():
                         role=props.get("role"));
 
         new_user.save()
-
-        # post image
-        images = props.get('img')
-        roles = images.keys()
-        urls = images.values()
-        for role, url in zip(roles, urls):
-            new_img = Image(owner_id=new_user.id, role=role, url=url)
-            new_img.save()
+            # post image
+        if (props.get('img')):
+            images = props.get('img')
+            roles = images.keys()
+            urls = images.values()
+            for role, url in zip(roles, urls):
+                new_img = Image(owner_id=new_user.id, role=role, url=url)
+                new_img.save()
         return jsonify(new_user.to_dict()), 201
 
 

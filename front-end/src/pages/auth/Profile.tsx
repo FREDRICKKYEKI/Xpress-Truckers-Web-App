@@ -21,7 +21,7 @@ const Profile = () => {
             <i className="fa-solid fa-pen" />
           </a>
         </div>
-        <div className="profile__card__body card-body p-0">
+        <div className="profile__card__body card-body p-0 text-center">
           <h5 className="card-title">
             {token?.user?.first_name} {token?.user?.last_name}
           </h5>
@@ -29,9 +29,9 @@ const Profile = () => {
           <p className="card-text">{token?.user?.phonenumber}</p>
           <p className="card-text">Nairobi, Kenya</p>
           <p className="card-text">
-            Rating: <b>{token?.user?.rating}</b>
+            Rating: <b>{token?.user?.ratings}</b>
           </p>
-          <Rating value={token?.user?.rating} />
+          <Rating value={token?.user?.ratings} />
         </div>
       </div>
     </section>

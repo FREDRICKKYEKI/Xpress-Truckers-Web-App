@@ -18,7 +18,7 @@ const color = {
 export const LogoBrandName = ({ variant = "v1" }: { variant: "v1" | "v2" }) => {
   return (
     <a href={routes.home} className="logo">
-      <h4 className="brand-name bold">
+      <h4 className="brand-name bold font-italic">
         <span style={firtLetterStyle[variant]}>X</span>
         <span style={{ color: color[variant] }}>
           press <br />

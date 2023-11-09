@@ -15,7 +15,7 @@ export const DriverPopUp = ({ driver }: { driver: driverResponse }) => {
         </h5>
 
         <p className="card-text"></p>
-        <Rating text={true} value={driver?.rating || 0} />
+        <Rating text={true} value={driver?.ratings || 0} />
 
         <p className="card-text">
           <b>

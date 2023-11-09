@@ -106,7 +106,7 @@ export type driverResponse = {
     latitude: number;
     longitude: number;
   };
-  rating: number;
+  ratings: number;
   services: driverServices[];
 };
 
@@ -116,7 +116,7 @@ export type userResponse = {
   last_name: string;
   email: string;
   phonenumber: string;
-  rating: number;
+  ratings: number;
   role: userTypes;
 };
 

@@ -45,7 +45,8 @@ const Driver = () => {
 
   useEffect(() => {
     if (driver?.vehicle?.vehicle_type) {
-      const vehicleType = VEHICLE_SIZE_TYPES[driver?.vehicle?.vehicle_type];
+      const vehicleType =
+        VEHICLE_SIZE_TYPES[driver?.vehicle?.vehicle_type as "A" | "B" | "C"];
       getUnsplashPhotos({ query: vehicleType })
         .then((data) => {
           setSampleTrucks(data.results);
@@ -58,15 +59,11 @@ const Driver = () => {
 
   if (isLoading) return <div>Loading...</div>;
   return (
-    <section
-      className="container color-dark"
-      // className="driver-details d-flex justify-content-evenly color-dark"
-    >
+    <section className="container color-dark">
       <div className="row">
         {/* Driver profile*/}
         <div
           style={{ border: "none" }}
-          // className="profile__card card mobile_profile__card"
           className="col-lg-4 mx-auto col-md-4 col-sm-12 profile__card card mobile_profile__card"
         >
           <div className="profile__header">
@@ -84,10 +81,12 @@ const Driver = () => {
               {driver?.first_name} {driver?.last_name}
             </h5>
             <p className="card-text"></p>
-            <Rating text={true} value={driver?.rating} />
+            <Rating text={true} value={driver?.ratings} />
             <p className="card-text">
-              <b>Email: </b>
-              {driver?.email}
+              <>
+                <b>Email:&nbsp;</b>
+                {driver?.email}
+              </>
             </p>
             <p className="card-text">
               <b>Contact: </b>
@@ -118,7 +117,10 @@ const Driver = () => {
             <p className="card-text">
               <b>Truck Type: </b>
               <i className="color-secondary">
-                {driver && VEHICLE_SIZE_TYPES[driver?.vehicle?.vehicle_type]}
+                {driver &&
+                  VEHICLE_SIZE_TYPES[
+                    driver?.vehicle?.vehicle_type as "A" | "B" | "C"
+                  ]}
               </i>
             </p>
             <p className="card-text">

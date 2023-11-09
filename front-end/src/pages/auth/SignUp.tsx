@@ -189,6 +189,7 @@ const SignUp = ({ editType = "register" }: { editType: editType }) => {
             navigate(routes.login);
           })
           .catch((err) => {
+            toast.dismiss();
             toast.error(err?.response?.data?.error, {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 500,
