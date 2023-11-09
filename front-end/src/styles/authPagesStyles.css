@@ -5,10 +5,10 @@
 body {
   background-color: var(--color-white-02);
 }
-.container {
+.container_ {
   max-width: 600px !important;
   padding: 20px;
-  min-width: 100%;
+  /* min-width: 100%; */
 }
 
 /* .login-form {

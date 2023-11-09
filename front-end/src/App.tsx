@@ -1,26 +1,29 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Home from "./pages/Home";
-import Signup from "./pages/SignUp";
-import LogIn from "./pages/LogIn";
+import Signup from "./pages/auth/SignUp";
+import LogIn from "./pages/auth/LogIn";
 import Driver from "./pages/Driver";
-import Profile from "./pages/Profile";
+import Profile from "./pages/auth/Profile";
 import NavBar from "./components/NavBar";
 import { RequireAuth } from "./components/RequireAuth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { COMPANY_NAME, promiseStates } from "./utils/constants";
+import { COMPANY_NAME, apiEndpoints, routes } from "./utils/constants";
 import { capitalize, getXTData } from "./utils/utils";
 import { NotFound } from "./pages/NotFound";
-import { setServices } from "./StateManagement/store";
+import { RootState, setServices } from "./StateManagement/store";
+import { editTypes, promiseStates, serviceResponse } from "./utils/types";
 
 function App() {
-  const promiseState = useSelector((state) => state.promiseState);
-  const currentLocation = useSelector((state) => state.currentLocation);
+  const promiseState = useSelector((state: RootState) => state.promiseState);
+  const currentLocation = useSelector(
+    (state: RootState) => state.currentLocation
+  );
   const dispatch = useDispatch();
   const location = useLocation();
-  const noNavs = ["/login", "/signup"];
+  const noNavs = [routes.login, routes.signup, routes.editUser];
   const v2Paths = ["profile", "driver"];
   const [loading, setLoading] = useState(true);
 
@@ -31,11 +34,12 @@ function App() {
   }, [location]);
 
   useEffect(() => {
-    let services = {};
-    getXTData("services")
-      .then((data) => {
+    getXTData(apiEndpoints.services)
+      .then((data: unknown) => {
+        let serviceData = data as serviceResponse[];
+        let services: { [key: string]: serviceResponse } = {};
         setLoading(false);
-        for (let service of data) {
+        for (let service of serviceData) {
           services[service.id] = service;
         }
         dispatch(setServices(services));
@@ -47,7 +51,11 @@ function App() {
       });
 
     try {
-      document.querySelector("#input-origin").value = currentLocation.formatted;
+      const inputOrigin =
+        document.querySelector<HTMLInputElement>("#input-origin");
+      if (inputOrigin) {
+        inputOrigin.value = currentLocation.formatted;
+      }
     } catch (e) {}
   }, []);
 
@@ -71,13 +79,7 @@ function App() {
       });
     } else if (promiseState.state === promiseStates.REJECTED) {
       toast.dismiss();
-      let message = "";
-      if (promiseState.message?.includes("Network")) {
-        message = "You are offline!";
-      } else if (!promiseState.message) {
-        message = "Something went wrong!";
-      }
-      message = promiseState.message;
+      let message = promiseState.message || "Something went wrong!";
       toast.error(message, {
         position: toast.POSITION.TOP_CENTER,
         closeButton: true,
@@ -98,24 +100,38 @@ function App() {
       {!loading ? (
         <main className="main">
           <Routes>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/driver/:id" element={<Driver />} />
+            <Route path={routes.home} element={<Home />} />
             <Route
-              path="/profile"
+              path={routes.signup}
+              element={<Signup editType={editTypes.REGISTER} />}
+            />
+            <Route path={routes.login} element={<LogIn />} />
+            <Route
+              path={routes.driverRoute}
+              element={
+                <RequireAuth>
+                  <Driver />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={routes.profile}
               element={
                 <RequireAuth>
                   <Profile />
                 </RequireAuth>
               }
             />
+            <Route
+              path={routes.editUser}
+              element={<Signup editType={editTypes.UPDATE} />}
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ToastContainer />
         </main>
       ) : (
-        <h2>Loading...</h2>
+        <h2></h2>
       )}
     </>
   );

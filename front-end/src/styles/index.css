@@ -81,6 +81,7 @@ main {
   flex: 1;
   min-height: max-content;
   position: relative;
+  width: 100%;
 }
 
 button[type="submit"] {

@@ -1,9 +1,16 @@
 import { UNSPLASH_ROOT, apiEndpoints, apiUrl } from "./constants";
 import { envs } from "./loadEnv";
 import axios from "axios";
-import { driver, user, userLoginEmail, userLoginPhone } from "./types";
-const accessToken =
-  JSON.parse(localStorage.getItem("user_tk") as string)?.token || "";
+import {
+  driver,
+  driverRequestType,
+  methods,
+  user,
+  userLoginEmail,
+  userLoginPhone,
+  userToken,
+} from "./types";
+
 /**
  * Returns a promise that resolves to the current location of the user.
  * @returns {Promise<Position>} A promise that resolves to the current position of the user.
@@ -93,7 +100,7 @@ export function geoSearch(text: string): Promise<JSON> {
  * @param {string} options.query - The query string to search for.
  * @returns {Promise<JSON>} A Promise that resolves with the fetched data in JSON format.
  */
-export function getUnsplashPhotos({ query }: { query: string }): Promise<JSON> {
+export function getUnsplashPhotos({ query }: { query: string }): Promise<any> {
   return new Promise((resolve, reject) => {
     fetch(
       `${UNSPLASH_ROOT}/search/photos?page=${Math.floor(
@@ -120,10 +127,27 @@ export function capitalize(str: string): string {
  * @param endpoint - The endpoint to fetch data from.
  * @returns A Promise that resolves with the fetched data in JSON format.
  */
-export function getXTData(endpoint: string): Promise<JSON> {
+export function getXTData(endpoint: string) {
+  const accessToken =
+    JSON.parse(localStorage.getItem("user_tk") as string)?.token || "";
   return new Promise((resolve, reject) => {
     axios
       .get(`${apiUrl}/${endpoint}`, {
+        headers: {
+          "x-access-token": `${accessToken}`,
+        },
+      })
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
+  });
+}
+
+export function postXTData(endpoint: string, data: driverRequestType) {
+  const accessToken =
+    JSON.parse(localStorage.getItem("user_tk") as string)?.token || "";
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${apiUrl}/${endpoint}`, data, {
         headers: {
           "x-access-token": `${accessToken}`,
         },
@@ -138,16 +162,41 @@ export function getXTData(endpoint: string): Promise<JSON> {
  * @param user The user or driver object to be registered.
  * @returns A Promise that resolves with the JSON response from the server.
  */
-export function registerUser(user: user | driver): Promise<JSON> {
+export function registerUser(
+  user: user | driver,
+  method: methods
+): Promise<any> {
+  const userToken: userToken =
+    JSON.parse(localStorage.getItem("user_tk") as string) || {};
+
   return new Promise((resolve, reject) => {
-    axios
-      .post(`${apiUrl}/${apiEndpoints.userSignUp}`, user)
-      .then((response) => resolve(response.data))
-      .catch((err) => reject(err));
+    switch (method) {
+      case "POST":
+        axios
+          .post(`${apiUrl}/${apiEndpoints.userSignUp}`, user)
+          .then((response) => resolve(response.data))
+          .catch((err) => reject(err));
+        break;
+      case "PUT":
+        axios
+          .put(`${apiUrl}/${apiEndpoints.user(userToken?.user?.id)}`, user)
+          .then((response) => resolve(response.data))
+          .catch((err) => reject(err));
+        break;
+    }
   });
+  //   axios
+  //     .post(`${apiUrl}/${apiEndpoints.userSignUp}`, user)
+  //     .then((response) => resolve(response.data))
+  //     .catch((err) => reject(err));
+  // });
 }
 
-export function signInUser(
+/**
+ * Sign in a user with their email or phone number.
+ * @param user - The user's login information.
+ * @returns A Promise that resolves with the user's data in JSON format.
+ */ export function signInUser(
   user: userLoginEmail | userLoginPhone
 ): Promise<JSON> {
   return new Promise((resolve, reject) => {

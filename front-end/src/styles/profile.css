@@ -1,6 +1,6 @@
 .profile-header {
   background-image: url("/backgrounds/bg-01.png") !important;
-  height: 300px;
+  height: 250px;
 }
 
 .driver-details {
@@ -100,7 +100,7 @@
   /* border: 1px solid var(--color-primary); */
 }
 
-.profile__icon button {
+.profile__icon a {
   background: var(--color-black-01) !important;
   color: var(--color-secondary) !important;
   position: absolute;

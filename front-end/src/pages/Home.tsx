@@ -1,14 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { MapBG } from "../components/MapBG";
-import {
-  setCurrentLocation,
-  setPromiseState,
-  setServices,
-} from "../StateManagement/store";
+import { setCurrentLocation, setPromiseState } from "../StateManagement/store";
 import { useDispatch } from "react-redux";
 import { TruckRequestForm } from "../components/TruckRequestForm";
-import { locationTypes, promiseStates } from "../utils/constants";
-import { getCurrentLocation, getLocationData, getXTData } from "../utils/utils";
+import { promiseStates } from "../utils/types";
+import { getCurrentLocation, getLocationData } from "../utils/utils";
 import { LocationDataResponse } from "../utils/DataModels";
 import { toast } from "react-toastify";
 
@@ -28,7 +24,7 @@ const Home = () => {
           lat: location.coords.latitude,
           lng: location.coords.longitude,
         })
-          .then((data) => {
+          .then((data: any) => {
             dispatch(
               setPromiseState(
                 promiseStates.FULFILLED,
@@ -36,16 +32,24 @@ const Home = () => {
               )
             );
 
-            const location = new LocationDataResponse(data.results[0]);
             try {
+              const location = new LocationDataResponse(data.results[0]);
               if (location.isValid()) {
                 dispatch(setCurrentLocation(location.toObject()));
-                document.querySelector("#input-origin").value =
-                  location.toObject().formatted;
+                const inputOrigin =
+                  document.querySelector<HTMLInputElement>("#input-origin");
+                if (inputOrigin) {
+                  inputOrigin.value = location.getShortName();
+                }
               }
-            } catch (e) {
+            } catch (err: any) {
+              console.error(err);
+              if (err) {
+                toast.dismiss();
+                dispatch(setPromiseState(promiseStates.REJECTED, err.message));
+              }
               toast.dismiss();
-              dispatch(setPromiseState(promiseStates.REJECTED, e.message));
+              dispatch(setPromiseState(promiseStates.REJECTED, err.message));
             }
           })
           .catch((error) => {
@@ -63,16 +67,8 @@ const Home = () => {
 
   return (
     <>
-      <MapBG
-        originRef={originRef}
-        destinationRef={destinationRef}
-        locationTypes={locationTypes}
-      />
-      <TruckRequestForm
-        originRef={originRef}
-        destinationRef={destinationRef}
-        locationTypes={locationTypes}
-      />
+      <MapBG originRef={originRef} destinationRef={destinationRef} />
+      <TruckRequestForm originRef={originRef} destinationRef={destinationRef} />
     </>
   );
 };

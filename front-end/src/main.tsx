@@ -1,14 +1,16 @@
 import "./styles/index.css";
-import React from "react";
+// import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
+import App from "./App.js";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthProvider";
+import { AuthProvider } from "./contexts/AuthProvider.jsx";
 import { Provider } from "react-redux";
 import { store } from "./StateManagement/store.js";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    // <React.StrictMode>
     <Router>
       <Provider store={store}>
         <AuthProvider>
@@ -16,5 +18,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </AuthProvider>
       </Provider>
     </Router>
-  </React.StrictMode>
-);
+    // </React.StrictMode>
+  );
+}

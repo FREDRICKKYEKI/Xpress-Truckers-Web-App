@@ -1,4 +1,4 @@
-import React from "react";
+import { routes } from "../../utils/constants";
 
 const firtLetterStyle = {
   v1: {
@@ -17,7 +17,7 @@ const color = {
 
 export const LogoBrandName = ({ variant = "v1" }: { variant: "v1" | "v2" }) => {
   return (
-    <a href="/" className="logo">
+    <a href={routes.home} className="logo">
       <h4 className="brand-name bold">
         <span style={firtLetterStyle[variant]}>X</span>
         <span style={{ color: color[variant] }}>
