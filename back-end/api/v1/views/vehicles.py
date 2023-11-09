@@ -150,6 +150,14 @@ def filter_service(current_user):
     if type(service_types) != list:
         abort(jsonify(message="services should be provided as a list"), 400)
 
+    vehicle_types = props.get("vehicle_type")
+
+    if not vehicle_types:
+        abort(jsonify(message="Please Provide a vehicle type"), 400)
+
+    if type(vehicle_types) != list:
+        abort(jsonify(message="Vehicle type should be provided as a list"), 400)
+
     service_ids = []
     driver_ids = {}
     filtered = []
@@ -190,7 +198,7 @@ def filter_service(current_user):
     all_vehicles = storage.all(Vehicle).values()
     for vehicle in all_vehicles:
         keys = driver_ids.keys()
-        if vehicle.driver_id in keys:
+        if vehicle.driver_id in keys and vehicle.vehicle_type in vehicle_types:
             temp = vehicle.to_dict()
             # temp["services"] = driver_ids[vehicle.driver_id]
             filtered.append(temp)
