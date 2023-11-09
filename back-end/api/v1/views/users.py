@@ -11,6 +11,7 @@ from models.vehicle import Vehicle
 from models.driver_service import DriverService
 from models.image import Image
 
+
 @app_views.route('/users/', methods=['GET'], strict_slashes=False,
                  defaults={'user_id': None})
 @app_views.route('/users/<user_id>/', methods=['GET'],
@@ -147,14 +148,6 @@ def insert_user():
                                         driver_id=new_user.id);
             new_driver_service.save()
 
-        # post image
-        images = props.get('img')
-        roles = images.keys()
-        urls = images.values()
-        for role, url in zip(roles, urls):
-            new_img = Image(owner_id=new_user.id, role=role, url=url)
-            new_img.save()
-
         # new_driver_service.save()
         response = jsonify(new_user.to_dict())
         response.status_code = 201
@@ -171,13 +164,6 @@ def insert_user():
 
         new_user.save()
 
-        # post image
-        images = props.get('img')
-        roles = images.keys()
-        urls = images.values()
-        for role, url in zip(roles, urls):
-            new_img = Image(owner_id=new_user.id, role=role, url=url)
-            new_img.save()
         return jsonify(new_user.to_dict()), 201
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/Profile.css";
+import "../styles/profile.css";
 import { Rating } from "../components/Rating";
 import { defaultAvatarUrl } from "../utils/constants";
 import useAuth from "../contexts/AuthProvider";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/Profile.css";
+import "../styles/profile.css";
 import {
   SERVICES,
   VEHICLE_SIZE_TYPES,
