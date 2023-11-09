@@ -13,3 +13,4 @@ from api.v1.views.drivers import *
 from api.v1.views.vehicles import *
 from api.v1.views.trips import *
 from api.v1.views.services import *
+from api.v1.views.post_images import *
