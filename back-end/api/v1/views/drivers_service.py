@@ -31,5 +31,5 @@ def get_drivers(current_user, driver_id):
             if driver_service.driver_id == driver_id:
                 services.append(driver_service.to_dict())
 
-        return jsonify(services)
+            return jsonify(services)
     return (jsonify({"Error": "Service not found"}))

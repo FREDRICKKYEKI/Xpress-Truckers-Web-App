@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import {
   destinationIcon,
@@ -8,34 +8,46 @@ import {
   originIcon,
 } from "../utils/mapMarkers";
 import { getLocationData } from "../utils/utils";
-import { useDispatch } from "react-redux";
-import { setCurrentLocation, setDestination } from "../StateManagement/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  RootState,
+  setCurrentLocation,
+  setDestination,
+} from "../StateManagement/store";
 import { LocationDataResponse } from "../utils/DataModels";
 import { toast } from "react-toastify";
-import { DriverPopUp } from "../components/DriverPopUp";
+import { DriverPopUp } from "./DriverPopUp";
+import { locationData, locationTypes } from "../utils/types";
 
 export const MapMarkers = ({
   center,
   positionData,
   destinationData,
-  locationTypes,
   originRef,
   destinationRef,
-  drivers,
-  isLoading,
+}: {
+  center: { lat: number; lng: number };
+  positionData: locationData;
+  destinationData: locationData | null;
+  originRef: any;
+  destinationRef: any;
 }) => {
   const map = useMap();
   const dispatch = useDispatch();
   const originMarkerRef = useRef();
   const destinationMarkerRef = useRef();
+  const drivers = useSelector((state: RootState) => state.drivers);
 
-  function updateLocation(locationType, latLng) {
+  function updateLocation(
+    locationType: locationTypes,
+    latLng: { lat: number; lng: number }
+  ) {
     toast.loading("Updating location...", {
       position: toast.POSITION.TOP_CENTER,
       closeButton: true,
     });
     getLocationData(latLng)
-      .then((data) => {
+      .then((data: any) => {
         toast.dismiss();
         const location = new LocationDataResponse(data.results[0]);
         if (locationType === locationTypes.ORIGIN) {
@@ -65,19 +77,25 @@ export const MapMarkers = ({
       map.panTo(center);
     }
   }, [positionData]);
+  type iconTypes = {
+    [key: string]: any;
+  };
   const iconTypes = {
     A: truckSmallIcon,
     B: truckMediumIcon,
     C: truckLargeIcon,
   };
 
+  useEffect(() => {
+    console.log(drivers);
+  }, [drivers]);
   return (
     <>
       {drivers?.map((driver, index) => (
         <Marker
           key={driver?.id || index}
           riseOnHover={true}
-          icon={iconTypes[driver?.vehicle?.vehicle_type]}
+          icon={iconTypes[driver?.vehicle?.vehicle_type as "A" | "B" | "C"]}
           position={[driver?.vehicle?.latitude, driver?.vehicle?.longitude]}
         >
           <Popup>
@@ -89,13 +107,16 @@ export const MapMarkers = ({
       <Marker
         icon={originIcon}
         draggable={true}
-        ref={originMarkerRef}
+        ref={originMarkerRef as any}
         eventHandlers={useMemo(
           () => ({
             dragend() {
               const marker = originMarkerRef.current;
               if (marker != null) {
-                updateLocation(locationTypes.ORIGIN, marker.getLatLng());
+                updateLocation(
+                  locationTypes.ORIGIN,
+                  (marker as any).getLatLng()
+                );
               }
             },
           }),
@@ -110,18 +131,21 @@ export const MapMarkers = ({
       </Marker>
       {destinationData && (
         <Marker
-          ref={destinationMarkerRef}
+          ref={destinationMarkerRef as any}
           icon={destinationIcon}
           eventHandlers={{
             dragend() {
               const marker = destinationMarkerRef.current;
               if (marker != null) {
-                updateLocation(locationTypes.DESTINATION, marker.getLatLng());
+                updateLocation(
+                  locationTypes.DESTINATION,
+                  (marker as any).getLatLng()
+                );
               }
             },
           }}
           draggable={true}
-          position={Object.values(destinationData?.geometry)}
+          position={destinationData?.geometry}
         >
           <Popup>
             <h4>Destination</h4>

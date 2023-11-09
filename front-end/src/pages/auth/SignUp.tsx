@@ -1,39 +1,101 @@
-import React, { useEffect, useRef, useState } from "react";
-import "../styles/authPagesStyles.css";
-import { LogoIcon } from "../components/logos/LogoIcon";
+import { useEffect, useRef, useState } from "react";
+import "../../styles/authPagesStyles.css";
+import { LogoIcon } from "../../components/logos/LogoIcon";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import {
-  SERVICES,
-  VEHICLE_TYPES,
-  userTypes,
-  promiseStates,
-} from "../utils/constants";
-import { geoSearch, registerUser } from "../utils/utils";
+import { VEHICLE_TYPES, routes } from "../../utils/constants";
+import { geoSearch, registerUser } from "../../utils/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { setPromiseState } from "../StateManagement/store";
+import { RootState, setPromiseState } from "../../StateManagement/store";
 import { toast } from "react-toastify";
-import { UserRegistrationData } from "../utils/DataModels";
-import { useNavigate } from "react-router-dom";
+import { UserRegistrationData } from "../../utils/DataModels";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  editType,
+  editTypes,
+  locationData,
+  promiseStates,
+  serviceResponse,
+  userTypes,
+  vehicleTypes,
+} from "../../utils/types";
+import useAuth from "../../contexts/AuthProvider";
+import { useUser } from "../../hooks/useUser";
 
-const SignUp = () => {
+const SignUp = ({ editType = "register" }: { editType: editType }) => {
   const dispatch = useDispatch();
-  const promiseState = useSelector((state) => state.promiseState);
+  const user = useUser()?.user;
+  const { token } = useAuth();
+  const promiseState = useSelector((state: RootState) => state.promiseState);
+  const services = useSelector((state: RootState) => state.services);
   const [showDriverControls, setShowDriverControls] = useState(false);
-  const [locations, setLocations] = useState([]);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [locations, setLocations] = useState<locationData[]>([]);
+  const [phoneNumber, setPhoneNumber] = useState<string | undefined>("");
   const [showPassword, setShowPassword] = useState(false);
-  const firstNameRef = useRef();
-  const lastNameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const carRegRef = useRef();
-  const carTypeRef = useRef();
-  const carModelRef = useRef();
-  const locationRef = useRef();
+  const firstNameRef = useRef(null) as any;
+  const lastNameRef = useRef(null) as any;
+  const emailRef = useRef(null) as any;
+  const passwordRef = useRef(null) as any;
+  const carRegRef = useRef(null) as any;
+  const carTypeRef = useRef(null) as any;
+  const carModelRef = useRef(null) as any;
+  const locationRef = useRef(null) as any;
   const navigate = useNavigate();
 
-  function handleDriverControls(e) {
+  useEffect(() => {
+    if (editType === editTypes.UPDATE) {
+      if (!token) {
+        toast.warning("You need to be logged in to access this page!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 500,
+        });
+        navigate(routes.login);
+      }
+      if (firstNameRef.current) {
+        firstNameRef.current.value = token?.user.first_name || "";
+      }
+      if (lastNameRef.current) {
+        lastNameRef.current.value = token?.user.last_name || "";
+      }
+      if (emailRef.current) {
+        emailRef.current.value = token?.user.email || "";
+      }
+      setPhoneNumber(token?.user.phonenumber);
+      setShowDriverControls(
+        token?.user.role === userTypes.DRIVER ? true : false
+      );
+      if (token?.user.role === userTypes.DRIVER && user && "vehicle" in user) {
+        if (carRegRef.current) {
+          carRegRef.current.value = user.vehicle.vehicle_registration || "";
+        }
+        if (carTypeRef.current) {
+          carTypeRef.current.value = user.vehicle.vehicle_type || "";
+        }
+        if (carModelRef.current) {
+          carModelRef.current.value = user.vehicle.make || "";
+        }
+        if (locationRef.current) {
+          locationRef.current.placeholder = "please select a location";
+        }
+        const services = document.querySelectorAll<HTMLInputElement>(
+          "[data-role=service]"
+        );
+        services?.forEach((service) => {
+          user?.services?.map((drivService) => {
+            if (drivService.service_id?.trim() === service.value?.trim()) {
+              service.checked = true;
+            }
+          });
+        });
+      }
+    }
+  }, [user]);
+
+  /**
+   * Handles the driver controls based on the selected user type.
+   * @param e - The event object.
+   */
+  function handleDriverControls(e: any) {
     if (e.target.id === userTypes.DRIVER) {
       setShowDriverControls(true);
     } else {
@@ -41,43 +103,57 @@ const SignUp = () => {
     }
   }
 
-  function fetchLocations(e) {
+  /**
+   * Fetches locations based on user input.
+   * @param e - The event object.
+   */
+  function fetchLocations(e: any) {
     const text = e.target.value;
     if (text.length < 3) return;
 
     geoSearch(text)
-      .then((data) => {
+      .then((data: any) => {
         dispatch(setPromiseState(promiseStates.FULFILLED, "Location found!"));
         setLocations(data.results);
       })
-      .catch((error) => {
+      .catch(() => {
         dispatch(setPromiseState(promiseStates.REJECTED, "Error!"));
       });
   }
 
-  function handleSignUp(e) {
+  /**
+   * Handles the sign up form submission.
+   * @param {any} e - The form submission event.
+   */
+  function handleSignUp(e: any) {
     e.preventDefault();
-    const firstname = firstNameRef.current.value;
-    const lastname = lastNameRef.current.value;
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
-    const phonenumber = phoneNumber;
-    const usertype = showDriverControls ? userTypes.DRIVER : userTypes.REGULAR;
-    const vehicleRegistration = carRegRef.current?.value || null;
-    const vehicleType = carTypeRef.current?.value || null;
-    const vehicleModel = carModelRef.current?.value || null;
-    const location = locationRef.current?.value || null;
-    const placeOperation =
-      location == locations[0]?.formatted ? locations[0] : location;
 
-    const services = document.querySelectorAll("[data-role=service]");
-    const servicesArray = [];
+    const firstname: string = firstNameRef.current?.value || "";
+    const lastname: string = lastNameRef.current?.value || "";
+    const email: string = emailRef.current?.value || "";
+    const password: string = passwordRef.current?.value || "";
+    const phonenumber: string = phoneNumber || "";
+    const usertype: userTypes = showDriverControls
+      ? userTypes.DRIVER
+      : userTypes.REGULAR;
+    const vehicleRegistration: string = carRegRef.current?.value || "";
+    const vehicleType: vehicleTypes | string = carTypeRef.current?.value || "";
+    const vehicleModel: string = carModelRef.current?.value || "";
+    const location: string = locationRef.current?.value || "";
+    const placeOperation: locationData | string =
+      location === locations[0]?.formatted ? locations[0] : location;
+
+    const services = document.querySelectorAll<HTMLInputElement>(
+      "[data-role=service]"
+    );
+    const servicesArray: string[] = [];
 
     services.forEach((service) => {
       if (service.checked) {
         servicesArray.push(service.value);
       }
     });
+
     const user = new UserRegistrationData({
       firstname: firstname,
       lastname: lastname,
@@ -98,7 +174,10 @@ const SignUp = () => {
           position: toast.POSITION.TOP_CENTER,
           closeButton: true,
         });
-        registerUser(user.toObject())
+        registerUser(
+          user.toObject(),
+          editType === editTypes.UPDATE ? "PUT" : "POST"
+        )
           .then((data) => {
             console.log(data);
             toast.dismiss();
@@ -107,16 +186,17 @@ const SignUp = () => {
               autoClose: 500,
             });
 
-            navigate("/login");
+            navigate(routes.login);
           })
           .catch((err) => {
+            toast.dismiss();
             toast.error(err?.response?.data?.error, {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 500,
             });
           });
       }
-    } catch (e) {
+    } catch (e: any) {
       toast.error(e.message, {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 500,
@@ -129,11 +209,15 @@ const SignUp = () => {
       <div className="container">
         <h1 className="text-center">Registration Form</h1>
         <div className="d-flex justify-content-between">
-          <a style={{ color: "var(--color-secondary)" }} className="" href="/">
+          <a
+            style={{ color: "var(--color-secondary)" }}
+            className=""
+            href={routes.home}
+          >
             &larr; <b>Go back</b>
           </a>
         </div>
-        <LogoIcon />
+        <LogoIcon size="md" />
         <form
           onSubmit={handleSignUp}
           className="reg-form"
@@ -214,7 +298,7 @@ const SignUp = () => {
               id="phone"
               required
               value={phoneNumber}
-              onChange={setPhoneNumber}
+              onChange={(e: any) => setPhoneNumber(e)}
             />
           </div>
           <div className="mb-3" onChange={handleDriverControls}>
@@ -224,7 +308,7 @@ const SignUp = () => {
               id={userTypes.REGULAR}
               onChange={handleDriverControls}
               type="radio"
-              defaultChecked
+              checked={!showDriverControls}
               name="role"
               value="user"
             />{" "}
@@ -233,6 +317,7 @@ const SignUp = () => {
               className="custom-control-input"
               id={userTypes.DRIVER}
               onChange={handleDriverControls}
+              checked={showDriverControls}
               type="radio"
               name="role"
               value="driver"
@@ -295,7 +380,7 @@ const SignUp = () => {
                   Vehicle Type:
                 </label>
                 <select
-                  ref={carTypeRef}
+                  ref={carTypeRef as any}
                   defaultValue={"null"}
                   id="v-type"
                   className="custom-select p-2 w-100"
@@ -323,21 +408,24 @@ const SignUp = () => {
               <div className="form-group">
                 <label htmlFor="services">Pick the services you provide:</label>
                 <div id="services">
-                  {SERVICES.map((service) => (
-                    <div key={service.id} className="mb-1 form-check">
+                  {Object.values(services).map((service: unknown) => (
+                    <div
+                      key={(service as serviceResponse)?.id}
+                      className="mb-1 form-check"
+                    >
                       <label
                         data-role="service"
                         className="form-check-label"
-                        htmlFor={`service-${service.id}`}
+                        htmlFor={`service-${(service as serviceResponse)?.id}`}
                       >
-                        {service.name}
+                        {(service as serviceResponse)?.name}
                       </label>
                       <input
                         data-role="service"
                         type="checkbox"
-                        value={service.id}
+                        value={(service as serviceResponse)?.id}
                         className="form-check-input"
-                        id={`service-${service.id}`}
+                        id={`service-${(service as serviceResponse)?.id}`}
                       />
                     </div>
                   ))}
@@ -346,24 +434,23 @@ const SignUp = () => {
             </div>
           )}
           <button
-            disabled={promiseState == promiseStates.PENDING}
+            disabled={promiseState.state == promiseStates.PENDING}
             className="btn btn-primary"
             type="submit"
           >
             Register
           </button>
-          <div className="d-flex justify-content-between mt-3">
+          <div className="d-flex justify-content-between mt-3 mb-5">
             <span>
               Already have an account?{" "}
-              <a
-                href="/login"
+              <Link
+                to={routes.login}
                 style={{
                   color: "var(--color-secondary)",
-                  // textDecoration: "none",
                 }}
               >
                 <span>Sign in</span>
-              </a>
+              </Link>
             </span>
           </div>
         </form>

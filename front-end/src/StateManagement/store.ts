@@ -1,5 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { initialLocationData } from "../utils/constants";
+import {
+  driverResponse,
+  locationData,
+  promiseStates,
+  storedService,
+} from "../utils/types";
 
 const ACTIONS = {
   // ACTIONS
@@ -11,58 +17,71 @@ const ACTIONS = {
   SET_SERVICES: "SET_SERVICES",
 };
 
-export const setCurrentLocation = (location) => {
+export const setCurrentLocation = (location: locationData | any) => {
   return {
     type: ACTIONS.SET_CURRENT_LOCATION,
     payload: location,
   };
 };
 
-export const setDestination = (destination) => {
+export const setDestination = (destination: locationData | any) => {
   return {
     type: ACTIONS.SET_DESTINATION,
     payload: destination,
   };
 };
 
-export const setIsLoading = (isLoading) => {
+export const setIsLoading = (isLoading: boolean) => {
   return {
     type: ACTIONS.SET_IS_LOADING,
     payload: isLoading,
   };
 };
 
-export const setPromiseState = (promiseState, message = null) => {
+export const setPromiseState = (
+  promiseState: promiseStates,
+  message: string = ""
+) => {
   return {
     type: ACTIONS.SET_PROMISE_STATE,
     payload: { state: promiseState, message: message },
   };
 };
 
-export const setDrivers = (drivers) => {
+export const setDrivers = (drivers: driverResponse[] | unknown) => {
   return {
     type: ACTIONS.SET_DRIVERS,
     payload: drivers,
   };
 };
 
-export const setServices = (services) => {
+export const setServices = (services: storedService) => {
   return {
     type: ACTIONS.SET_SERVICES,
     payload: services,
   };
 };
 
-const initialState = {
+const initialState: {
+  currentLocation: locationData;
+  isLoading: boolean;
+  destination: locationData | null;
+  promiseState: { state: promiseStates; message: string };
+  drivers: driverResponse[];
+  services: { [key: string]: storedService };
+} = {
   currentLocation: initialLocationData,
   isLoading: false,
   destination: null,
-  promiseState: { state: null, message: null },
+  promiseState: { state: promiseStates.FULFILLED, message: "" },
   drivers: [],
-  services: null,
+  services: {},
 };
 
-const reducer = (state = initialState, { type, payload }) => {
+const reducer = (
+  state = initialState,
+  { type, payload }: { type: string; payload: any }
+) => {
   switch (type) {
     case ACTIONS.SET_CURRENT_LOCATION:
       return {
@@ -102,3 +121,5 @@ const reducer = (state = initialState, { type, payload }) => {
 export const store = configureStore({
   reducer: reducer,
 });
+
+export type RootState = ReturnType<typeof store.getState>;

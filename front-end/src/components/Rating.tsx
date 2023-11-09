@@ -1,6 +1,17 @@
-import React from "react";
-
-export const Rating = ({ value, text = false }) => {
+import { useState, useEffect } from "react";
+export const Rating = ({
+  value,
+  text = false,
+}: {
+  value: number | undefined;
+  text?: boolean;
+}) => {
+  let [rating, setRating] = useState<number>(0);
+  useEffect(() => {
+    try {
+      setRating(Number(value));
+    } catch (e: unknown) {}
+  }, []);
   return (
     <>
       {!value ? (
@@ -16,9 +27,9 @@ export const Rating = ({ value, text = false }) => {
           <span>
             <i
               className={
-                value >= 1
+                rating >= 1
                   ? "fa-solid fa-star"
-                  : value >= 0.5
+                  : rating >= 0.5
                   ? "fa-solid fa-star-half-stroke"
                   : "fa-regular fa-star"
               }
@@ -27,9 +38,9 @@ export const Rating = ({ value, text = false }) => {
           <span>
             <i
               className={
-                value >= 2
+                rating >= 2
                   ? "fa-solid fa-star"
-                  : value >= 1.5
+                  : rating >= 1.5
                   ? "fa-solid fa-star-half-stroke"
                   : "fa-regular fa-star"
               }
@@ -38,9 +49,9 @@ export const Rating = ({ value, text = false }) => {
           <span>
             <i
               className={
-                value >= 3
+                rating >= 3
                   ? "fa-solid fa-star"
-                  : value >= 2.5
+                  : rating >= 2.5
                   ? "fa-solid fa-star-half-stroke"
                   : "fa-regular fa-star"
               }
@@ -49,9 +60,9 @@ export const Rating = ({ value, text = false }) => {
           <span>
             <i
               className={
-                value >= 4
+                rating >= 4
                   ? "fa-solid fa-star"
-                  : value >= 3.5
+                  : rating >= 3.5
                   ? "fa-solid fa-star-half-stroke"
                   : "fa-regular fa-star"
               }
@@ -60,9 +71,9 @@ export const Rating = ({ value, text = false }) => {
           <span>
             <i
               className={
-                value >= 5
+                rating >= 5
                   ? "fa-solid fa-star"
-                  : value >= 4.5
+                  : rating >= 4.5
                   ? "fa-solid fa-star-half-stroke"
                   : "fa-regular fa-star"
               }

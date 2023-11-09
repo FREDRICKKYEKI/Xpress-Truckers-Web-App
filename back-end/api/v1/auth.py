@@ -44,12 +44,6 @@ def token_required(f):
 
 @app_views.route('/login', strict_slashes=False, methods=['POST'])
 def login():
-    # auth = request.authorization
-
-    # if not auth or not auth.username or not auth.password:
-    #     return (make_response(
-    #         'Could not verify', 401,
-    #         {'WWW-Authenticate' : 'Basic realm="Login required!"'}))
 
     body = request.get_json()
     all_users = storage.all(User).values()
@@ -70,13 +64,13 @@ def login():
             {'id' : user.id,
              'exp' : datetime.datetime.utcnow() + datetime.timedelta(hours=24)
              }, SECRET_KEY, algorithm='HS256')
-
+        
         response = jsonify({'token' : token,
                             "user": {
                                      "id": user.id,
                                      "first_name": user.first_name,
                                      "last_name": user.last_name,
-                                     "phone": user.phonenumber,
+                                     "phonenumber": user.phonenumber,
                                      "rating": user.ratings,
                                      "email": user.email,
                                      "role": user.role,

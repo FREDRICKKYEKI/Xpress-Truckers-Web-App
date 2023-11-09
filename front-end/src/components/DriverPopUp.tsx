@@ -1,8 +1,9 @@
-import React from "react";
 import { Rating } from "./Rating";
-import { defaultAvatarUrl } from "../utils/constants";
+import { defaultAvatarUrl, routes } from "../utils/constants";
+import { driverResponse } from "../utils/types";
+import { Link } from "react-router-dom";
 
-export const DriverPopUp = ({ driver }) => {
+export const DriverPopUp = ({ driver }: { driver: driverResponse }) => {
   return (
     <div style={{ border: "none" }} className="card">
       <div className="profile__icon">
@@ -14,7 +15,7 @@ export const DriverPopUp = ({ driver }) => {
         </h5>
 
         <p className="card-text"></p>
-        <Rating text={true} value={driver?.ratings || "0"} />
+        <Rating text={true} value={driver?.ratings || 0} />
 
         <p className="card-text">
           <b>
@@ -22,12 +23,12 @@ export const DriverPopUp = ({ driver }) => {
           </b>
         </p>
       </div>
-      <a
-        href={`driver/${driver?.id}`}
+      <Link
+        to={routes.driver(driver?.id)}
         className="btn btn-secondary color-light mt-2 w-100"
       >
         More info
-      </a>
+      </Link>
     </div>
   );
 };

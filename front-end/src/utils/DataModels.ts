@@ -1,12 +1,27 @@
-import { logInTypes, userTypes } from "./constants";
-import { driver, user } from "./types";
+import {
+  driver,
+  driverRequestType,
+  locationData,
+  logInTypes,
+  user,
+  userLoginEmail,
+  userLoginPhone,
+  userTypes,
+  vehicleTypes,
+} from "./types";
 
 export class DriverRequest {
   origin: {};
   destination: {};
-  vehicleType: string;
+  vehicleType: Array<vehicleTypes>;
   services: string[];
-  constructor(origin = {}, destination = {}, vehicleType = "", services = []) {
+
+  constructor(
+    origin = {},
+    destination = {},
+    vehicleType = [vehicleTypes.typeA],
+    services = [""]
+  ) {
     this.origin = origin;
     this.destination = destination;
     this.vehicleType = vehicleType;
@@ -18,7 +33,7 @@ export class DriverRequest {
       throw Error("Current location not selected!");
     } else if (!this.destination) {
       throw Error("Destination not selected!");
-    } else if (!this.vehicleType || this.vehicleType === "null") {
+    } else if (!this.vehicleType || this.vehicleType[0] === "null") {
       throw Error("Vehicle Type not selected!");
     } else if (!this.services || this.services.length === 0) {
       throw Error("Services not selected!");
@@ -26,7 +41,7 @@ export class DriverRequest {
     return true;
   }
 
-  toObject() {
+  toObject(): driverRequestType {
     return {
       origin: this.origin,
       destination: this.destination,
@@ -42,21 +57,21 @@ export class DriverRequest {
 
 export class LocationDataResponse {
   __keys = ["name", "formatted", "geometry"];
-  bounds: {};
   name: string;
   formatted: string;
   geometry: { lat: number; lng: number };
+
   constructor(data: locationData) {
     this.name = data?.name;
-    this.bounds = data?.bounds;
     this.formatted = data?.formatted;
     this.geometry = data?.geometry;
   }
+  getShortName() {
+    return this.formatted;
+  }
 
   isValid() {
-    if (!this.bounds) {
-      throw Error("Bounds not found!");
-    } else if (!this.formatted) {
+    if (!this.formatted) {
       throw Error("Formatted address not found!");
     } else if (!this.geometry) {
       throw Error("Geometry not found!");
@@ -66,33 +81,27 @@ export class LocationDataResponse {
   toObject(): locationData {
     return {
       name: this.name,
-      bounds: this.bounds,
       formatted: this.formatted,
       geometry: this.geometry,
     };
   }
 
-  validate() {
+  [key: string]: any;
+
+  validate(): boolean {
     try {
       for (const key of Object.keys(this.toObject())) {
         if (!this.__keys.includes(key) || !this[key]) {
           console.log(this);
           return false;
         }
-        return true;
       }
     } catch (e) {
       console.log("Error");
       return false;
     }
+    return true;
   }
-}
-
-interface locationData {
-  bounds: {};
-  name: string;
-  formatted: string;
-  geometry: { lat: number; lng: number };
 }
 
 export class UserRegistrationData {
@@ -103,11 +112,11 @@ export class UserRegistrationData {
   email: string;
   password: string;
   phonenumber: string;
-  usertype: string;
+  usertype: userTypes;
   vehicleRegistration: string;
   vehicleType: string;
   vehicleModel: string;
-  placeOperation: locationData;
+  placeOperation: any;
   services: string[];
 
   constructor({
@@ -116,12 +125,12 @@ export class UserRegistrationData {
     email = "",
     password = "",
     phonenumber = "",
-    usertype = "",
+    usertype = userTypes.REGULAR,
     vehicleRegistration = "",
     vehicleType = "",
     vehicleModel = "",
-    placeOperation,
-    services = [],
+    placeOperation = {},
+    services = [""],
   }) {
     this.firstname = firstname;
     this.lastname = lastname;
@@ -211,7 +220,7 @@ export class UserRegistrationData {
     return true;
   }
 
-  toObject() {
+  toObject(): user | driver {
     if (this.usertype === userTypes.REGULAR) {
       return {
         first_name: this.firstname,
@@ -271,16 +280,18 @@ export class UserLogInData {
     return true;
   }
 
-  toObject() {
+  toObject(): userLoginEmail | userLoginPhone {
     if (this.type === logInTypes.EMAIL) {
       return {
         email: this.email_phone,
         password: this.password,
+        type: this.type,
       };
     }
     return {
       phone: this.email_phone,
       password: this.password,
+      type: this.type,
     };
   }
 

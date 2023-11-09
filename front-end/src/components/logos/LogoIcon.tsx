@@ -1,10 +1,9 @@
-import React from "react";
 import logo from "/logos/logo.png";
-import { COMPANY_NAME } from "../../utils/constants";
+import { COMPANY_NAME, routes } from "../../utils/constants";
 import { Link } from "react-router-dom";
 
-export const LogoIcon = ({ size = "md" }) => {
-  const STYLES = {
+export const LogoIcon = ({ size = "md" }: { size: "sm" | "md" }) => {
+  const STYLES: { [key: string]: any } = {
     sm: {
       maxWidth: "130px",
       marginInline: "auto",
@@ -15,7 +14,7 @@ export const LogoIcon = ({ size = "md" }) => {
     },
   };
   return (
-    <Link to="/" className="d-flex justify-center align-center">
+    <Link to={routes.home} className="d-flex justify-center align-center">
       <img style={STYLES[size]} src={logo} alt={COMPANY_NAME} />
     </Link>
   );
