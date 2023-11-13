@@ -1,11 +1,11 @@
 import {
-  driver,
+  driverRequest,
   driverRequestType,
   locationData,
   logInTypes,
-  user,
   userLoginEmail,
   userLoginPhone,
+  userRequest,
   userTypes,
   vehicleTypes,
 } from "./types";
@@ -220,7 +220,7 @@ export class UserRegistrationData {
     return true;
   }
 
-  toObject(): user | driver {
+  toObject(): userRequest | driverRequest {
     if (this.usertype === userTypes.REGULAR) {
       return {
         first_name: this.firstname,

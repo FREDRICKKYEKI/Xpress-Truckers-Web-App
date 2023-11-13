@@ -15,7 +15,7 @@ import { RootState } from "../StateManagement/store";
 const Driver = () => {
   const params = useParams();
   const [sampleTrucks, setSampleTrucks] = useState<any>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [driver, setDriver] = useState<driverResponse | null>(null);
   const services = useSelector((state: RootState) => state.services);
   const [driverServices, setDriverServices] = useState<serviceResponse[]>([]);
@@ -161,7 +161,7 @@ const Driver = () => {
           <div className="vehicle_imgs">
             {sampleTrucks?.map((result: any) => (
               <div key={result?.id}>
-                <img alt="vehicle" src={result.urls.regular} />
+                <img alt="vehicle" src={result?.urls?.regular} />
               </div>
             ))}
           </div>

@@ -2,12 +2,12 @@ import { UNSPLASH_ROOT, apiEndpoints, apiUrl } from "./constants";
 import { envs } from "./loadEnv";
 import axios from "axios";
 import {
-  driver,
+  driverRequest,
   driverRequestType,
   methods,
-  user,
   userLoginEmail,
   userLoginPhone,
+  userRequest,
   userToken,
 } from "./types";
 
@@ -163,7 +163,7 @@ export function postXTData(endpoint: string, data: driverRequestType) {
  * @returns A Promise that resolves with the JSON response from the server.
  */
 export function registerUser(
-  user: user | driver,
+  user: userRequest | driverRequest,
   method: methods
 ): Promise<any> {
   const userToken: userToken =
