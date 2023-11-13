@@ -209,7 +209,6 @@ def filter_service(current_user):
                 temp = driver.to_dict()
                 temp["vehicle"] = vehicle
                 resp_drivers.append(temp)
-           
 
     if filtered == [] and resp_drivers == []:
         return make_response(jsonify({"message": "No drivers found"}), 404)

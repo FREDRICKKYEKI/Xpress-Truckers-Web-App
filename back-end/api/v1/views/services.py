@@ -14,7 +14,7 @@ from models.service import Service
 @app_views.route('/services/<service_id>/', methods=['GET'],
                  strict_slashes=False)
 # @token_required
-def get_service( service_id):
+def get_service(service_id):
     """
     retrievs vehicle data only
     """
