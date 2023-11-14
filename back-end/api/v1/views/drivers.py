@@ -18,7 +18,7 @@ from models.service import Service
 @app_views.route('/drivers/<driver_id>/', methods=['GET'],
                  strict_slashes=False)
 # @token_required
-def get_drivers( driver_id):
+def get_drivers(current_user, driver_id):
     """
     retrievs driver data only
     """
@@ -31,8 +31,10 @@ def get_drivers( driver_id):
     for user in all_users:
         if user.role == 'driver':
             temp = user.to_dict()
-            url = [{image.role: image.url} for image in images
-                       if image.owner_id == user.id]
+            url = {}
+            for image in images:
+                if image.owner_id == user.id:
+                    url[image.role] = image.url
             temp["img"] = url
             drivers.append(temp)
 
