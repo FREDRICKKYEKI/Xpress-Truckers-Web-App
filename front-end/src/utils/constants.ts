@@ -1,3 +1,4 @@
+import { envs } from "./loadEnv";
 import { locationData } from "./types";
 
 export const COMPANY_NAME: string = "Xpress Truckers";
@@ -7,7 +8,7 @@ export const defaultAvatarUrl: string =
 
 export const UNSPLASH_ROOT: string = "https://api.unsplash.com";
 
-export const apiUrl: string = "http://127.0.0.1:5000/api/v1";
+export const apiUrl: string = envs.api_url;
 
 export const initialLocationData: locationData = {
   formatted: "Nairobi, Kenya",
@@ -39,8 +40,12 @@ export const apiEndpoints = {
   services: "services/",
   drivers: "drivers/",
   filteredDrivers: "filter_vehicles/",
+  trips: "trips/",
   driver: (id: string | undefined) => (id ? `drivers/${id}` : "drivers/none"),
   user: (id: string | undefined) => (id ? `users/${id}` : "users/none"),
+  trip: (id: string | undefined) => (id ? `trips/${id}` : "trips/none"),
+  driverTrips: (id: string) => `drivers/${id}/trips/`,
+  userTrips: (id: string) => `users/${id}/trips/`,
 };
 
 export const routes = {

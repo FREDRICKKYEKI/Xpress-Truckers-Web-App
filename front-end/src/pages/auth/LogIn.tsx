@@ -8,9 +8,11 @@ import { signInUser } from "../../utils/utils";
 import useAuth from "../../contexts/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../utils/constants";
+import { useEffect } from "react";
 
 const LogIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { token } = useAuth();
   const navigate = useNavigate();
   const [loginType, setLoginType] = useState(logInTypes.EMAIL);
   const emailRef = useRef<any>();
@@ -73,6 +75,10 @@ const LogIn = () => {
       });
     }
   }
+
+  useEffect(() => {
+    if (token?.user) navigate(routes.profile);
+  });
   return (
     <section className="auth-form">
       <div style={{ maxWidth: "500px" }} className="container login-form">

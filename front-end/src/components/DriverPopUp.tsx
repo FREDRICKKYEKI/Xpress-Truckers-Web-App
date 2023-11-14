@@ -1,9 +1,34 @@
 import { Rating } from "./Rating";
 import { defaultAvatarUrl, routes } from "../utils/constants";
-import { driverResponse } from "../utils/types";
-import { Link } from "react-router-dom";
+import { driverResponse, locationData } from "../utils/types";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "../StateManagement/store";
+import { useSelector } from "react-redux";
+import { LocationDataResponse } from "../utils/DataModels";
+import { toast } from "react-toastify";
 
 export const DriverPopUp = ({ driver }: { driver: driverResponse }) => {
+  const state = useSelector((state: RootState) => state);
+  const navigate = useNavigate();
+
+  function navigateToDriver() {
+    const origin = new LocationDataResponse(state.currentLocation);
+    const destination = new LocationDataResponse(
+      state.destination as locationData
+    );
+
+    try {
+      if (origin.isValid() && destination.isValid()) {
+        navigate(routes.driver(driver?.id));
+      }
+    } catch (error) {
+      toast.error("Please select a valid origin and destination...", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 500,
+      });
+    }
+  }
+
   return (
     <div style={{ border: "none" }} className="card">
       <div className="profile__icon">
@@ -27,12 +52,13 @@ export const DriverPopUp = ({ driver }: { driver: driverResponse }) => {
           </b>
         </p>
       </div>
-      <Link
-        to={routes.driver(driver?.id)}
+      <a
+        onClick={() => navigateToDriver()}
+        href="#"
         className="btn btn-secondary color-light mt-2 w-100"
       >
         More info
-      </Link>
+      </a>
     </div>
   );
 };

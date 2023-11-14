@@ -25,11 +25,17 @@ export const useUser = () => {
         .then((data: unknown) => {
           setUser(data as driverResponse | userResponse);
           toast.dismiss();
-          toast.success("Done!");
+          toast.success("Done!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
         })
         .catch((error) => {
           toast.dismiss();
-          toast.error("Error!");
+          toast.error("Error!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
           console.log(error);
         });
     } else
@@ -38,13 +44,18 @@ export const useUser = () => {
           console.log(data);
           setUser(data as driverResponse | userResponse);
           toast.dismiss();
-
-          toast.success("Done!");
+          toast.success("Done!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
         })
         .catch((error) => {
           toast.dismiss();
 
-          toast.error("Error!");
+          toast.error("Error!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
           console.log(error);
         });
   }, []);

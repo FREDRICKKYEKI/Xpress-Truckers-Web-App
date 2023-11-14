@@ -18,4 +18,5 @@ export const envs = {
   unsplashApiAccessKey: (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY,
   unsplashApiSecretKey: (import.meta as any).env.VITE_UNSPLASH_SECRET_KEY,
   db_host: (import.meta as any).env.VITE_DB_HOST,
+  api_url: (import.meta as any).env.VITE_API_URL,
 };

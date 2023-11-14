@@ -8,9 +8,13 @@ export type methods = "GET" | "POST" | "PUT" | "DELETE";
 
 export type vehicleType = "A" | "B" | "C";
 
+export type tripStatus = "pending" | "ongoing" | "finished" | "cancelled";
+
 export type storedService = {
   [key: string]: serviceResponse;
 };
+
+export type latlng = { lat: number; lng: number };
 
 export type userLoginEmail = {
   email: string;
@@ -49,7 +53,7 @@ export type userToken = {
 export type locationData = {
   name: string;
   formatted: string;
-  geometry: { lat: number; lng: number };
+  geometry: latlng;
 };
 
 export interface userRequest {
@@ -82,6 +86,9 @@ export interface userResponse {
 
 export interface driverResponse extends userResponse {
   vehicle: {
+    id: string;
+    created_at: string;
+    updated_at: string;
     vehicle_registration: string;
     vehicle_type: vehicleTypes;
     make: string;
@@ -107,6 +114,30 @@ export interface driverRequestType {
   destination: {};
   vehicleType: string[];
   services: string[];
+}
+
+export interface TripPostRequest {
+  client_id: string;
+  driver_id: string;
+  vehicle_id: string;
+  origin: latlng;
+  destination: latlng;
+  status: tripStatus;
+}
+
+export interface TripResponse {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  client_id: string;
+  driver_id: string;
+  vehicle_id: string;
+  origin: string;
+  destination: string;
+  status: tripStatus;
+  start_at: string;
+  end_at: string;
+  type: "type1" | "type2";
 }
 
 /**
@@ -163,4 +194,11 @@ export enum logInTypes {
 export enum editTypes {
   REGISTER = "register",
   UPDATE = "update",
+}
+
+export enum tripStatuses {
+  PENDING = "pending",
+  ONGOING = "ongoing",
+  FINISHED = "finished",
+  CANCELLED = "cancelled",
 }

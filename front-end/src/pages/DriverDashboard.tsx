@@ -3,21 +3,24 @@ import { useEffect, useState } from "react";
 import useAuth from "../contexts/AuthProvider";
 import { useUser } from "../hooks/useUser";
 import { apiEndpoints, defaultAvatarUrl, routes } from "../utils/constants";
-import { driverResponse, serviceResponse } from "../utils/types";
-import { getXTData } from "../utils/utils";
+import { TripResponse, driverResponse, serviceResponse } from "../utils/types";
+import { capitalize, getXTData } from "../utils/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "../StateManagement/store";
 import { Link } from "react-router-dom";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { VehicleDetailsCard } from "../components/cards/VehicleDetailsCard";
+import { TripRequestsCard } from "../components/cards/TripRequestsCard";
+import { OngoingTripsCard } from "../components/cards/OnGoingTripsCard";
 
 export const DriverDashboard = () => {
+  const services = useSelector((state: RootState) => state.services);
+  const [openNav, setOpenNav] = useState<boolean>(false);
+  const [trips, setTrips] = useState<TripResponse[] | []>([]); // TODO: replace with TripResponse[
   const { token } = useAuth();
   const { user } = useUser();
   const { width } = useWindowSize();
   const maxWidth = 568;
-  const [openNav, setOpenNav] = useState<boolean>(false);
-  const services = useSelector((state: RootState) => state.services);
 
   const [driverServices, setDriverServices] = useState<serviceResponse[]>([]);
 
@@ -35,6 +38,15 @@ export const DriverDashboard = () => {
           }
           setDriverServices(Object.values(drivServices));
         }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    getXTData(apiEndpoints.userTrips(token?.user.id as string))
+      .then((data) => {
+        setTrips(data as TripResponse[]);
+        console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -64,7 +76,7 @@ export const DriverDashboard = () => {
       <div className="d-flex h-100">
         {openNav && (
           <aside
-            className={`bg-primary p-4 d-flex flex-column align-items-center gap-3 justify-content-between 
+            className={`bg-dark p-4 d-flex flex-column align-items-center gap-3 justify-content-between 
             ${width && width < maxWidth && "position-absolute w-100"}`}
             style={{
               zIndex: "100",
@@ -120,13 +132,19 @@ export const DriverDashboard = () => {
         >
           {/* <BackButton /> */}
 
-          <h4>Welcome back {token?.user.first_name},</h4>
+          <h4>Welcome back {capitalize(token?.user.first_name as string)},</h4>
+          <h5 className="ms-3">
+            Role:{" "}
+            <span className="rounded bg-secondary color-light p-1">
+              {capitalize(token?.user.role as string)}
+            </span>
+          </h5>
           <div className="row p-3">
             <article className="col-lg-4 col-md-4 col-sm-12 mb-3">
               <h5>Trip Requests:</h5>
-              <div className="card p-2 d-flex flex-column align-items-center">
-                <EmptyState text="No Trip Requests" />
-              </div>
+              <TripRequestsCard
+                trips={trips.filter((trip) => trip.status === "pending")}
+              />
             </article>
             <article className="col-lg-4 col-md-4 col-sm-12 mb-3">
               <h5>Complete Trips:</h5>
@@ -136,13 +154,13 @@ export const DriverDashboard = () => {
             </article>
             <article className="col-lg-4 col-md-4 col-sm-12">
               <h5>Ongoing Trips:</h5>
-              <div className="card p-2 d-flex flex-column align-items-center">
-                <EmptyState text="No Ongoing trips yet" />
-              </div>
+              <OngoingTripsCard
+                trips={trips.filter((trip) => trip.status === "ongoing")}
+              />
             </article>
-            <article className="col-lg-4 col-md-4 col-sm-12 mt-3">
+            <article className="col-lg-4 col-md-4 col-sm-12 mt-5">
               <h5>Vehicle Details:</h5>
-              {user ? (
+              {driverServices ? (
                 <VehicleDetailsCard
                   driver={user as driverResponse}
                   driverServices={driverServices}
@@ -158,13 +176,13 @@ export const DriverDashboard = () => {
   );
 };
 
-function EmptyState({ text }: { text: string }) {
+export function EmptyState({ text }: { text: string }) {
   return (
-    <>
+    <div className="d-flex flex-column align-items-center">
       <span style={{ width: "max-content" }}>
         <img src="/icons/empty-box.svg" />
       </span>
       <i className="color-gray text-center">{text}</i>
-    </>
+    </div>
   );
 }

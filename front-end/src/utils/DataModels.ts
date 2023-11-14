@@ -10,6 +10,16 @@ import {
   vehicleTypes,
 } from "./types";
 
+// class BaseDataModel {
+//   [key: string]: any;
+//   constructor(data: any) {
+//     Object.assign(this, data);
+//   }
+//   isValid() {}
+//   toObject() {}
+//   toRequest() {}
+// }
+
 export class DriverRequest {
   origin: {};
   destination: {};
@@ -299,3 +309,27 @@ export class UserLogInData {
     return JSON.stringify(this.toObject());
   }
 }
+
+// export class TripRequest extends BaseDataModel {
+//   client_id: string;
+//   driver_id: string;
+//   vehicle_id: string;
+//   origin: latlng;
+//   destination: latlng;
+//   status: tripStatus;
+
+//   constructor(data: TripPostRequest) {
+//     super(data);
+//     this.client_id = data.client_id;
+//     this.driver_id = data.driver_id;
+//     this.vehicle_id = data.vehicle_id;
+//     this.origin = data.origin;
+//     this.destination = data.destination;
+//     this.status = data.status;
+//   }
+//   isValid(): boolean {
+//     if (!this.client_id) {
+//     throw Error("Email/Phone not provided!");
+
+//   }
+// }

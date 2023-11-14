@@ -98,7 +98,11 @@ const Driver = () => {
           <VehicleImagesCard driver={driver} />
         </div>
       </div>
-      <RequestTruckModal open={openModal} onClose={() => setOpenModal(false)} />
+      <RequestTruckModal
+        driver={driver}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+      />
     </section>
   );
 };
