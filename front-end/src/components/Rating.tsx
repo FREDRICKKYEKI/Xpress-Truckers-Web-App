@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 export const Rating = ({
   value,
   text = false,
+  className = "",
 }: {
   value: number | undefined;
   text?: boolean;
+  className?: string;
 }) => {
   let [rating, setRating] = useState<number>(0);
   useEffect(() => {
@@ -13,14 +15,14 @@ export const Rating = ({
     } catch (e: unknown) {}
   }, []);
   return (
-    <>
+    <span>
       {!value ? (
         <div></div>
       ) : (
-        <div style={{ color: "var(--color-secondary)" }} className="rating">
+        <div style={{ color: "var(--color-secondary)" }} className={`rating`}>
           {text && (
-            <span style={{ color: "var(--color-black-01)" }}>
-              <b>Rating</b>:
+            <span>
+              <b className={`${className}`}>Rating:</b>
             </span>
           )}
           &nbsp;
@@ -82,6 +84,6 @@ export const Rating = ({
           <span> {text || ""} </span>
         </div>
       )}
-    </>
+    </span>
   );
 };

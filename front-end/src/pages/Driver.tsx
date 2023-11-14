@@ -11,12 +11,14 @@ import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { driverResponse, serviceResponse } from "../utils/types";
 import { RootState } from "../StateManagement/store";
+import { useUser } from "../hooks/useUser";
 
 const Driver = () => {
   const params = useParams();
   const [sampleTrucks, setSampleTrucks] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [driver, setDriver] = useState<driverResponse | null>(null);
+  const { user } = useUser();
+  const driver = user;
   const services = useSelector((state: RootState) => state.services);
   const [driverServices, setDriverServices] = useState<serviceResponse[]>([]);
 
@@ -24,7 +26,6 @@ const Driver = () => {
     getXTData(apiEndpoints.driver(params.id))
       .then((driverRes: unknown) => {
         let driverResponse = driverRes as driverResponse;
-        setDriver(driverResponse);
 
         if (services) {
           let drivServices: { [key: string]: any } = {};
@@ -44,7 +45,7 @@ const Driver = () => {
   }, []);
 
   useEffect(() => {
-    if (driver?.vehicle?.vehicle_type) {
+    if (driver && "vehicle" in driver) {
       const vehicleType =
         VEHICLE_SIZE_TYPES[driver?.vehicle?.vehicle_type as "A" | "B" | "C"];
       getUnsplashPhotos({ query: vehicleType })
@@ -60,14 +61,10 @@ const Driver = () => {
   if (isLoading) return <div>Loading...</div>;
   return (
     <section className="container color-dark">
-      <div className="row">
-        {/* Driver profile*/}
-        <div
-          style={{ border: "none" }}
-          className="col-lg-4 mx-auto col-md-4 col-sm-12 profile__card card mobile_profile__card"
-        >
+      <div className="row p-3">
+        <div className="col-lg-4 mx-auto col-md-4 col-sm-12 profile__card card mobile_profile__card">
           <div className="profile__header">
-            <h2 className="profile__header__title ">Truck Driver</h2>
+            <h3 className="profile__header__title ">Truck Driver</h3>
           </div>
           <div className="profile__icon">
             <img
@@ -81,7 +78,11 @@ const Driver = () => {
               {driver?.first_name} {driver?.last_name}
             </h5>
             <p className="card-text"></p>
-            <Rating text={true} value={driver?.ratings} />
+            <Rating
+              className="color-dark font-weight-bold"
+              text={true}
+              value={driver?.ratings}
+            />
             <p className="card-text">
               <>
                 <b>Email:&nbsp;</b>
@@ -104,10 +105,7 @@ const Driver = () => {
           </button>
         </div>
         {/* Driver Details */}
-        <div
-          // className="driver-details__card card"
-          className="col-lg-4 col-md-4 col-sm-12 driver-details__card card mx-auto"
-        >
+        <div className="col-lg-4 col-md-4 col-sm-12 driver-details__card card mx-auto">
           <div className="">
             <h5>
               <u>Details:</u>
@@ -118,6 +116,7 @@ const Driver = () => {
               <b>Truck Type: </b>
               <i className="color-secondary">
                 {driver &&
+                  "vehicle" in driver &&
                   VEHICLE_SIZE_TYPES[
                     driver?.vehicle?.vehicle_type as "A" | "B" | "C"
                   ]}
@@ -125,12 +124,16 @@ const Driver = () => {
             </p>
             <p className="card-text">
               <b>Vehicle Model: </b>
-              <i className="color-secondary">{driver?.vehicle?.make}</i>
+              <i className="color-secondary">
+                {driver && "vehicle" in driver && driver?.vehicle?.make}
+              </i>
             </p>
             <p className="card-text">
               <b>Registration: </b>
               <i className="color-secondary">
-                {driver?.vehicle?.vehicle_registration}
+                {driver &&
+                  "vehicle" in driver &&
+                  driver?.vehicle?.vehicle_registration}
               </i>
             </p>
             <p className="card-text font-weight-bold">

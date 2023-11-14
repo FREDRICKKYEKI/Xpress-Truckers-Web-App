@@ -71,7 +71,7 @@ def login():
                                      "first_name": user.first_name,
                                      "last_name": user.last_name,
                                      "phonenumber": user.phonenumber,
-                                     "rating": user.ratings,
+                                     "ratings": user.ratings,
                                      "email": user.email,
                                      "role": user.role,
                                      }})

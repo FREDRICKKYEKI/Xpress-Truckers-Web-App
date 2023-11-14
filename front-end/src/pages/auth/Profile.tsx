@@ -2,9 +2,16 @@ import "../../styles/profile.css";
 import { Rating } from "../../components/Rating";
 import { defaultAvatarUrl, routes } from "../../utils/constants";
 import useAuth from "../../contexts/AuthProvider";
+import { userTypes } from "../../utils/types";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Profile = () => {
   const { token } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (token?.user.role === userTypes.DRIVER) navigate(routes.driverDashboard);
+  }, []);
   return (
     <section className="profile-details d-flex justify-content-center">
       <div className="profile__card card mb-4">
