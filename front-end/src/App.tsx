@@ -18,6 +18,7 @@ import { editTypes, promiseStates, serviceResponse } from "./utils/types";
 import { DriverDashboard } from "./pages/DriverDashboard";
 import { LogoIcon } from "./components/logos/LogoIcon";
 import { UserDashboard } from "./pages/DashBoard";
+import { Loader } from "./components/Loader";
 
 function App() {
   const promiseState = useSelector((state: RootState) => state.promiseState);
@@ -158,7 +159,7 @@ function App() {
       ) : (
         <>
           <LogoIcon size="md" className="pulsating" />
-          Loading...
+          <Loader />
         </>
       )}
     </>

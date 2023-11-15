@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { getLocationData, getXTData, putXTData } from "../../utils/utils";
 import { apiEndpoints } from "../../utils/constants";
 import { toast } from "react-toastify";
+import { TripStatusBadge } from "../badges/TripStatusBadge";
+import { Loader } from "../Loader";
 
 export const type1Text = "You requested a truck.";
 
@@ -131,7 +133,7 @@ export const TripDetailsModal = ({
         <h3>Trip Details:</h3>
         {trip?.type === "type1" && <p>{type1Text}</p>}
         {loading ? (
-          <i className="fa fa-spinner" aria-hidden="true"></i>
+          <Loader />
         ) : (
           <>
             <div>
@@ -174,9 +176,7 @@ export const TripDetailsModal = ({
 
             <div className="mt-1">
               <b>Status</b>:{" "}
-              <span className="bg-gray p-1 rounded color-dark">
-                {trip?.status}
-              </span>
+              <TripStatusBadge status={trip?.status as tripStatuses} />
             </div>
             {trip?.type === "type1" ? (
               <button

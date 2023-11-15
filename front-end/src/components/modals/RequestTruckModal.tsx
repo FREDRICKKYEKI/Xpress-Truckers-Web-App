@@ -1,13 +1,14 @@
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { postXTData } from "../../utils/utils";
-import { apiEndpoints } from "../../utils/constants";
+import { apiEndpoints, routes } from "../../utils/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../../StateManagement/store";
 import { TripPostRequest, driverResponse, latlng } from "../../utils/types";
 import useAuth from "../../contexts/AuthProvider";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export function RequestTruckModal({
   open,
@@ -24,6 +25,7 @@ export function RequestTruckModal({
   const destination = useSelector((state: RootState) => state.destination);
   const { token } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   function handleRequestTruck() {
     setLoading(true);
@@ -42,6 +44,7 @@ export function RequestTruckModal({
           setLoading(false);
           console.log(res);
           onClose();
+          navigate(routes.userDashboard);
         })
         .catch((error) => {
           setLoading(false);
@@ -51,7 +54,8 @@ export function RequestTruckModal({
         pending: "Requesting truck...",
         success: "Trip started!",
         error: "Request failed!",
-      }
+      },
+      { autoClose: 2000 }
     );
   }
 
@@ -60,6 +64,12 @@ export function RequestTruckModal({
       <div className="container">
         <h4>Request Truck:</h4>
         <p>Do you wish to start the trip ?</p>
+        <p>
+          <b>From:</b> {currentLocation?.formatted}
+        </p>
+        <p>
+          <b>To:</b> {destination?.formatted}
+        </p>
         <div className="row">
           <div className="col-6">
             <button

@@ -23,8 +23,8 @@ export const CompletedTripsCard = ({ trips }: { trips: TripResponse[] }) => {
             }}
             className={`${
               trip?.status === tripStatuses.FINISHED
-                ? "border-success"
-                : "border-danger"
+                ? "bl-success"
+                : "bl-danger"
             } card p-2 bg-white py-2 d-flex flex-row gap-1 align-items-center cursor-pointer`}
           >
             <div>{index + 1}. </div>

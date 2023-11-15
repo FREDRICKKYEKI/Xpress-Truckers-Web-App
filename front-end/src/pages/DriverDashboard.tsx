@@ -8,6 +8,7 @@ import {
   driverResponse,
   serviceResponse,
   tripStatuses,
+  userTypes,
 } from "../utils/types";
 import { capitalize, getXTData } from "../utils/utils";
 import { useSelector } from "react-redux";
@@ -18,6 +19,9 @@ import { VehicleDetailsCard } from "../components/cards/VehicleDetailsCard";
 import { TripRequestsCard } from "../components/cards/TripRequestsCard";
 import { OngoingTripsCard } from "../components/cards/OnGoingTripsCard";
 import { CompletedTripsCard } from "../components/cards/CompletedTripsCard";
+import { UserRoleBadge } from "../components/badges/UserRoleBadge";
+import { VehicleImagesCard } from "../components/cards/VehicleImagesCard";
+import { Loader } from "../components/Loader";
 
 export const DriverDashboard = () => {
   const services = useSelector((state: RootState) => state.services);
@@ -134,14 +138,11 @@ export const DriverDashboard = () => {
 
         <section
           style={{ maxHeight: "100vh", overflowY: "scroll" }}
-          className="p-4 w-100 color-dark"
+          className="p-4 w-100 color-dark dashboard__container"
         >
           <h4>Welcome back {capitalize(token?.user.first_name as string)},</h4>
           <h5 className="ms-3">
-            Role:{" "}
-            <span className="rounded bg-secondary color-light p-1">
-              {capitalize(token?.user.role as string)}
-            </span>
+            Role: <UserRoleBadge role={token?.user.role as userTypes} />
           </h5>
           <div className="row p-3">
             <article className="col-lg-4 col-md-4 h-100 col-sm-12 mb-3">
@@ -178,8 +179,12 @@ export const DriverDashboard = () => {
                   driverServices={driverServices}
                 />
               ) : (
-                <i className="fa fa-spinner" aria-hidden="true"></i>
+                <Loader />
               )}
+            </article>
+            <article className="col-lg-4 col-md-4 h-100 col-sm-12 mt-5">
+              <h5>Vehicle Images:</h5>
+              <VehicleImagesCard driver={user as driverResponse} />
             </article>
           </div>
         </section>

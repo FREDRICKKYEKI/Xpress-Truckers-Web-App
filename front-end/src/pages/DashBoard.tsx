@@ -2,13 +2,14 @@ import { Rating } from "../components/Rating";
 import { useEffect, useState } from "react";
 import useAuth from "../contexts/AuthProvider";
 import { apiEndpoints, defaultAvatarUrl, routes } from "../utils/constants";
-import { TripResponse, tripStatuses } from "../utils/types";
+import { TripResponse, tripStatuses, userTypes } from "../utils/types";
 import { capitalize, getXTData } from "../utils/utils";
 import { Link } from "react-router-dom";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { TripRequestsCard } from "../components/cards/TripRequestsCard";
 import { OngoingTripsCard } from "../components/cards/OnGoingTripsCard";
 import { CompletedTripsCard } from "../components/cards/CompletedTripsCard";
+import { UserRoleBadge } from "../components/badges/UserRoleBadge";
 
 export const UserDashboard = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -103,14 +104,11 @@ export const UserDashboard = () => {
 
         <section
           style={{ maxHeight: "100vh", overflowY: "scroll" }}
-          className="p-4 w-100 color-dark"
+          className="p-4 w-100 color-dark dashboard__container"
         >
           <h4>Welcome back {capitalize(token?.user.first_name as string)},</h4>
           <h5 className="ms-3">
-            Role:{" "}
-            <span className="rounded bg-secondary color-light p-1">
-              {capitalize(token?.user.role as string)}
-            </span>
+            Role: <UserRoleBadge role={token?.user.role as userTypes} />
           </h5>
           <div className="row p-3">
             <article className="col-lg-4 col-md-4 h-100 col-sm-12 mb-3">
