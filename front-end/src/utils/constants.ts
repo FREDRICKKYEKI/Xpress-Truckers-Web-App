@@ -57,5 +57,6 @@ export const routes = {
   driverRoute: "/driver/:id",
   landingPage: "http://144.126.221.185/",
   driverDashboard: "/driver/dashboard",
+  userDashboard: "/profile/me/dashboard",
   driver: (id: string) => `/driver/${id}`,
 };

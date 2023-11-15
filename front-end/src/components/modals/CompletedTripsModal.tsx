@@ -7,13 +7,13 @@ import {
 } from "../../utils/types";
 import { Modal } from "react-responsive-modal";
 import { useEffect, useState } from "react";
-import { getLocationData, getXTData, putXTData } from "../../utils/utils";
+import { deleteXTData, getLocationData, getXTData } from "../../utils/utils";
 import { apiEndpoints } from "../../utils/constants";
 import { toast } from "react-toastify";
 
 export const type1Text = "You requested a truck.";
 
-export const OnGoingTripsModal = ({
+export const CompletedTripsModal = ({
   trip,
   open,
   onClose,
@@ -63,10 +63,10 @@ export const OnGoingTripsModal = ({
     }
   }, [trip]);
 
-  function handleFinishTrip() {
+  function handleDeleteTrip() {
     if (!trip) return;
     toast.promise(
-      putXTData(apiEndpoints.trip(trip?.id), { status: tripStatuses.FINISHED })
+      deleteXTData(apiEndpoints.trip(trip?.id))
         .then(() => {
           window.location.reload();
           onClose();
@@ -76,26 +76,7 @@ export const OnGoingTripsModal = ({
         }),
       {
         pending: "Please wait...",
-        success: "Trip finished!",
-        error: "Something went wrong!",
-      }
-    );
-  }
-
-  function handleCancelTrip() {
-    if (!trip) return;
-    toast.promise(
-      putXTData(apiEndpoints.trip(trip?.id), { status: tripStatuses.PENDING })
-        .then(() => {
-          window.location.reload();
-          onClose();
-        })
-        .catch((error) => {
-          console.log(error);
-        }),
-      {
-        pending: "Please wait...",
-        success: "Trip cancelled!",
+        success: "Trip Deleted!",
         error: "Something went wrong!",
       }
     );
@@ -159,33 +140,15 @@ export const OnGoingTripsModal = ({
                 {trip?.status}
               </span>
             </div>
-            {trip?.type === "type1" ? (
-              <button
-                onClick={handleCancelTrip}
-                className="btn btn-danger w-100 mt-3"
-              >
-                Cancel Trip
-              </button>
-            ) : (
-              <div className="row mt-2">
-                <div className="col-6">
-                  <button
-                    onClick={handleFinishTrip}
-                    className="btn w-100 btn-success"
-                  >
-                    Finish Trip
-                  </button>
-                </div>
-                <div className="col-6">
-                  <button
-                    onClick={handleCancelTrip}
-                    className="btn w-100 btn-danger"
-                  >
-                    Cancel Trip
-                  </button>
-                </div>
-              </div>
-            )}
+            {trip?.type === "type1" &&
+              trip?.status === tripStatuses.CANCELLED && (
+                <button
+                  onClick={handleDeleteTrip}
+                  className="btn btn-danger w-100 mt-3"
+                >
+                  Delete Trip
+                </button>
+              )}
           </>
         )}
       </div>

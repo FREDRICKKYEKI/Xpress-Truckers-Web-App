@@ -1,54 +1,23 @@
 import { Rating } from "../components/Rating";
 import { useEffect, useState } from "react";
 import useAuth from "../contexts/AuthProvider";
-import { useUser } from "../hooks/useUser";
 import { apiEndpoints, defaultAvatarUrl, routes } from "../utils/constants";
-import {
-  TripResponse,
-  driverResponse,
-  serviceResponse,
-  tripStatuses,
-} from "../utils/types";
+import { TripResponse, tripStatuses } from "../utils/types";
 import { capitalize, getXTData } from "../utils/utils";
-import { useSelector } from "react-redux";
-import { RootState } from "../StateManagement/store";
 import { Link } from "react-router-dom";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { VehicleDetailsCard } from "../components/cards/VehicleDetailsCard";
 import { TripRequestsCard } from "../components/cards/TripRequestsCard";
 import { OngoingTripsCard } from "../components/cards/OnGoingTripsCard";
 import { CompletedTripsCard } from "../components/cards/CompletedTripsCard";
 
-export const DriverDashboard = () => {
-  const services = useSelector((state: RootState) => state.services);
+export const UserDashboard = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [trips, setTrips] = useState<TripResponse[] | []>([]); // TODO: replace with TripResponse[
   const { token } = useAuth();
-  const { user } = useUser();
   const { width } = useWindowSize();
   const maxWidth = 568;
 
-  const [driverServices, setDriverServices] = useState<serviceResponse[]>([]);
-
   useEffect(() => {
-    getXTData(apiEndpoints.driver(token?.user.id as string))
-      .then((driverRes: unknown) => {
-        let driverResponse = driverRes as driverResponse;
-
-        if (services) {
-          let drivServices: { [key: string]: any } = {};
-
-          for (const service of driverResponse.services) {
-            drivServices[service.service_id.trim()] =
-              services[service.service_id.trim()];
-          }
-          setDriverServices(Object.values(drivServices));
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
     getXTData(apiEndpoints.userTrips(token?.user.id as string))
       .then((data) => {
         setTrips(data as TripResponse[]);
@@ -82,7 +51,7 @@ export const DriverDashboard = () => {
       <div className="d-flex h-100">
         {openNav && (
           <aside
-            className={`bg-dark p-4 d-flex flex-column align-items-center gap-3 justify-content-between 
+            className={`bg-primary p-4 d-flex flex-column align-items-center gap-3 justify-content-between 
             ${width && width < maxWidth && "position-absolute w-100"}`}
             style={{
               zIndex: "100",
@@ -170,31 +139,9 @@ export const DriverDashboard = () => {
                 )}
               />
             </article>
-            <article className="col-lg-4 col-md-4 h-100 col-sm-12 mt-5">
-              <h5>Vehicle Details:</h5>
-              {driverServices ? (
-                <VehicleDetailsCard
-                  driver={user as driverResponse}
-                  driverServices={driverServices}
-                />
-              ) : (
-                <i className="fa fa-spinner" aria-hidden="true"></i>
-              )}
-            </article>
           </div>
         </section>
       </div>
     </>
   );
 };
-
-export function EmptyState({ text }: { text: string }) {
-  return (
-    <div className="d-flex flex-column align-items-center">
-      <span style={{ width: "max-content" }}>
-        <img src="/icons/empty-box.svg" />
-      </span>
-      <i className="color-gray text-center">{text}</i>
-    </div>
-  );
-}

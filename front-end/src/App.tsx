@@ -17,6 +17,7 @@ import { RootState, setServices } from "./StateManagement/store";
 import { editTypes, promiseStates, serviceResponse } from "./utils/types";
 import { DriverDashboard } from "./pages/DriverDashboard";
 import { LogoIcon } from "./components/logos/LogoIcon";
+import { UserDashboard } from "./pages/DashBoard";
 
 function App() {
   const promiseState = useSelector((state: RootState) => state.promiseState);
@@ -30,6 +31,7 @@ function App() {
     routes.signup,
     routes.editUser,
     routes.driverDashboard,
+    routes.userDashboard,
   ];
   const v2Paths = ["profile", "driver"];
   const [loading, setLoading] = useState(true);
@@ -134,6 +136,14 @@ function App() {
               element={
                 <RequireAuth>
                   <DriverDashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={routes.userDashboard}
+              element={
+                <RequireAuth>
+                  <UserDashboard />
                 </RequireAuth>
               }
             />

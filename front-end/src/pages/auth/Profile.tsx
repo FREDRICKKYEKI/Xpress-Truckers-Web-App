@@ -35,11 +35,15 @@ const Profile = () => {
           <p className="card-text">{token?.user?.email}</p>
           <p className="card-text">{token?.user?.phonenumber}</p>
           <p className="card-text">Nairobi, Kenya</p>
-          <p className="card-text">
-            Rating: <b>{token?.user?.ratings}</b>
-          </p>
-          <Rating value={token?.user?.ratings} />
+          <Rating
+            className="color-dark"
+            text={true}
+            value={token?.user?.ratings}
+          />
         </div>
+        <a href={routes.userDashboard} className="">
+          Go to Dashboard
+        </a>
       </div>
     </section>
   );

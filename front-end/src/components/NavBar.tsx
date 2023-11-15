@@ -48,12 +48,11 @@ const NavBar = ({ variant = "v1" }: { variant: "v1" | "v2" }) => {
                 Profile
               </a>
               <a
-                href="#"
+                href={routes.login}
                 className={"nav-item"}
                 onClick={() => {
-                  localStorage.setItem("user_tk", "null");
                   toast.info("Logged out successfully");
-                  navigate(routes.login);
+                  localStorage.setItem("user_tk", "null");
                 }}
               >
                 Logout
