@@ -21,10 +21,15 @@ def get_vehicle(current_user, vehicle_id):
     retrievs vehicle data only
     """
     if not vehicle_id:
-        all_vehicles = [
-            vehicle.to_dict() for vehicle in storage.all(Vehicle).values()
-        ]
-        return (jsonify(all_vehicles))
+        all_vehicles = storage.all(Vehicle).values()
+        out = []
+        for vehicle in all_vehicles:
+            temp = vehicle.to_dict()
+            unmasked = temp["vehicle_registration"]
+            masked = unmasked[:3] + len(unmasked[3:]) * 'x'
+            temp["vehicle_registration"] = masked
+            out.append(temp)
+        return (jsonify(out))
 
     else:
         vehicle = storage.get(Vehicle, vehicle_id)
