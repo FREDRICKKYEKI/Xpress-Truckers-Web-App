@@ -7,7 +7,7 @@ export const defaultAvatarUrl: string =
 
 export const UNSPLASH_ROOT: string = "https://api.unsplash.com";
 
-export const apiUrl: string = "http://127.0.0.1:5000/api/v1";
+export const apiUrl: string = "http://localhost:5000/api/v1";
 
 export const initialLocationData: locationData = {
   formatted: "Nairobi, Kenya",
