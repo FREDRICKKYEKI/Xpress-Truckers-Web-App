@@ -2,12 +2,11 @@ import { UNSPLASH_ROOT, apiEndpoints, apiUrl } from "./constants";
 import { envs } from "./loadEnv";
 import axios from "axios";
 import {
-  driver,
-  driverRequestType,
+  driverRequest,
   methods,
-  user,
   userLoginEmail,
   userLoginPhone,
+  userRequest,
   userToken,
 } from "./types";
 
@@ -119,7 +118,8 @@ export function getUnsplashPhotos({ query }: { query: string }): Promise<any> {
  * @returns The capitalized string.
  */
 export function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  let word = str.toLocaleLowerCase();
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
 /**
@@ -142,12 +142,48 @@ export function getXTData(endpoint: string) {
   });
 }
 
-export function postXTData(endpoint: string, data: driverRequestType) {
+/**
+ * Sends a POST request to the specified endpoint with the provided data and access token.
+ * @param endpoint - The endpoint to send the request to.
+ * @param data - The data to send in the request body.
+ * @returns A Promise that resolves with the response data or rejects with an error.
+ */
+export function postXTData(endpoint: string, data: any) {
   const accessToken =
     JSON.parse(localStorage.getItem("user_tk") as string)?.token || "";
   return new Promise((resolve, reject) => {
     axios
       .post(`${apiUrl}/${endpoint}`, data, {
+        headers: {
+          "x-access-token": `${accessToken}`,
+        },
+      })
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
+  });
+}
+
+export function putXTData(endpoint: string, data: any) {
+  const accessToken =
+    JSON.parse(localStorage.getItem("user_tk") as string)?.token || "";
+  return new Promise((resolve, reject) => {
+    axios
+      .put(`${apiUrl}/${endpoint}`, data, {
+        headers: {
+          "x-access-token": `${accessToken}`,
+        },
+      })
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
+  });
+}
+
+export function deleteXTData(endpoint: string) {
+  const accessToken =
+    JSON.parse(localStorage.getItem("user_tk") as string)?.token || "";
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(`${apiUrl}/${endpoint}`, {
         headers: {
           "x-access-token": `${accessToken}`,
         },
@@ -163,7 +199,7 @@ export function postXTData(endpoint: string, data: driverRequestType) {
  * @returns A Promise that resolves with the JSON response from the server.
  */
 export function registerUser(
-  user: user | driver,
+  user: userRequest | driverRequest,
   method: methods
 ): Promise<any> {
   const userToken: userToken =

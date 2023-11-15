@@ -84,7 +84,6 @@ CREATE TABLE trips (
     client_id CHAR(36) NOT NULL,
     driver_id CHAR(36),
     vehicle_id CHAR(36),
-    service_id CHAR(36) NOT NULL,
     origin VARCHAR(128) NOT NULL,
     destination VARCHAR(128) NOT NULL,
     start_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -93,8 +92,7 @@ CREATE TABLE trips (
     PRIMARY KEY (id),
     FOREIGN KEY (client_id) REFERENCES users (id),
     FOREIGN KEY (driver_id) REFERENCES users (id),
-    FOREIGN KEY (vehicle_id) REFERENCES vehicles (id),
-    FOREIGN KEY (service_id) REFERENCES services (id)
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles (id)
 );
 
 
@@ -146,11 +144,11 @@ VALUES
     ('993f37d2-e888-4ea7-88e0-d3b6f61b8f8a', '2023-02-28 09:00:00', '2023-02-28 12:15:00', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'profile', 'profile_image_url5');
 
 -- Insert sample data into the 'trips' table
-INSERT INTO trips (id, created_at, updated_at, client_id, driver_id, vehicle_id, service_id, origin, destination, start_at, end_at, status)
+INSERT INTO trips (id, created_at, updated_at, client_id, driver_id, vehicle_id, origin, destination, start_at, end_at, status)
 VALUES
-    ('9d18f4a8-eb0f-11ec-82b0-6532c072d76f', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', '8335a810-eb0f-11ec-9f6e-354f428589c2', 'Origin 1', 'Destination 1', '2023-10-27 10:00:00', '2023-10-27 12:00:00', 'finished'),
-    ('a1404606-eb0f-11ec-8b67-75a3c6f68c61', '2023-02-28 09:00:00', '2023-02-28 12:15:00', '50254c03-e92c-49f7-9819-4a5d2b455d09', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', '8cb380c6-eb0f-11ec-95e1-5e4c04f24894', 'Origin 2', 'Destination 2', '2023-10-27 11:00:00', '2023-10-27 13:00:00', 'ongoing'),
-    ('a4ddc00e-eb0f-11ec-a0dd-b948a775421e', '2023-02-28 09:00:00', '2023-02-28 12:15:00', '50254c03-e92c-49f7-9819-4a5d2b455d09', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', '9025077e-eb0f-11ec-8a44-851f2e4f31eb', 'Origin 3', 'Destination 3', '2023-10-27 12:00:00', NULL, 'pending'),
-    ('a9f389ac-eb0f-11ec-aecc-29f2c2c0de18', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', '9455f0ea-eb0f-11ec-82dd-45339f5be2c7', 'Origin 4', 'Destination 4', '2023-10-27 13:00:00', NULL, 'pending'),
-    ('ae3cf7ec-eb0f-11ec-8d3f-ebf200254452', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', '98ca8d54-eb0f-11ec-9f18-b55639f31ef5', 'Origin 5', 'Destination 5', '2023-10-27 14:00:00', NULL, 'pending');
+    ('9d18f4a8-eb0f-11ec-82b0-6532c072d76f', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', 'Origin 1', 'Destination 1', '2023-10-27 10:00:00', '2023-10-27 12:00:00', 'finished'),
+    ('a1404606-eb0f-11ec-8b67-75a3c6f68c61', '2023-02-28 09:00:00', '2023-02-28 12:15:00', '50254c03-e92c-49f7-9819-4a5d2b455d09', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', 'Origin 2', 'Destination 2', '2023-10-27 11:00:00', '2023-10-27 13:00:00', 'ongoing'),
+    ('a4ddc00e-eb0f-11ec-a0dd-b948a775421e', '2023-02-28 09:00:00', '2023-02-28 12:15:00', '50254c03-e92c-49f7-9819-4a5d2b455d09', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', 'Origin 3', 'Destination 3', '2023-10-27 12:00:00', NULL, 'pending'),
+    ('a9f389ac-eb0f-11ec-aecc-29f2c2c0de18', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', 'Origin 4', 'Destination 4', '2023-10-27 13:00:00', NULL, 'pending'),
+    ('ae3cf7ec-eb0f-11ec-8d3f-ebf200254452', '2023-02-28 09:00:00', '2023-02-28 12:15:00', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', '4b48aca8-887f-4cf1-9a1e-0db71194dd73', 'b6e17b88-eb0f-11ec-9e2c-952f12f918f8', 'Origin 5', 'Destination 5', '2023-10-27 14:00:00', NULL, 'pending');
 

@@ -4,7 +4,7 @@ Defines API routes for users and clients
 """
 from api.v1.auth import token_required
 from api.v1.views import app_views
-from flask import abort, jsonify, request, make_response
+from flask import abort, jsonify, request, make_response, redirect, url_for
 from models import storage
 from models.user import User
 from models.vehicle import Vehicle
@@ -41,6 +41,8 @@ def get_users(current_user, user_id):
         return (jsonify(out))
     else:
         user = storage.get(User, user_id)
+        if user.role == 'driver':
+            return redirect(url_for('app_views.get_drivers', driver_id=user_id))
         if user:
             temp = user.to_dict()
             url = {}
@@ -115,6 +117,9 @@ def insert_user():
 
     if not props.get("role"):
         return make_response(jsonify({"error":"Missing Role"}), 400);
+
+    if props.get("role") == "admin":# to be added later 
+        return make_response(jsonify({"error":"Unauthorized user❌"}), 401);
 
 
     if props.get("email") in [user.email for user in all_users.values()]:
