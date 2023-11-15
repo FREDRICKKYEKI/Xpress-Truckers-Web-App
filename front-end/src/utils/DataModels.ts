@@ -1,3 +1,7 @@
+/**
+ * @fileoverview This file contains the data models used in the Xpress Truckers Web App.
+ * @packageDocumentation
+ */
 import {
   driverRequest,
   driverRequestType,
@@ -10,22 +14,34 @@ import {
   vehicleTypes,
 } from "./types";
 
-// class BaseDataModel {
-//   [key: string]: any;
-//   constructor(data: any) {
-//     Object.assign(this, data);
-//   }
-//   isValid() {}
-//   toObject() {}
-//   toRequest() {}
-// }
-
+/**
+ * Represents a driver request.
+ */
 export class DriverRequest {
+  /**
+   * The origin of the driver request.
+   */
   origin: {};
+  /**
+   * The destination of the driver request.
+   */
   destination: {};
+  /**
+   * The type of vehicle for the driver request.
+   */
   vehicleType: Array<vehicleTypes>;
+  /**
+   * The services requested for the driver request.
+   */
   services: string[];
 
+  /**
+   * Creates a new instance of DriverRequest.
+   * @param origin The origin of the driver request.
+   * @param destination The destination of the driver request.
+   * @param vehicleType The type of vehicle for the driver request.
+   * @param services The services requested for the driver request.
+   */
   constructor(
     origin = {},
     destination = {},
@@ -38,6 +54,10 @@ export class DriverRequest {
     this.services = services;
   }
 
+  /**
+   * Checks if the driver request is valid.
+   * @returns True if the driver request is valid, otherwise throws an error.
+   */
   isValid() {
     if (!this.origin) {
       throw Error("Current location not selected!");
@@ -51,6 +71,10 @@ export class DriverRequest {
     return true;
   }
 
+  /**
+   * Converts the driver request to an object.
+   * @returns An object representing the driver request.
+   */
   toObject(): driverRequestType {
     return {
       origin: this.origin,
@@ -60,11 +84,18 @@ export class DriverRequest {
     };
   }
 
+  /**
+   * Converts the driver request to a JSON string.
+   * @returns A JSON string representing the driver request.
+   */
   toRequest() {
     return JSON.stringify(this.toObject());
   }
 }
 
+/**
+ * Represents a response object containing location data.
+ */
 export class LocationDataResponse {
   __keys = ["name", "formatted", "geometry"];
   name: string;
@@ -114,6 +145,9 @@ export class LocationDataResponse {
   }
 }
 
+/**
+ * Represents the data model for user registration.
+ */
 export class UserRegistrationData {
   private __car_reg_pattern = /^[a-zA-Z]{3} \d{3}[a-zA-Z]$/;
   private __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -262,6 +296,9 @@ export class UserRegistrationData {
   }
 }
 
+/**
+ * Represents the data required for user login.
+ */
 export class UserLogInData {
   private __email_reg_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   email_phone: any;
@@ -309,27 +346,3 @@ export class UserLogInData {
     return JSON.stringify(this.toObject());
   }
 }
-
-// export class TripRequest extends BaseDataModel {
-//   client_id: string;
-//   driver_id: string;
-//   vehicle_id: string;
-//   origin: latlng;
-//   destination: latlng;
-//   status: tripStatus;
-
-//   constructor(data: TripPostRequest) {
-//     super(data);
-//     this.client_id = data.client_id;
-//     this.driver_id = data.driver_id;
-//     this.vehicle_id = data.vehicle_id;
-//     this.origin = data.origin;
-//     this.destination = data.destination;
-//     this.status = data.status;
-//   }
-//   isValid(): boolean {
-//     if (!this.client_id) {
-//     throw Error("Email/Phone not provided!");
-
-//   }
-// }

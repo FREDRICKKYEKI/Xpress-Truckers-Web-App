@@ -9,7 +9,7 @@ export const TripStatusBadge = ({ status }: { status: tripStatuses }) => {
     [tripStatuses.ONGOING]: "bg-secondary text-white",
     [tripStatuses.FINISHED]: "bg-success text-light",
     [tripStatuses.CANCELLED]: "bg-danger text-white",
-    [tripStatuses.PENDING]: "bg-gray",
+    [tripStatuses.PENDING]: "bg-gray text-dark",
   };
   return (
     <span className={`badge rounded-pill ${classVariant[status]}`}>

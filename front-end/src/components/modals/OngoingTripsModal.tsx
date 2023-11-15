@@ -68,7 +68,9 @@ export const OnGoingTripsModal = ({
   function handleFinishTrip() {
     if (!trip) return;
     toast.promise(
-      putXTData(apiEndpoints.trip(trip?.id), { status: tripStatuses.FINISHED })
+      putXTData(apiEndpoints.trip(trip?.id), {
+        status: tripStatuses.FINISHED,
+      })
         .then(() => {
           window.location.reload();
           onClose();
@@ -87,7 +89,9 @@ export const OnGoingTripsModal = ({
   function handleCancelTrip() {
     if (!trip) return;
     toast.promise(
-      putXTData(apiEndpoints.trip(trip?.id), { status: tripStatuses.PENDING })
+      putXTData(apiEndpoints.trip(trip?.id), {
+        status: tripStatuses.CANCELLED,
+      })
         .then(() => {
           window.location.reload();
           onClose();
@@ -121,11 +125,11 @@ export const OnGoingTripsModal = ({
               <b>Trip id</b>: <b className="color-primary">{trip?.id}</b>
             </div>
             <div>
-              <b>Requested on</b>: {new Date(trip?.created_at).toDateString()}
+              <b>Requested on</b>: {new Date(trip?.created_at).toUTCString()}
             </div>
             <div>
               <b>Started On:</b>{" "}
-              {new Date(trip?.start_at).toDateString() || "not yet"}
+              {new Date(trip?.start_at).toUTCString() || "not yet"}
             </div>
 
             <div>

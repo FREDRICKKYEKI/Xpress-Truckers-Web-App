@@ -118,6 +118,9 @@ def insert_user():
     if not props.get("role"):
         return make_response(jsonify({"error":"Missing Role"}), 400);
 
+    if props.get("role") == "admin":# to be added later 
+        return make_response(jsonify({"error":"Unauthorized user❌"}), 401);
+
 
     if props.get("email") in [user.email for user in all_users.values()]:
         return make_response(jsonify({"error":"Email already exists"}), 400);

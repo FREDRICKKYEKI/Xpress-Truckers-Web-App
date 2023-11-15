@@ -92,7 +92,7 @@ def update_trip(current_user, trip_id):
 
     if props.get("status") == "ongoing":
         trip.start_at = datetime.now()
-    if props.get("status") == "finished":
+    if props.get("status") == "finished" or props.get("status") == "cancelled":
         trip.end_at = datetime.now()
 
     trip.updated_at = datetime.now()

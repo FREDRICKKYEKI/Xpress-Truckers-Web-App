@@ -4,7 +4,7 @@ import useAuth from "../contexts/AuthProvider";
 import { apiEndpoints, defaultAvatarUrl, routes } from "../utils/constants";
 import { TripResponse, tripStatuses, userTypes } from "../utils/types";
 import { capitalize, getXTData } from "../utils/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { TripRequestsCard } from "../components/cards/TripRequestsCard";
 import { OngoingTripsCard } from "../components/cards/OnGoingTripsCard";
@@ -16,9 +16,13 @@ export const UserDashboard = () => {
   const [trips, setTrips] = useState<TripResponse[] | []>([]); // TODO: replace with TripResponse[
   const { token } = useAuth();
   const { width } = useWindowSize();
+  const navigate = useNavigate();
   const maxWidth = 568;
 
   useEffect(() => {
+    if (token && token.user.role === userTypes.DRIVER) {
+      navigate(routes.driverDashboard);
+    }
     getXTData(apiEndpoints.userTrips(token?.user.id as string))
       .then((data) => {
         setTrips(data as TripResponse[]);

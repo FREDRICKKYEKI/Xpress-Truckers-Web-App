@@ -4,7 +4,12 @@ import { postXTData } from "../../utils/utils";
 import { apiEndpoints, routes } from "../../utils/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../../StateManagement/store";
-import { TripPostRequest, driverResponse, latlng } from "../../utils/types";
+import {
+  TripPostRequest,
+  driverResponse,
+  latlng,
+  userTypes,
+} from "../../utils/types";
 import useAuth from "../../contexts/AuthProvider";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -44,7 +49,11 @@ export function RequestTruckModal({
           setLoading(false);
           console.log(res);
           onClose();
-          navigate(routes.userDashboard);
+          navigate(
+            token?.user.role === userTypes.REGULAR
+              ? routes.userDashboard
+              : routes.driverDashboard
+          );
         })
         .catch((error) => {
           setLoading(false);

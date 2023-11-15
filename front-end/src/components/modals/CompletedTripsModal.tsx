@@ -102,13 +102,23 @@ export const CompletedTripsModal = ({
               <b>Trip id</b>: <b className="color-primary">{trip?.id}</b>
             </div>
             <div>
-              <b>Requested on</b>: {new Date(trip?.created_at).toDateString()}
+              <b>Requested on</b>: {new Date(trip?.created_at).toUTCString()}
             </div>
             <div>
               <b>Started On:</b>{" "}
-              {new Date(trip?.start_at).toDateString() || "not yet"}
+              {new Date(trip?.start_at).toUTCString() || "not yet"}
             </div>
-
+            {trip?.status === tripStatuses.FINISHED ? (
+              <div>
+                <b>Ended On:</b>{" "}
+                {new Date(trip?.end_at).toUTCString() || "not yet"}
+              </div>
+            ) : (
+              <div>
+                <b>Cancelled at:</b>{" "}
+                {new Date(trip?.end_at).toUTCString() || "not yet"}
+              </div>
+            )}
             <div>
               <b>From</b>: {(origin as locationData)?.formatted}
             </div>
