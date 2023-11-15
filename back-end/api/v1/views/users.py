@@ -24,6 +24,14 @@ def get_users(current_user, user_id):
     if not user_id:
         for user in storage.all(User).values():
             temp = user.to_dict()
+
+            unmasked = temp["phonenumber"]
+            masked = unmasked[:4] + (len(unmasked[4:-3]) * "x" ) + unmasked[-3:]
+            temp["phonenumber"] = masked
+
+            unmasked= temp["email"]
+            masked = unmasked[:4] + (len(unmasked[4:-3]) * "x" ) + unmasked[-3:]
+            temp["email"] = masked
             url = {}
             for image in images:
                 if image.owner_id == user.id:
@@ -61,6 +69,14 @@ def get_clients(current_user, client_id):
     for user in all_users:
         if user.role == 'user':
             temp = user.to_dict()
+            unmasked = temp["phonenumber"]
+            masked = unmasked[:4] + (len(unmasked[4:-3]) * "x" ) + unmasked[-3:]
+            temp["phonenumber"] = masked
+
+            unmasked= temp["email"]
+            masked = unmasked[:4] + (len(unmasked[4:-3]) * "x" ) + unmasked[-3:]
+            temp["email"] = masked
+
             url = {}
             for image in images:
                 if image.owner_id == user.id:
