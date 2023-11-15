@@ -18,7 +18,7 @@ from models.service import Service
 @app_views.route('/drivers/<driver_id>/', methods=['GET'],
                  strict_slashes=False)
 # @token_required
-def get_drivers(current_user, driver_id):
+def get_drivers( driver_id):
     """
     retrievs driver data only
     """

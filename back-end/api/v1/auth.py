@@ -50,6 +50,7 @@ def login():
     user = None
 
     for item in all_users:
+        print(item.email, body.get("email"))
         if item.email == body.get("email"):
             user = item
             break
