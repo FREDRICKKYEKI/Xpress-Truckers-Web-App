@@ -29,7 +29,7 @@ const NavBar = ({ variant = "v1" }: { variant: "v1" | "v2" }) => {
 
   return (
     <header className={`navbar  ${classVariants[variant]}`}>
-      <LogoBrandName variant={variant} />
+      <LogoBrandName variant={"v1"} />
       {width && width > 768 ? (
         <span className="options" style={{ color: "var(--color-white-03)" }}>
           <a className={"nav-item"} href="#" onClick={checkIfDriver}>
@@ -37,16 +37,22 @@ const NavBar = ({ variant = "v1" }: { variant: "v1" | "v2" }) => {
           </a>
           {token?.token ? (
             <>
-              <a className={"nav-item"} href={routes.profile}>
+              <a
+                className={"nav-item"}
+                href={
+                  token?.user.role === userTypes.REGULAR
+                    ? routes.profile
+                    : routes.driverDashboard
+                }
+              >
                 Profile
               </a>
               <a
-                href="#"
+                href={routes.login}
                 className={"nav-item"}
                 onClick={() => {
-                  localStorage.setItem("user_tk", "null");
                   toast.info("Logged out successfully");
-                  navigate(routes.login);
+                  localStorage.setItem("user_tk", "null");
                 }}
               >
                 Logout

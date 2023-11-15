@@ -106,6 +106,10 @@ button[type="submit"] {
   color: var(--color-secondary) !important;
 }
 
+.color-gray {
+  color: var(--color-gray-01) !important;
+}
+
 .bg-dark {
   background-color: var(--color-black-01) !important;
 }
@@ -116,6 +120,18 @@ button[type="submit"] {
 
 .bg-secondary {
   background-color: var(--color-secondary) !important;
+}
+
+.bg-gray {
+  background-color: var(--color-gray-03) !important;
+}
+
+.bl-success {
+  border-left: 5px solid var(--color-primary) !important;
+}
+
+.bl-danger {
+  border-left: 5px solid var(--bs-danger) !important;
 }
 
 .navbar-toggler-icon {
@@ -143,4 +159,23 @@ button[type="submit"] {
 .leaflet-popup-content .profile__card__body .card-text {
   margin: 0;
   color: var(--color-black-01);
+}
+
+.pulsating {
+  animation: pulsate 0.9s ease-out alternate infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.dashboard__container article > .card {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  min-height: 250px;
 }

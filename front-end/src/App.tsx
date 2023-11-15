@@ -15,6 +15,10 @@ import { capitalize, getXTData } from "./utils/utils";
 import { NotFound } from "./pages/NotFound";
 import { RootState, setServices } from "./StateManagement/store";
 import { editTypes, promiseStates, serviceResponse } from "./utils/types";
+import { DriverDashboard } from "./pages/DriverDashboard";
+import { LogoIcon } from "./components/logos/LogoIcon";
+import { UserDashboard } from "./pages/DashBoard";
+import { Loader } from "./components/Loader";
 
 function App() {
   const promiseState = useSelector((state: RootState) => state.promiseState);
@@ -23,7 +27,13 @@ function App() {
   );
   const dispatch = useDispatch();
   const location = useLocation();
-  const noNavs = [routes.login, routes.signup, routes.editUser];
+  const noNavs = [
+    routes.login,
+    routes.signup,
+    routes.editUser,
+    routes.driverDashboard,
+    routes.userDashboard,
+  ];
   const v2Paths = ["profile", "driver"];
   const [loading, setLoading] = useState(true);
 
@@ -123,6 +133,22 @@ function App() {
               }
             />
             <Route
+              path={routes.driverDashboard}
+              element={
+                <RequireAuth>
+                  <DriverDashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={routes.userDashboard}
+              element={
+                <RequireAuth>
+                  <UserDashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
               path={routes.editUser}
               element={<Signup editType={editTypes.UPDATE} />}
             />
@@ -131,7 +157,10 @@ function App() {
           <ToastContainer />
         </main>
       ) : (
-        <h2></h2>
+        <>
+          <LogoIcon size="md" className="pulsating" />
+          <Loader />
+        </>
       )}
     </>
   );

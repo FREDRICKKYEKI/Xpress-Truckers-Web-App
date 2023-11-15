@@ -2,9 +2,16 @@ import "../../styles/profile.css";
 import { Rating } from "../../components/Rating";
 import { defaultAvatarUrl, routes } from "../../utils/constants";
 import useAuth from "../../contexts/AuthProvider";
+import { userTypes } from "../../utils/types";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Profile = () => {
   const { token } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (token?.user.role === userTypes.DRIVER) navigate(routes.driverDashboard);
+  }, []);
   return (
     <section className="profile-details d-flex justify-content-center">
       <div className="profile__card card mb-4">
@@ -28,11 +35,15 @@ const Profile = () => {
           <p className="card-text">{token?.user?.email}</p>
           <p className="card-text">{token?.user?.phonenumber}</p>
           <p className="card-text">Nairobi, Kenya</p>
-          <p className="card-text">
-            Rating: <b>{token?.user?.ratings}</b>
-          </p>
-          <Rating value={token?.user?.ratings} />
+          <Rating
+            className="color-dark"
+            text={true}
+            value={token?.user?.ratings}
+          />
         </div>
+        <a href={routes.userDashboard} className="">
+          Go to Dashboard
+        </a>
       </div>
     </section>
   );

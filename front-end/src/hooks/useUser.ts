@@ -11,7 +11,6 @@ export const useUser = () => {
   const [user, setUser] = useState<driverResponse | userResponse | null>(null);
   const { token } = useAuth();
   let userId: string | undefined;
-  console.log(params.id);
   if (params.id) {
     userId = params.id;
   } else {
@@ -24,14 +23,19 @@ export const useUser = () => {
     if (token.user.role === "driver") {
       getXTData(apiEndpoints.driver(userId))
         .then((data: unknown) => {
-          console.log(data);
           setUser(data as driverResponse | userResponse);
           toast.dismiss();
-          toast.success("Done!");
+          toast.success("Done!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
         })
         .catch((error) => {
           toast.dismiss();
-          toast.error("Error!");
+          toast.error("Error!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
           console.log(error);
         });
     } else
@@ -40,13 +44,18 @@ export const useUser = () => {
           console.log(data);
           setUser(data as driverResponse | userResponse);
           toast.dismiss();
-
-          toast.success("Done!");
+          toast.success("Done!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
         })
         .catch((error) => {
           toast.dismiss();
 
-          toast.error("Error!");
+          toast.error("Error!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 200,
+          });
           console.log(error);
         });
   }, []);

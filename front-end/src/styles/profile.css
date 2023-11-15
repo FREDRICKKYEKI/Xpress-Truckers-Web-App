@@ -1,6 +1,6 @@
 .profile-header {
-  background-image: url("/backgrounds/bg-01.png") !important;
-  height: 250px;
+  /* background-image: url("/backgrounds/bg-01.png") !important; */
+  height: 150px;
 }
 
 .driver-details {
@@ -18,9 +18,9 @@
   padding: 1rem;
   border-radius: 10px;
   margin-top: -80px;
-  box-shadow: -2px 3px 14px -3px rgba(0, 0, 0, 0.75);
+  /* box-shadow: -2px 3px 14px -3px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: -2px 3px 14px -3px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: -2px 3px 14px -3px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -2px 3px 14px -3px rgba(0, 0, 0, 0.75); */
 }
 .driver-details__card,
 .vehicle__card {
@@ -68,8 +68,8 @@
 }
 
 .profile__header {
-  color: var(--color-white-01);
-  position: absolute;
+  /* color: var(--color-white-01); */
+  /* position: absolute; */
   top: -50px;
 }
 
@@ -81,10 +81,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid var(--color-primary);
   color: var(--color-black-01);
   background-color: var(--color-white-02);
-  /* text-align: center; */
 }
 
 .profile__icon {
