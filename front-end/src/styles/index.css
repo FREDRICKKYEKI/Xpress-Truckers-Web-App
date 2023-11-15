@@ -127,7 +127,7 @@ button[type="submit"] {
 }
 
 .bl-success {
-  border-left: 5px solid var(--bs-success) !important;
+  border-left: 5px solid var(--color-primary) !important;
 }
 
 .bl-danger {
