@@ -8,7 +8,7 @@ export const defaultAvatarUrl: string =
 
 export const UNSPLASH_ROOT: string = "https://api.unsplash.com";
 
-export const apiUrl: string = envs.api_url;
+export const apiUrl: string = "http://localhost:5000/api/v1";
 
 
 export const initialLocationData: locationData = {
