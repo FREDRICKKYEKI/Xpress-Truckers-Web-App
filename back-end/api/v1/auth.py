@@ -15,6 +15,9 @@ SECRET_KEY = 'thisissecret'
 
 
 def token_required(f):
+    """
+    checks given token if valid to access route
+    """
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -44,7 +47,9 @@ def token_required(f):
 
 @app_views.route('/login', strict_slashes=False, methods=['POST'])
 def login():
-
+    """
+    validates user login before assigning a json web token
+    """
     body = request.get_json()
     all_users = storage.all(User).values()
     user = None
